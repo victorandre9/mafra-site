@@ -521,3 +521,26 @@ body::before {
   -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
   box-shadow: inset 0 1px 0 rgba(236, 255, 244, .95), inset 0 0 0 1px rgba(52, 210, 122, .5), inset 0 -2px 0 rgba(6, 70, 36, .6), 0 14px 30px -12px rgba(6, 64, 34, .5) !important;
 }
+
+/* ================= METODOLOGIA: legibilidade do card, pontos em volta e telas do celular ================= */
+/* o iPhone aumenta letra sozinho dentro do celular encolhido por zoom e estoura as telas: trava */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+.step h3 { color: #0b1a2e; }
+.step p { color: #4f6078 !important; line-height: 1.55; }
+.step.is-active p { color: #3b4d66 !important; }
+@media (max-width: 900px) {
+  .step.is-active {
+    background: linear-gradient(180deg, rgba(255, 255, 255, .92), rgba(240, 250, 244, .88)) !important;
+    border: 1px solid rgba(52, 210, 122, .4) !important;
+    box-shadow: inset 0 1px 0 #fff, 0 0 0 4px rgba(52, 210, 122, .07), 0 16px 34px -18px rgba(24, 160, 87, .4) !important;
+  }
+  .step.is-active h3 { color: #0b1a2e; }
+  .step.is-active p { color: #3b4d66 !important; font-size: .95rem !important; }
+}
+/* pontos e órbitas em volta do celular: visíveis no fundo claro */
+.orbit { border: 1.5px dashed rgba(13, 44, 82, .26) !important; }
+.orbit span { width: 14px !important; height: 14px !important; top: -7px !important; background: radial-gradient(circle at 35% 35%, #d9ffe9, #34d27a 45%, #0c6b38) !important; box-shadow: 0 0 0 4px rgba(52, 210, 122, .18), 0 0 18px rgba(52, 210, 122, .8) !important; }
+.orbit--2 span { background: radial-gradient(circle at 35% 35%, #e6f2ff, #4f9bdc 45%, #0a4d8c) !important; box-shadow: 0 0 0 4px rgba(79, 155, 220, .18), 0 0 18px rgba(79, 155, 220, .8) !important; }
+/* textos de dentro do celular: título menos largo, para não cortar na borda */
+.ui-head__title { font-size: 1.12rem !important; letter-spacing: -.01em !important; }
+.radar__blip em { font-family: var(--font-body) !important; }
