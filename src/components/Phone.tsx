@@ -53,7 +53,7 @@ export function Phone() {
           <div className="screen screen--4">
             <div className="ui-top"><span>9:41</span><span>●●●</span></div>
             <div className="launch">
-              <div className="launch__icon"><svg viewBox="0 0 100 80" width="54" height="44"><path d="M6 76V4h17l27 31L77 4h17v30L50 76 23 45v31z" fill="#fff" /><path d="M94 40v36H77V57L59 76h-5z" fill="#061428" /></svg></div>
+              <div className="launch__icon"><svg viewBox="0 0 164 140" width="56" height="48"><path d="M0 140V0h30l60 84v40L28 38v102z" fill="#fff" /><path d="M136 0h28v48l-28 24z" fill="#fff" /><path d="M72 140l64-60 28-24v84h-28v-30l-32 30z" fill="#061428" /></svg></div>
               <div className="launch__name">Painel do gestor</div>
               <div className="launch__stars">Produtividade da equipe</div>
               <div className="launch__btn">Metas no alvo ✓</div>

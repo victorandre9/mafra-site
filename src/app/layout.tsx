@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import "@fontsource-variable/space-grotesk";
 import "@fontsource-variable/inter";
+import "@fontsource/montserrat/400.css";
+import "@fontsource/montserrat/500.css";
 import "lenis/dist/lenis.css";
 import "./globals.css";
 

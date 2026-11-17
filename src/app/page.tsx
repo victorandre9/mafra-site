@@ -3,7 +3,7 @@ import Hero3DLazy from "@/components/Hero3DLazy";
 import { Drone } from "@/components/Drone";
 import { Phone } from "@/components/Phone";
 import { SplitChars, SplitWords } from "@/components/Split";
-import { Chevron, Logo, LogoMark } from "@/components/Logo";
+import { Chevron, Logo, LogoBadge } from "@/components/Logo";
 
 const TECH = [
   "Ordens de serviço", "Força de vendas", "Logística & entregas", "Financeiro", "Checklists",
@@ -53,8 +53,8 @@ const STEPS = [
 const STATS = [
   { to: 30, suffix: "–60", unit: "dias", label: "prazo típico de implantação de um app de gestão" },
   { to: 30, suffix: "", unit: "dias", label: "de acompanhamento assistido após a entrada em uso" },
-  { to: 3, suffix: "", unit: "canais", label: "para registrar um gasto no Vo$: voz, foto do cupom e WhatsApp" },
-  { to: 100, suffix: "%", unit: "", label: "desenvolvido sob medida — do diagnóstico ao suporte" },
+  { to: 3, suffix: "", unit: "canais", label: "de registro já aplicados em produção: voz, foto e WhatsApp" },
+  { to: 100, suffix: "%", unit: "", label: "sob medida para a sua empresa — do diagnóstico ao suporte" },
 ];
 
 const ABOUT = [
@@ -77,21 +77,39 @@ const ABOUT = [
 
 const CASES = [
   {
+    cls: "p-verifica",
+    tag: "Solução empresarial · Gestão operacional",
+    title: "Verifica — Gestão Operacional Inteligente",
+    text: "Sistema sob medida para uma transportadora: checklists, frota, qualidade e RH no mesmo lugar. Indicadores clicáveis levam direto ao detalhe, e a gestão monta apresentações com as telas do próprio app.",
+    bullets: ["Checklists e frota", "Qualidade (ROQ) com indicadores", "RH, férias e documentação", "Despesas, multas e premiações", "Exporta Excel e PDF"],
+    gain: "Rotinas que viviam em planilhas e mensagens viraram um sistema único, com histórico pronto para auditoria.",
+    icon: "✅",
+    logo: "",
+    wordmark: "verifica",
+    badge: "",
+  },
+  {
     cls: "p-vos",
-    tag: "Produto próprio · Finanças pessoais com IA",
-    title: "Vo$ — controle de gastos por voz",
-    text: "Você fala o gasto ou manda a foto do cupom; a IA transcreve, extrai valor e categoria e até divide a compra entre categorias. Tudo cai no app e nos relatórios.",
-    bullets: ["Voz, foto e WhatsApp", "IA lê o cupom fiscal", "Espaço Família", "Ranking e Vo$Coins"],
+    tag: "Projeto autoral · Voz e inteligência artificial",
+    title: "Vo$ — registro por voz e foto",
+    text: "Você fala o gasto ou manda a foto do cupom; a IA transcreve, entende valor e categoria e até divide a compra entre categorias. Funciona também pelo WhatsApp.",
+    bullets: ["Voz, foto e WhatsApp", "IA lê o cupom fiscal", "Espaços compartilhados", "Relatórios e metas"],
+    gain: "A mesma tecnologia pode registrar uma visita, uma ocorrência ou uma despesa da equipe em campo — sem digitar.",
     icon: "🎙️",
+    logo: "/cases/vos-logo.webp",
+    wordmark: "",
     badge: "Vo$",
   },
   {
     cls: "p-ifluxo",
-    tag: "Produto · Em destaque",
-    title: "iFluxo",
-    text: "Case em preparação — detalhes em breve.",
-    bullets: ["Em breve"],
-    icon: "🔁",
+    tag: "Projeto autoral · Dados de movimento",
+    title: "iFluxo — confira o movimento antes de sair",
+    text: "Consulta do nível de lotação de bares, restaurantes, academias e outros estabelecimentos para escolher o melhor momento da visita.",
+    bullets: ["Quantidade de pessoas no local", "Nível de lotação", "Comparação entre estabelecimentos", "Planejamento da visita"],
+    gain: "Mostra como transformar dados de movimento em decisão: útil para capacidade, escalas e atendimento.",
+    icon: "🦉",
+    logo: "",
+    wordmark: "",
     badge: "iFluxo",
   },
 ];
@@ -129,7 +147,7 @@ export default function Home() {
       {/* PRELOADER */}
       <div className="preloader" aria-hidden="true">
         <div className="preloader__inner">
-          <div className="preloader__logo"><LogoMark size={84} /><div className="preloader__name">MAFRA</div></div>
+          <div className="preloader__logo"><LogoBadge uid="pre" size={190} /></div>
           <div className="preloader__bar"><span /></div>
           <div className="preloader__count"><span className="js-count">0</span>%</div>
         </div>
@@ -304,9 +322,9 @@ export default function Home() {
         <section className="flow" aria-labelledby="flow-title">
           <div className="flow__pin">
             <div className="container">
-              <Eyebrow>Por dentro do Vo$</Eyebrow>
+              <Eyebrow>Tecnologia aplicada</Eyebrow>
               <h2 id="flow-title" className="section-title">Da fala ao relatório, <span className="grad">em segundos.</span></h2>
-              <p className="flow__sub">Voz, inteligência artificial e uma boa experiência trabalhando juntas. É esse cuidado que levo para o app da sua empresa.</p>
+              <p className="flow__sub">Voz e inteligência artificial no lugar da digitação. Aqui, o exemplo é o registro de um gasto — na sua empresa, pode ser a visita do vendedor, a ocorrência do técnico ou o checklist do motorista.</p>
             </div>
             <div className="flow__track container">
               <svg className="flow__line" viewBox="0 0 1000 20" preserveAspectRatio="none" aria-hidden="true">
@@ -330,13 +348,31 @@ export default function Home() {
         {/* CASES */}
         <section className="work container" id="cases">
           <Eyebrow>Cases</Eyebrow>
-          <h2 className="section-title">Produtos que <span className="grad">já estão rodando</span></h2>
+          <h2 className="section-title">Tecnologia que <span className="grad">já está em uso</span></h2>
+          <p className="work__lead">Meu trabalho é resolver problemas de empresas. Estes projetos mostram, na prática, o nível de solução que levo para a sua operação.</p>
           <div className="work__grid">
             {CASES.map((c) => (
               <article key={c.title} className="project tilt" data-cursor="✦">
                 <div className={`project__media ${c.cls}`}>
                   <Chevron className="project__chev" />
-                  <div className="project__emoji">{c.icon}</div>
+                  {"wordmark" in c && c.wordmark === "verifica" ? (
+                    <span className="vf-mark" role="img" aria-label="Verifica — Gestão Operacional Inteligente">
+                      <svg viewBox="0 0 48 56" width="54" height="63" aria-hidden="true">
+                        <rect x="4" y="8" width="40" height="44" rx="6" fill="none" stroke="#3b82f6" strokeWidth="4" />
+                        <rect x="15" y="3" width="18" height="10" rx="3" fill="#0b1830" stroke="#3b82f6" strokeWidth="3" />
+                        <path d="M14 30l8 8 14-16" fill="none" stroke="#ef4444" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                      <span className="vf-mark__text">
+                        <span className="vf-mark__name">Verific<span className="vf-mark__a">A</span></span>
+                        <span className="vf-mark__sub">Gestão Operacional Inteligente</span>
+                      </span>
+                    </span>
+                  ) : c.logo ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img className="project__logo" src={c.logo} alt={`Logo ${c.badge}`} width={180} height={180} loading="lazy" />
+                  ) : (
+                    <div className="project__emoji">{c.icon}</div>
+                  )}
                   <span className="project__badge">{c.badge}</span>
                 </div>
                 <div className="project__info">
@@ -344,6 +380,7 @@ export default function Home() {
                   <h3>{c.title}</h3>
                   <p>{c.text}</p>
                   <ul>{c.bullets.map((b) => <li key={b}>{b}</li>)}</ul>
+                  <p className="project__gain"><strong>Na sua empresa:</strong> {c.gain}</p>
                 </div>
               </article>
             ))}
@@ -366,7 +403,7 @@ export default function Home() {
                 <defs><path id="circ" d="M100 100m-78 0a78 78 0 1 1 156 0a78 78 0 1 1-156 0" /></defs>
                 <text><textPath href="#circ">GESTÃO NA PRÁTICA ✦ TECNOLOGIA COM PROPÓSITO ✦ </textPath></text>
               </svg>
-              <LogoMark size={70} />
+              <LogoBadge uid="sobre" size={176} />
             </div>
             <div>
               <Eyebrow>Quem está por trás</Eyebrow>

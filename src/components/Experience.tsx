@@ -356,7 +356,7 @@ export default function Experience() {
         [".services", "Olha tudo que dá pra fazer ✨"],
         [".process", "Esse é o método MAFRA 📱"],
         [".flow", "Fala comigo que eu anoto! 🎙️"],
-        ["#cases", "Produtos de verdade, rodando 💪"],
+        ["#cases", "Tecnologia que já está em uso 💪"],
         ["#sobre", "Prazer, esse é o Victor 🤝"],
         [".contact", "Chegamos! Qual processo vamos organizar? 🚀"],
       ];
