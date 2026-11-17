@@ -375,7 +375,8 @@ export default function Experience() {
       const drone = $(".drone"), droneBody = $(".drone__body"), bubble = $(".drone__bubble"), bubbleTxt = $(".drone__bubble span");
       const altEl = $(".js-alt");
       let bubbleTl: gsap.core.Timeline | undefined;
-      function droneSay(text: string, hold = 2.6) {
+      function droneSay(text: string, hold = 4) {
+        hold = Math.max(4, hold); // pedido do Victor: toda fala do Orbe fica pelo menos 4 s na tela
         bubbleTxt.textContent = text;
         bubbleTl?.kill();
         // o balão nunca sai da tela: mede no tamanho final e empurra para dentro
