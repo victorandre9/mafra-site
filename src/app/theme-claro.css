@@ -38,7 +38,7 @@ body::after { opacity: .02 !important; }
 .marquee i { color: #3ddc84 !important; }
 .services, .stats, .about { background: linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,.65) 12%, rgba(255,255,255,.65) 88%, rgba(255,255,255,0)); }
 .manifesto__text em { color: #1b8f52 !important; }
-.manifesto__text .word { opacity: .22; }
+.manifesto__text .word { opacity: .32; }
 
 /* cards */
 .card, .project, .about__item { background: #fff !important; border: 1px solid rgba(13, 44, 82, .08) !important; box-shadow: 0 14px 40px rgba(13, 44, 82, .07); }
@@ -609,3 +609,5 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
   @keyframes stepin-suave { from { opacity: 0; transform: translateY(10px); filter: blur(2px); } to { opacity: 1; transform: none; filter: none; } }
 }
 .step { transition: opacity .8s cubic-bezier(.22, 1, .36, 1), background .6s, box-shadow .6s !important; }
+/* celular: vão entre o parágrafo e os botões do topo com altura para o balão do Orbe caber no meio */
+@media (max-width: 760px) { .hero__ctas { margin-top: 74px !important; } }
