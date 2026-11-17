@@ -121,7 +121,7 @@ function PointSphere({ mobile, energy }: { mobile: boolean; energy: React.RefObj
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
         <bufferAttribute attach="attributes-color" args={[colors, 3]} />
       </bufferGeometry>
-      <pointsMaterial size={mobile ? 0.045 : 0.035} vertexColors transparent opacity={0.95} sizeAttenuation depthWrite={false} blending={THREE.AdditiveBlending} />
+      <pointsMaterial size={mobile ? 0.045 : 0.035} vertexColors transparent opacity={0.75} sizeAttenuation depthWrite={false} blending={THREE.AdditiveBlending} />
     </points>
   );
 }
@@ -188,7 +188,8 @@ function Orb({ mobile, wrap }: { mobile: boolean; wrap: React.RefObject<HTMLDivE
     camera.position.y = Math.cos(t * 0.11) * 0.18;
     camera.lookAt(0, 0, 0);
 
-    if (wrap.current) wrap.current.style.opacity = c.o.toFixed(3);
+    // fundo discreto: a malha fica translúcida para não competir com o conteúdo
+    if (wrap.current) wrap.current.style.opacity = (c.o * 0.5).toFixed(3);
     // posição do fundo na tela (frações da viewport): a Orbe usa para não ficar em cima dele
     (window as Window & { __mafraBg?: { x: number; y: number; s: number } }).__mafraBg = {
       x: 0.5 + g.position.x / viewport.width, y: 0.5 - g.position.y / viewport.height, s: g.scale.x * (2.4 / viewport.height),
