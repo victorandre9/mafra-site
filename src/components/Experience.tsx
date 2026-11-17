@@ -6,8 +6,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 import Lenis from "lenis";
 
-// >>> Coloque aqui seu número de WhatsApp (DDI + DDD + número, só dígitos). Ex: "5511999999999"
-const WHATSAPP = "5531996693991";
 
 /**
  * Orquestra todas as animações da página: preloader, smooth scroll, cursor,
@@ -315,15 +313,8 @@ export default function Experience() {
 
       /* ---------- Contato ---------- */
       gsap.from(".contact__title .char", { yPercent: 120, stagger: 0.03, duration: 1, ease: "expo.out", scrollTrigger: { trigger: ".contact", start: "top 65%" } });
-      gsap.from(".form .field, .form .btn", { y: 40, opacity: 0, stagger: 0.08, duration: 1, ease: "expo.out", scrollTrigger: { trigger: ".form", start: "top 85%" } });
-      on($(".form"), "submit", (e: SubmitEvent) => {
-        e.preventDefault();
-        const val = (id: string) => ($(id) as HTMLInputElement).value;
-        const company = val("#f-company");
-        const msg = `Olá, Victor! Meu nome é ${val("#f-name")}${company ? ` (${company})` : ""}.\n\n${val("#f-msg")}`;
-        window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`, "_blank", "noopener");
-        droneSay("Mensagem a caminho! 🚀", 3);
-      });
+      gsap.from(".contact__actions > *, .contact__social > *", { y: 40, opacity: 0, stagger: 0.1, duration: 1, ease: "expo.out", scrollTrigger: { trigger: ".contact__actions", start: "top 90%" } });
+      $$(".js-whatsapp").forEach((a) => on(a, "click", () => droneSay("Mensagem a caminho! 🚀", 3)));
 
       /* =====================================================
          DRONE — voa pela tela acompanhando a rolagem
@@ -378,7 +369,7 @@ export default function Experience() {
               const dx = x - lastX;
               lastX = x;
               gsap.to(droneBody, { rotation: gsap.utils.clamp(-28, 28, dx * 1.4), duration: 0.5, overwrite: "auto" });
-              drone.classList.toggle("is-right", x > window.innerWidth * 0.55);
+              drone.classList.toggle("is-right", x > window.innerWidth * 0.5);
               altEl.textContent = String(120 + Math.round((flyTween?.scrollTrigger?.progress ?? 0) * 880)).padStart(3, "0");
             },
           },

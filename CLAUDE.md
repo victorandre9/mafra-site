@@ -32,7 +32,8 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
 
 ## Pendências conhecidas
 
-- Links de Instagram/LinkedIn no rodapé e foto do Victor na seção Sobre.
+- Foto do Victor na seção Sobre.
+- Contato e links (WhatsApp, Instagram, LinkedIn) moram em `src/lib/contato.ts`.
 
 ## Vercel: versão oficial presa
 
