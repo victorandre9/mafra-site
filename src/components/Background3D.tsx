@@ -17,14 +17,14 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 type Stage = { sel: string; d: [number, number, number, number]; m: [number, number, number, number] };
 // [x, y, escala, opacidade] — x/y em frações da viewport (0 = centro). d = desktop, m = celular.
 const STAGES: Stage[] = [
-  { sel: ".hero", d: [0.27, 0.0, 1.0, 1], m: [0.18, 0.27, 0.62, 0.95] },
-  { sel: ".manifesto", d: [-0.3, 0.02, 0.8, 0.55], m: [0.0, -0.28, 0.5, 0.35] },
-  { sel: ".services", d: [0.38, 0.3, 0.42, 0.75], m: [0.28, 0.36, 0.34, 0.55] },
-  { sel: ".process", d: [-0.52, -0.36, 0.45, 0.2], m: [-0.36, 0.44, 0.26, 0.2] },
+  { sel: ".hero", d: [0.27, 0.0, 1.0, 0.35], m: [0.18, 0.27, 0.62, 0.3] },
+  { sel: ".manifesto", d: [-0.3, 0.02, 0.8, 0.35], m: [0.0, -0.28, 0.5, 0.3] },
+  { sel: ".services", d: [0.38, 0.3, 0.42, 0.35], m: [0.28, 0.36, 0.34, 0.3] },
+  { sel: ".process", d: [-0.52, -0.36, 0.45, 0.35], m: [-0.36, 0.44, 0.26, 0.3] },
   { sel: ".stats", d: [0.0, 0.0, 1.35, 0.35], m: [0.0, 0.0, 0.85, 0.3] },
-  { sel: "#cases", d: [-0.42, 0.05, 0.62, 0.45], m: [-0.3, -0.36, 0.4, 0.3] },
-  { sel: "#sobre", d: [0.36, -0.05, 0.75, 0.6], m: [0.25, 0.33, 0.45, 0.45] },
-  { sel: ".contact", d: [0.3, 0.0, 1.05, 0.9], m: [0.05, 0.28, 0.6, 0.6] },
+  { sel: "#cases", d: [-0.42, 0.05, 0.62, 0.35], m: [-0.3, -0.36, 0.4, 0.3] },
+  { sel: "#sobre", d: [0.36, -0.05, 0.75, 0.35], m: [0.25, 0.33, 0.45, 0.3] },
+  { sel: ".contact", d: [0.3, 0.0, 1.05, 0.35], m: [0.05, 0.28, 0.6, 0.3] },
 ];
 
 const smooth = (t: number) => t * t * (3 - 2 * t);
@@ -93,11 +93,11 @@ function Stars({ count }: { count: number }) {
  */
 
 /**
- * Malha de pontos "Pérola com núcleo esmeralda" (escolha do Victor, 17/11/2026): cada ponto tem o
- * centro verde e a borda pérola, mais transparente que a anterior para não brigar com o texto.
+ * Malha de pontos no estilo original (pontinho verde → azul). O Victor testou a versão de duas cores
+ * e preferiu esta, com a transparência suave da seção de números em todo o trajeto (ver STAGES).
  * window.__mafraFundo sobrescreve (só para testar outras cores, sem publicar).
  */
-const MALHA_PEROLA = { a: "#18a057", b: "#18a057", anel: "#7fcfa3", dentro: "#14a85a", fora: "#f2f5f7", bead: 0.5, opMul: 0.28, tam: 2.7, normal: true };
+const MALHA_PEROLA = { a: "#3ddc84", b: "#4f9bdc", anel: "#3ddc84", opMul: 0.5 }; // estilo original (Victor: "deixa do jeito que está")
 type TemaMalha = { a: string; b: string; anel: string; perola?: number; bead?: number; opMul?: number; tam?: number; normal?: boolean; dentro?: string; fora?: string };
 function temaMalha(): TemaMalha {
   const t = typeof window !== "undefined" ? (window as unknown as { __mafraFundo?: TemaMalha }).__mafraFundo : undefined;
@@ -260,7 +260,7 @@ function Orb({ mobile, wrap }: { mobile: boolean; wrap: React.RefObject<HTMLDivE
         {/* malha fina de ligação por trás dos pontos */}
         <lineSegments>
           <wireframeGeometry args={[new THREE.IcosahedronGeometry(1.6, 3)]} />
-          <lineBasicMaterial color={temaMalha()?.anel ?? "#3ddc84"} transparent opacity={temaMalha() ? 0.22 : 0.1} />
+          <lineBasicMaterial color={temaMalha()?.anel ?? "#3ddc84"} transparent opacity={0.1} />
         </lineSegments>
         <mesh ref={ring}>
           <torusGeometry args={[2.25, 0.006, 6, 200]} />
