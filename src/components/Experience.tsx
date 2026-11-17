@@ -239,7 +239,7 @@ export default function Experience() {
       gsap
         .timeline({
           scrollTrigger: {
-            trigger: ".process", pin: ".process__pin", start: "top top", end: "+=300%", scrub: 1,
+            trigger: ".process", pin: ".process__pin", start: "top top", end: () => (window.innerWidth <= 900 ? "+=160%" : "+=240%"), scrub: 1,
             onUpdate: (self) => {
               setStep(Math.min(3, Math.floor(self.progress * 4)));
               gsap.set(".process__bar span", { scaleX: self.progress });
