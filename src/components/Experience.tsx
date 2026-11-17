@@ -113,8 +113,14 @@ export default function Experience() {
         rt.set(track, { yPercent: 0 });
       }
 
-      /* ---------- Parallax do hero ---------- */
+      /* ---------- Parallax do hero + chevrons da marca ---------- */
       if (!reduce) {
+        gsap.from(".hero .chev", { x: 260, opacity: 0, duration: 1.6, ease: "expo.out", stagger: 0.12, delay: 2.6 });
+        gsap.to(".chev--big", { xPercent: -25, scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
+        gsap.to(".chev--mid", { xPercent: -80, scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
+        gsap.to(".chev--small", { xPercent: 120, scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
+        gsap.to(".chev--mid", { y: -16, repeat: -1, yoyo: true, duration: 2.2, ease: "sine.inOut" });
+        gsap.fromTo(".chev--contact", { xPercent: 40 }, { xPercent: -10, scrollTrigger: { trigger: ".contact", start: "top bottom", end: "bottom bottom", scrub: true } });
         gsap.to(".hero__glow--a", { yPercent: 40, scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
         gsap.to(".hero__content", { y: 120, opacity: 0.2, scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
       }
@@ -204,6 +210,31 @@ export default function Experience() {
         .fromTo(".orbit--1", { scale: 0.85 }, { scale: 1.1, ease: "none", duration: 1 }, 0)
         .fromTo(".float-chip", { y: 40 }, { y: -60, stagger: 0.1, ease: "none", duration: 0.9 }, 0);
 
+      /* ---------- Fluxo do pedido: linha se desenha, pacote viaja, setores acendem ---------- */
+      const nodes = $$(".flow__node");
+      const desktopFlow = window.innerWidth > 860;
+      const flowTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".flow",
+          pin: desktopFlow ? ".flow__pin" : false,
+          start: desktopFlow ? "top top" : "top 70%",
+          end: desktopFlow ? "+=180%" : "bottom 60%",
+          scrub: 1,
+          onUpdate: (self) => {
+            const n = Math.max(1, Math.round(self.progress * nodes.length));
+            nodes.forEach((el, k) => el.classList.toggle("is-on", k < n));
+          },
+        },
+      });
+      flowTl
+        .to(".flow__line-fg", { strokeDashoffset: 0, ease: "none", duration: 1 }, 0)
+        .to(".flow__packet", { x: () => $(".flow__line").getBoundingClientRect().width - 30, ease: "none", duration: 1 }, 0)
+        .to(".flow__packet", { y: -10, rotation: 8, yoyo: true, repeat: 7, ease: "sine.inOut", duration: 0.125 }, 0);
+
+      /* ---------- Sobre ---------- */
+      gsap.from(".about__badge", { scale: 0.6, rotation: -90, opacity: 0, duration: 1.4, ease: "expo.out", scrollTrigger: { trigger: ".about", start: "top 75%" } });
+      gsap.from(".about__item", { y: 70, opacity: 0, stagger: 0.12, duration: 1.1, ease: "expo.out", scrollTrigger: { trigger: ".about__grid", start: "top 85%" } });
+
       /* ---------- Contadores ---------- */
       $$(".js-counter").forEach((el) => {
         const to = Number(el.dataset.to);
@@ -231,7 +262,8 @@ export default function Experience() {
       on($(".form"), "submit", (e: SubmitEvent) => {
         e.preventDefault();
         const val = (id: string) => ($(id) as HTMLInputElement).value;
-        const msg = `Olá! Meu nome é ${val("#f-name")}.\nContato: ${val("#f-contact")}\n\n${val("#f-msg")}`;
+        const company = val("#f-company");
+        const msg = `Olá, Victor! Meu nome é ${val("#f-name")}${company ? ` (${company})` : ""}.\n\n${val("#f-msg")}`;
         window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`, "_blank", "noopener");
         droneSay("Mensagem a caminho! 🚀", 3);
       });
@@ -322,10 +354,11 @@ export default function Experience() {
       // Falas do drone em cada seção
       const lines: Array<[string, string]> = [
         [".services", "Olha tudo que dá pra fazer ✨"],
-        [".process", "Segue comigo, do zero até a loja 📱"],
-        [".stats", "Números que falam por si 📈"],
-        ["#projetos", "Qual desses é o seu? 🤔"],
-        [".contact", "Chegamos! Bora tirar seu app do papel? 🚀"],
+        [".process", "Esse é o método MAFRA 📱"],
+        [".flow", "Fala comigo que eu anoto! 🎙️"],
+        ["#cases", "Produtos de verdade, rodando 💪"],
+        ["#sobre", "Prazer, esse é o Victor 🤝"],
+        [".contact", "Chegamos! Qual processo vamos organizar? 🚀"],
       ];
       lines.forEach(([sel, text]) => ScrollTrigger.create({ trigger: sel, start: "top 55%", onEnter: () => droneSay(text) }));
     });

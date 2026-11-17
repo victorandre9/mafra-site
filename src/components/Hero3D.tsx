@@ -6,10 +6,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 
 const ICONS = [
-  { color: "#c6ff3d", radius: 2.3, speed: 0.35, y: 0.6, size: 0.42, phase: 0 },
-  { color: "#22d3ee", radius: 2.6, speed: 0.28, y: -0.7, size: 0.5, phase: 1.3 },
-  { color: "#ff5ca8", radius: 2.1, speed: 0.42, y: -0.1, size: 0.36, phase: 2.6 },
-  { color: "#ffd23d", radius: 2.8, speed: 0.22, y: 1.0, size: 0.32, phase: 3.9 },
+  { color: "#3ddc84", radius: 2.3, speed: 0.35, y: 0.6, size: 0.42, phase: 0 },
+  { color: "#3ddc84", radius: 2.6, speed: 0.28, y: -0.7, size: 0.5, phase: 1.3 },
+  { color: "#4f9bdc", radius: 2.1, speed: 0.42, y: -0.1, size: 0.36, phase: 2.6 },
+  { color: "#8ec5ff", radius: 2.8, speed: 0.22, y: 1.0, size: 0.32, phase: 3.9 },
   { color: "#ffffff", radius: 2.45, speed: 0.31, y: -1.1, size: 0.3, phase: 5.1 },
 ];
 
@@ -53,7 +53,7 @@ function Stars({ count }: { count: number }) {
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
-      <pointsMaterial size={0.035} color="#c9c2ff" transparent opacity={0.8} sizeAttenuation depthWrite={false} />
+      <pointsMaterial size={0.035} color="#bfe8d0" transparent opacity={0.8} sizeAttenuation depthWrite={false} />
     </points>
   );
 }
@@ -65,9 +65,9 @@ function Scene({ mobile }: { mobile: boolean }) {
 
   // Posição responsiva: à direita no desktop, no topo (menor) no celular.
   const wide = viewport.width > 7;
-  const baseX = wide ? viewport.width * 0.22 : viewport.width * 0.18;
+  const baseX = wide ? viewport.width * 0.28 : viewport.width * 0.22;
   const baseY = wide ? 0 : viewport.height * 0.26;
-  const baseScale = wide ? 1 : 0.62;
+  const baseScale = wide ? 0.88 : 0.55;
 
   useFrame((state, dt) => {
     const g = group.current;
@@ -89,11 +89,11 @@ function Scene({ mobile }: { mobile: boolean }) {
       <Float speed={1.6} rotationIntensity={0.6} floatIntensity={0.9}>
         <mesh>
           <icosahedronGeometry args={[1.25, mobile ? 12 : 32]} />
-          <MeshDistortMaterial color="#6b4dff" roughness={0.12} metalness={0.55} distort={0.38} speed={1.8} />
+          <MeshDistortMaterial color="#1d5c9a" emissive="#0f4a3a" emissiveIntensity={0.35} roughness={0.1} metalness={0.45} distort={0.38} speed={1.8} />
         </mesh>
         <mesh ref={shell} scale={1.75}>
           <icosahedronGeometry args={[1, 1]} />
-          <meshBasicMaterial color="#22d3ee" wireframe transparent opacity={0.18} />
+          <meshBasicMaterial color="#3ddc84" wireframe transparent opacity={0.18} />
         </mesh>
       </Float>
       {ICONS.slice(0, mobile ? 3 : ICONS.length).map((ic) => (
@@ -132,10 +132,10 @@ export default function Hero3D() {
         eventPrefix="client"
       >
         <PerformanceMonitor onDecline={() => setDpr(1)} />
-        <ambientLight intensity={0.35} />
+        <ambientLight intensity={0.6} />
         <directionalLight position={[4, 5, 5]} intensity={1.6} />
-        <pointLight position={[-4, -2, 3]} intensity={30} color="#22d3ee" />
-        <pointLight position={[3, -3, 2]} intensity={25} color="#ff5ca8" />
+        <pointLight position={[-4, -2, 3]} intensity={30} color="#3ddc84" />
+        <pointLight position={[3, -3, 2]} intensity={25} color="#4f9bdc" />
         <Stars count={mobile ? 250 : 700} />
         <Scene mobile={mobile} />
       </Canvas>

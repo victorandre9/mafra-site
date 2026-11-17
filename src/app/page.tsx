@@ -3,69 +3,113 @@ import Hero3DLazy from "@/components/Hero3DLazy";
 import { Drone } from "@/components/Drone";
 import { Phone } from "@/components/Phone";
 import { SplitChars, SplitWords } from "@/components/Split";
+import { Chevron, Logo, LogoMark } from "@/components/Logo";
 
-const TECH = ["Flutter", "React Native", "Swift", "Kotlin", "Firebase", "Node.js", "Supabase", "Figma", "IA & LLMs"];
+const TECH = [
+  "Ordens de serviço", "Força de vendas", "Logística & entregas", "Financeiro", "Checklists",
+  "Dashboards", "Integração com ERP", "Gestão de ativos", "ISO 9001", "IA aplicada",
+];
 
 const SERVICES = [
   {
-    title: "Consultoria estratégica",
-    text: "Valido sua ideia, defino escopo, prioridades e o caminho tecnológico mais inteligente para o seu orçamento.",
-    tags: ["Discovery & MVP", "Roadmap de produto", "Escolha de stack"],
-    icon: <><circle cx="24" cy="24" r="18" /><path d="M24 12v12l8 6" /></>,
+    title: "Diagnóstico & processos",
+    text: "Mapeio rotinas, gargalos e informações que faltam ao gestor. Organizo fluxos, padrões e responsabilidades antes de qualquer linha de código.",
+    tags: ["Mapeamento de rotinas", "Padronização", "Melhoria contínua"],
+    icon: <><circle cx="21" cy="21" r="13" /><path d="M31 31l11 11" /><path d="M15 21h12M21 15v12" /></>,
   },
   {
-    title: "UX/UI Design",
-    text: "Interfaces lindas e intuitivas, prototipadas e testadas antes de escrever uma linha de código.",
-    tags: ["Wireframes", "Design System", "Protótipo navegável"],
-    icon: <><rect x="8" y="8" width="32" height="32" rx="8" /><path d="M8 20h32M20 20v20" /></>,
+    title: "Aplicativos de gestão sob medida",
+    text: "Sistemas no celular e no computador, desenhados para a rotina real da sua equipe — com acesso por perfil e a informação certa para cada função.",
+    tags: ["Web + mobile", "Perfis de acesso", "Uso em campo"],
+    icon: <><rect x="14" y="4" width="20" height="40" rx="5" /><path d="M21 38h6M19 14h10M19 20h10M19 26h6" /></>,
   },
   {
-    title: "Desenvolvimento mobile",
-    text: "Apps nativos e multiplataforma (iOS e Android) rápidos, estáveis e prontos para escalar.",
-    tags: ["Flutter / React Native", "Swift / Kotlin", "Publicação nas lojas"],
-    icon: <><rect x="14" y="4" width="20" height="40" rx="5" /><path d="M21 38h6" /></>,
+    title: "Integração com ERP & sistemas",
+    text: "O app complementa o que você já usa. Pedidos, crédito e faturamento continuam no ERP; a operação ganha uma interface ágil conectada por API.",
+    tags: ["API autenticada", "ERP existente", "Dados centralizados"],
+    icon: <><rect x="4" y="16" width="14" height="16" rx="3" /><rect x="30" y="16" width="14" height="16" rx="3" /><path d="M18 24h12M24 20l4 4-4 4" /></>,
   },
   {
-    title: "Integrações & Back-end",
-    text: "APIs, pagamentos, notificações, login social, painéis administrativos e integrações com seu sistema.",
-    tags: ["APIs REST/GraphQL", "Pagamentos & PIX", "Cloud & Firebase"],
-    icon: <><path d="M6 30l10-10 8 8 18-18" /><path d="M32 10h10v10" /></>,
+    title: "Indicadores & dashboards",
+    text: "Registros, alertas e painéis em tempo útil. Sócios e gestores acompanham equipes, pendências, recebíveis e resultados sem depender de mensagens.",
+    tags: ["Painéis por perfil", "Alertas", "Relatórios"],
+    icon: <><path d="M6 42V6M6 42h36" /><path d="M14 32l8-9 7 6 11-14" /></>,
   },
   {
-    title: "IA & Automação",
-    text: "Chatbots, assistentes inteligentes e automações que colocam inteligência artificial para trabalhar no seu app.",
-    tags: ["Assistentes com LLM", "Automação de processos", "Análise de dados"],
-    icon: <><circle cx="24" cy="24" r="6" /><path d="M24 4v8M24 36v8M4 24h8M36 24h8M10 10l6 6M32 32l6 6M38 10l-6 6M16 32l-6 6" /></>,
+    title: "Implantação & suporte",
+    text: "Configuração, carga inicial, treinamento da equipe e acompanhamento dos primeiros 30 dias. Depois, hospedagem, backups, manutenção e suporte.",
+    tags: ["Treinamento", "30 dias assistidos", "Suporte contínuo"],
+    icon: <><path d="M24 4l16 6v12c0 10-7 18-16 22C15 40 8 32 8 22V10z" /><path d="M17 24l5 5 9-10" /></>,
   },
 ];
 
 const STEPS = [
-  ["Descoberta", "Entendo seu negócio, público e objetivos. Saímos com escopo claro e um MVP enxuto."],
-  ["Design", "Protótipo navegável para você testar no celular antes de investir em código."],
-  ["Desenvolvimento", "Sprints semanais com entregas que você acompanha e testa em tempo real."],
-  ["Lançamento & evolução", "Publicação nas lojas, métricas e melhorias contínuas para seu app crescer."],
+  ["Diagnóstico das rotinas", "Entendo atividades, dificuldades, gargalos e as informações que faltam ao gestor."],
+  ["Organização dos processos", "Defino fluxos, padrões, responsabilidades e oportunidades de melhoria."],
+  ["Indicadores e controles digitais", "Crio registros, alertas, dashboards e informações em tempo útil — no app."],
+  ["Gestão de desempenho", "Acompanhamos equipes, produtividade, qualidade e a evolução dos resultados."],
 ];
 
 const STATS = [
-  { to: 40, suffix: "+", label: "projetos digitais entregues" },
-  { to: 98, suffix: "%", label: "clientes satisfeitos" },
-  { to: 8, suffix: " sem", label: "tempo médio até o MVP" },
-  { to: 24, suffix: "/7", label: "monitoramento pós-lançamento" },
+  { to: 30, suffix: "–60", unit: "dias", label: "prazo típico de implantação de um app de gestão" },
+  { to: 30, suffix: "", unit: "dias", label: "de acompanhamento assistido após a entrada em uso" },
+  { to: 3, suffix: "", unit: "canais", label: "para registrar um gasto no Vo$: voz, foto do cupom e WhatsApp" },
+  { to: 100, suffix: "%", unit: "", label: "desenvolvido sob medida — do diagnóstico ao suporte" },
 ];
 
-const PROJECTS = [
-  { cls: "p-delivery", emoji: "🛵", title: "Delivery & marketplace", text: "Pedidos, rastreio em tempo real, pagamentos" },
-  { cls: "p-health", emoji: "🩺", title: "Saúde & agendamentos", text: "Agenda, teleconsulta, lembretes" },
-  { cls: "p-fin", emoji: "💳", title: "Fintech & carteiras", text: "PIX, extratos, cartões, segurança" },
-  { cls: "p-fit", emoji: "🏋️", title: "Fitness & bem-estar", text: "Treinos, gamificação, wearables" },
-  { cls: "p-edu", emoji: "🎓", title: "Educação", text: "Cursos, quizzes, progresso do aluno" },
-  { cls: "p-biz", emoji: "📊", title: "Gestão interna", text: "Apps para equipes, campo e operações" },
+const ABOUT = [
+  {
+    n: "01",
+    title: "Gestão e liderança",
+    text: "Atuação como gestor e sócio empresarial: liderança de equipes, gestão de recursos, custos e processos, metas e planejamento estratégico.",
+  },
+  {
+    n: "02",
+    title: "Qualidade e processos",
+    text: "Mapeamento de rotinas, melhoria contínua, padronização, sistemas da qualidade e atuação em auditorias ISO 9001.",
+  },
+  {
+    n: "03",
+    title: "Formação e tecnologia",
+    text: "Processos Gerenciais, MBA em Gestão Empresarial (em curso), Técnico em Informática Gerencial e desenvolvimento de aplicativos.",
+  },
+];
+
+const CASES = [
+  {
+    cls: "p-vos",
+    tag: "Produto próprio · Finanças pessoais com IA",
+    title: "Vo$ — controle de gastos por voz",
+    text: "Você fala o gasto ou manda a foto do cupom; a IA transcreve, extrai valor e categoria e até divide a compra entre categorias. Tudo cai no app e nos relatórios.",
+    bullets: ["Voz, foto e WhatsApp", "IA lê o cupom fiscal", "Espaço Família", "Ranking e Vo$Coins"],
+    icon: "🎙️",
+    badge: "Vo$",
+  },
+  {
+    cls: "p-ifluxo",
+    tag: "Produto · Em destaque",
+    title: "iFluxo",
+    text: "Case em preparação — detalhes em breve.",
+    bullets: ["Em breve"],
+    icon: "🔁",
+    badge: "iFluxo",
+  },
+];
+
+const FLOW = [
+  ["Você fala", "“Gastei 42 no mercado”"],
+  ["Transcrição", "O áudio vira texto"],
+  ["IA entende", "Valor, categoria e data"],
+  ["Cupom dividido", "Cada item na categoria certa"],
+  ["Você confere", "Nada é salvo sem ok"],
+  ["Relatórios", "Mês, tendências e orçamento"],
 ];
 
 const NAV = [
   ["#servicos", "Serviços"],
-  ["#processo", "Processo"],
-  ["#projetos", "Projetos"],
+  ["#metodo", "Método"],
+  ["#cases", "Cases"],
+  ["#sobre", "Sobre"],
   ["#contato", "Contato"],
 ];
 
@@ -85,7 +129,7 @@ export default function Home() {
       {/* PRELOADER */}
       <div className="preloader" aria-hidden="true">
         <div className="preloader__inner">
-          <div className="preloader__logo">mafra<span>.</span></div>
+          <div className="preloader__logo"><LogoMark size={84} /><div className="preloader__name">MAFRA</div></div>
           <div className="preloader__bar"><span /></div>
           <div className="preloader__count"><span className="js-count">0</span>%</div>
         </div>
@@ -101,7 +145,7 @@ export default function Home() {
 
       {/* HEADER */}
       <header className="header">
-        <a href="#top" className="logo" data-cursor="Topo">mafra<span>.</span></a>
+        <a href="#top" className="logo" data-cursor="Topo" aria-label="MAFRA Consultoria & Tecnologia"><Logo /></a>
         <nav className="nav">
           {NAV.map(([href, label]) => (
             <a key={href} href={href} className="nav__link">{label}</a>
@@ -123,29 +167,37 @@ export default function Home() {
         <section className="hero">
           <div className="hero__glow hero__glow--a" />
           <div className="hero__glow hero__glow--b" />
+          <div className="hero__chevrons" aria-hidden="true">
+            <Chevron className="chev chev--big" />
+            <Chevron className="chev chev--mid" />
+            <Chevron className="chev chev--small" />
+          </div>
           <Hero3DLazy />
           <div className="container hero__content">
-            <p className="eyebrow reveal-up"><span className="dot" /> Consultoria &amp; implementação de aplicativos</p>
+            <p className="pill reveal-up">Consultoria &amp; implementação de aplicativos</p>
             <h1 className="hero__title">
               <span className="line"><SplitChars text="Transformo" /></span>
               <span className="line">
-                <SplitChars text="ideias em" />{" "}
+                <SplitChars text="processos em" />{" "}
+              </span>
+              <span className="line">
                 <span className="rotator">
                   <span className="rotator__track">
-                    <span>apps</span><span>produtos</span><span>resultados</span><span>apps</span>
+                    <span>aplicativos</span><span>controle</span><span>resultados</span><span>aplicativos</span>
                   </span>
                 </span>
               </span>
-              <span className="line"><SplitChars text="que se movem." className="outline" /></span>
+              <span className="line"><SplitChars text="que movem." className="outline" /></span>
             </h1>
             <p className="hero__sub reveal-up">
-              Do primeiro rascunho ao app publicado na App Store e Google Play. Estratégia, design e código, com a
-              mesma obsessão por detalhe que você está vendo nesta página.
+              Entendo a rotina da sua empresa, organizo os processos e desenvolvo o aplicativo de gestão que a sua
+              equipe usa de verdade — no celular e no computador, integrado ao que você já tem.
             </p>
             <div className="hero__ctas reveal-up">
-              <a href="#contato" className="btn magnetic" data-cursor="Bora"><span>Quero meu app</span><i className="btn__arrow">→</i></a>
-              <a href="#processo" className="btn btn--ghost magnetic" data-cursor="Ver"><span>Como eu trabalho</span></a>
+              <a href="#contato" className="btn magnetic" data-cursor="Bora"><span>Agendar diagnóstico</span><i className="btn__arrow">→</i></a>
+              <a href="#metodo" className="btn btn--ghost magnetic" data-cursor="Ver"><span>Conhecer o método</span></a>
             </div>
+            <p className="hero__tagline reveal-up"><span className="hero__rule" />Da necessidade operacional à solução digital.</p>
           </div>
           <div className="hero__scroll">
             <span>role para voar</span>
@@ -154,7 +206,7 @@ export default function Home() {
         </section>
 
         {/* MARQUEE */}
-        <section className="marquee" aria-label="Tecnologias">
+        <section className="marquee" aria-label="O que digitalizamos">
           <div className="marquee__track">
             {[0, 1].map((g) => (
               <div key={g} className="marquee__group" aria-hidden={g === 1}>
@@ -171,11 +223,11 @@ export default function Home() {
         {/* MANIFESTO */}
         <section className="manifesto container">
           <p className="manifesto__text">
-            <SplitWords text="Um bom aplicativo não é só bonito. Ele" />{" "}
-            <em><SplitWords text="resolve um problema real," /></em>{" "}
-            <SplitWords text="encanta quem usa e" />{" "}
-            <em><SplitWords text="gera retorno" /></em>{" "}
-            <SplitWords text="para quem investe. Meu trabalho é unir negócio, design e tecnologia para que o seu app nasça certo, desde o primeiro clique." />
+            <SplitWords text="Sistema bom não é o mais bonito. É o que" />{" "}
+            <em><SplitWords text="nasce da rotina real," /></em>{" "}
+            <SplitWords text="elimina retrabalho e coloca" />{" "}
+            <em><SplitWords text="a informação certa" /></em>{" "}
+            <SplitWords text="nas mãos de quem decide. Entendemos o negócio. Transformamos processos. Desenvolvemos soluções." />
           </p>
         </section>
 
@@ -184,7 +236,7 @@ export default function Home() {
           <div className="services__pin">
             <div className="services__head container">
               <Eyebrow>Serviços</Eyebrow>
-              <h2 className="section-title">O que eu faço <span className="grad">por você</span></h2>
+              <h2 className="section-title">Gestão na prática. <span className="grad">Tecnologia com propósito.</span></h2>
             </div>
             <div className="services__track">
               {SERVICES.map((s, i) => (
@@ -197,21 +249,21 @@ export default function Home() {
                 </article>
               ))}
               <article className="card card--cta">
-                <h3>Tem um desafio diferente?</h3>
-                <p>Bora conversar. Se tem tela, tem jeito.</p>
+                <h3>Qual é o gargalo da sua operação?</h3>
+                <p>Me conta. O diagnóstico é o primeiro passo — e a conversa é sem compromisso.</p>
                 <a href="#contato" className="btn magnetic" data-cursor="Bora"><span>Conversar</span><i className="btn__arrow">→</i></a>
               </article>
             </div>
           </div>
         </section>
 
-        {/* PROCESSO */}
-        <section className="process" id="processo">
+        {/* MÉTODO (celular 3D pinado) */}
+        <section className="process" id="metodo">
           <div className="process__pin">
             <div className="container process__grid">
               <div className="process__text">
-                <Eyebrow>Processo</Eyebrow>
-                <h2 className="section-title">Da ideia à <span className="grad">loja</span></h2>
+                <Eyebrow>Metodologia MAFRA</Eyebrow>
+                <h2 className="section-title">Programa de <span className="grad">Eficiência Operacional</span></h2>
                 <div className="steps">
                   {STEPS.map(([t, d], i) => (
                     <div key={t} className={`step${i === 0 ? " is-active" : ""}`}>
@@ -221,14 +273,15 @@ export default function Home() {
                   ))}
                 </div>
                 <div className="process__bar"><span /></div>
+                <p className="process__note">Dois resultados: <strong>reduzir desperdícios</strong> e <strong>criar condições para crescer</strong>.</p>
               </div>
               <div className="process__stage">
                 <div className="orbit orbit--1"><span /></div>
                 <div className="orbit orbit--2"><span /></div>
                 <Phone />
-                <div className="float-chip chip--a">⚡ 60fps</div>
-                <div className="float-chip chip--b">🔒 Seguro</div>
-                <div className="float-chip chip--c">☁️ Cloud</div>
+                <div className="float-chip chip--a">📊 Indicadores</div>
+                <div className="float-chip chip--b">🔒 Acesso por perfil</div>
+                <div className="float-chip chip--c">🔗 Integra ao ERP</div>
               </div>
             </div>
           </div>
@@ -238,46 +291,124 @@ export default function Home() {
         <section className="stats container">
           {STATS.map((s) => (
             <div key={s.label} className="stat">
-              <div className="stat__n"><span className="js-counter" data-to={s.to}>0</span>{s.suffix}</div>
+              <div className="stat__n">
+                <span className="js-counter" data-to={s.to}>0</span>{s.suffix}
+                <small>{s.unit}</small>
+              </div>
               <p>{s.label}</p>
             </div>
           ))}
         </section>
 
-        {/* PROJETOS */}
-        <section className="work container" id="projetos">
-          <Eyebrow>Projetos</Eyebrow>
-          <h2 className="section-title">Tipos de app que <span className="grad">eu construo</span></h2>
+        {/* FLUXO DO PEDIDO */}
+        <section className="flow" aria-labelledby="flow-title">
+          <div className="flow__pin">
+            <div className="container">
+              <Eyebrow>Por dentro do Vo$</Eyebrow>
+              <h2 id="flow-title" className="section-title">Da fala ao relatório, <span className="grad">em segundos.</span></h2>
+              <p className="flow__sub">Voz, inteligência artificial e uma boa experiência trabalhando juntas. É esse cuidado que levo para o app da sua empresa.</p>
+            </div>
+            <div className="flow__track container">
+              <svg className="flow__line" viewBox="0 0 1000 20" preserveAspectRatio="none" aria-hidden="true">
+                <path className="flow__line-bg" d="M0 10H1000" />
+                <path className="flow__line-fg" d="M0 10H1000" />
+              </svg>
+              <div className="flow__packet" aria-hidden="true">💸</div>
+              <ol className="flow__nodes">
+                {FLOW.map(([who, what], i) => (
+                  <li key={who} className="flow__node">
+                    <span className="flow__dot">{String(i + 1).padStart(2, "0")}</span>
+                    <strong>{who}</strong>
+                    <span>{what}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        </section>
+
+        {/* CASES */}
+        <section className="work container" id="cases">
+          <Eyebrow>Cases</Eyebrow>
+          <h2 className="section-title">Produtos que <span className="grad">já estão rodando</span></h2>
           <div className="work__grid">
-            {PROJECTS.map((p) => (
-              <a key={p.title} className="project tilt" href="#contato" data-cursor="Quero">
-                <div className={`project__media ${p.cls}`}><div className="project__emoji">{p.emoji}</div></div>
-                <div className="project__info"><h3>{p.title}</h3><span>{p.text}</span></div>
-              </a>
+            {CASES.map((c) => (
+              <article key={c.title} className="project tilt" data-cursor="✦">
+                <div className={`project__media ${c.cls}`}>
+                  <Chevron className="project__chev" />
+                  <div className="project__emoji">{c.icon}</div>
+                  <span className="project__badge">{c.badge}</span>
+                </div>
+                <div className="project__info">
+                  <span className="project__tag">{c.tag}</span>
+                  <h3>{c.title}</h3>
+                  <p>{c.text}</p>
+                  <ul>{c.bullets.map((b) => <li key={b}>{b}</li>)}</ul>
+                </div>
+              </article>
+            ))}
+            <a className="project project--cta tilt" href="#contato" data-cursor="Bora">
+              <div className="project__info">
+                <span className="project__tag">Próximo case</span>
+                <h3>O app da sua empresa</h3>
+                <p>Ordens de serviço, vendas em campo, checklists, estoque, financeiro: se a sua operação tem um gargalo, ele pode virar o próximo case.</p>
+                <span className="btn btn--small"><span>Quero conversar</span></span>
+              </div>
+            </a>
+          </div>
+        </section>
+
+        {/* SOBRE */}
+        <section className="about container" id="sobre">
+          <div className="about__head">
+            <div className="about__badge" aria-hidden="true">
+              <svg className="about__ring" viewBox="0 0 200 200">
+                <defs><path id="circ" d="M100 100m-78 0a78 78 0 1 1 156 0a78 78 0 1 1-156 0" /></defs>
+                <text><textPath href="#circ">GESTÃO NA PRÁTICA ✦ TECNOLOGIA COM PROPÓSITO ✦ </textPath></text>
+              </svg>
+              <LogoMark size={70} />
+            </div>
+            <div>
+              <Eyebrow>Quem está por trás</Eyebrow>
+              <h2 className="section-title">Victor <span className="grad">Mafra</span></h2>
+              <p className="about__lead">
+                Experiência prática em gestão e tecnologia: conhecimento de operação, processos e sistemas aplicado a
+                desafios reais de empresas. Antes de programar, eu entendo como o seu negócio funciona.
+              </p>
+            </div>
+          </div>
+          <div className="about__grid">
+            {ABOUT.map((a) => (
+              <div key={a.n} className="about__item">
+                <span className="about__n">{a.n}</span>
+                <h3>{a.title}</h3>
+                <p>{a.text}</p>
+              </div>
             ))}
           </div>
         </section>
 
         {/* TEXTO GIGANTE */}
         <section className="bigtext" aria-hidden="true">
-          <div className="bigtext__row" data-dir="-1">tecnologia ✦ design ✦ estratégia ✦ tecnologia ✦ design ✦ estratégia ✦</div>
-          <div className="bigtext__row outline" data-dir="1">ios ✦ android ✦ web ✦ ia ✦ ios ✦ android ✦ web ✦ ia ✦</div>
+          <div className="bigtext__row" data-dir="-1">processos ✦ gestão ✦ tecnologia ✦ processos ✦ gestão ✦ tecnologia ✦</div>
+          <div className="bigtext__row outline" data-dir="1">diagnóstico ✦ apps ✦ indicadores ✦ resultados ✦ diagnóstico ✦ apps ✦</div>
         </section>
 
         {/* CONTATO */}
         <section className="contact" id="contato">
           <div className="contact__glow" />
+          <Chevron className="chev chev--contact" />
           <div className="container contact__inner">
             <Eyebrow>Contato</Eyebrow>
             <h2 className="contact__title">
-              <span className="line"><SplitChars text="Seu app" /></span>
-              <span className="line"><SplitChars text="começa aqui." charClassName="grad" /></span>
+              <span className="line"><SplitChars text="Sua operação," /></span>
+              <span className="line"><SplitChars text="no próximo nível." charClassName="grad" /></span>
             </h2>
-            <p className="contact__sub">Me conta sua ideia. Respondo em até 24h com os próximos passos, sem compromisso.</p>
+            <p className="contact__sub">Conte como funciona sua rotina hoje e onde ela trava. Respondo com os próximos passos para um diagnóstico.</p>
             <form className="form">
               <div className="field"><input id="f-name" type="text" required placeholder=" " /><label htmlFor="f-name">Seu nome</label></div>
-              <div className="field"><input id="f-contact" type="text" required placeholder=" " /><label htmlFor="f-contact">E-mail ou WhatsApp</label></div>
-              <div className="field field--full"><textarea id="f-msg" rows={3} required placeholder=" " /><label htmlFor="f-msg">Conte sobre seu projeto</label></div>
+              <div className="field"><input id="f-company" type="text" placeholder=" " /><label htmlFor="f-company">Empresa e segmento</label></div>
+              <div className="field field--full"><textarea id="f-msg" rows={3} required placeholder=" " /><label htmlFor="f-msg">Qual processo você quer organizar?</label></div>
               <button type="submit" className="btn btn--big magnetic" data-cursor="Enviar"><span>Enviar pelo WhatsApp</span><i className="btn__arrow">→</i></button>
             </form>
           </div>
@@ -285,8 +416,8 @@ export default function Home() {
       </main>
 
       <footer className="footer container">
-        <div className="logo">mafra<span>.</span></div>
-        <p>© {new Date().getFullYear()} Mafra — Consultoria e Implementação de Aplicativos</p>
+        <div className="logo"><Logo /></div>
+        <p>Entendemos o negócio. Transformamos processos. Desenvolvemos soluções.<br />© {new Date().getFullYear()} MAFRA Consultoria &amp; Tecnologia</p>
         <div className="footer__links">
           <a href="#" data-cursor="↗">Instagram</a>
           <a href="#" data-cursor="↗">LinkedIn</a>

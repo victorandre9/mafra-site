@@ -5,11 +5,11 @@ import "lenis/dist/lenis.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Mafra — Consultoria e Implementação de Aplicativos",
+  title: "MAFRA Consultoria & Tecnologia — Apps sob medida",
   description:
-    "Mafra: consultoria, design e desenvolvimento de aplicativos sob medida. Da ideia ao app publicado nas lojas.",
+    "MAFRA Consultoria & Tecnologia: consultoria e implementação de aplicativos. Da necessidade operacional à solução digital.",
   openGraph: {
-    title: "Mafra — Apps que movem negócios",
+    title: "MAFRA Consultoria & Tecnologia",
     description: "Consultoria e implementação de aplicativos iOS, Android e Web.",
     type: "website",
     locale: "pt_BR",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#07070c",
+  themeColor: "#061428",
   width: "device-width",
   initialScale: 1,
 };
