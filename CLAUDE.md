@@ -33,3 +33,9 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
 ## Pendências conhecidas
 
 - Links de Instagram/LinkedIn no rodapé e foto do Victor na seção Sobre.
+
+## Vercel: versão oficial presa
+
+Se o "Visit" abrir uma publicação antiga com o `main` atualizado, a troca automática
+da versão oficial foi desligada (rollback/promote manual). Só o Victor resolve no painel:
+Overview → aviso de auto-assign desligado → reativar/promover a publicação mais nova.
