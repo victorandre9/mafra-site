@@ -1,4 +1,5 @@
 import Experience from "@/components/Experience";
+import { LINK_INSTAGRAM, LINK_LINKEDIN, LINK_WHATSAPP } from "@/lib/contato";
 import Hero3DLazy from "@/components/Hero3DLazy";
 import { Drone } from "@/components/Drone";
 import { HoloCards, Phone } from "@/components/Phone";
@@ -419,13 +420,17 @@ export default function Home() {
               <span className="line"><SplitChars text="Sua operação," /></span>
               <span className="line"><SplitChars text="no próximo nível." charClassName="grad" /></span>
             </h2>
-            <p className="contact__sub">Conte como funciona sua rotina hoje e onde ela trava. Respondo com os próximos passos para um diagnóstico.</p>
-            <form className="form">
-              <div className="field"><input id="f-name" type="text" required placeholder=" " /><label htmlFor="f-name">Seu nome</label></div>
-              <div className="field"><input id="f-company" type="text" placeholder=" " /><label htmlFor="f-company">Empresa e segmento</label></div>
-              <div className="field field--full"><textarea id="f-msg" rows={3} required placeholder=" " /><label htmlFor="f-msg">Qual processo você quer organizar?</label></div>
-              <button type="submit" className="btn btn--big magnetic" data-cursor="Enviar"><span>Enviar pelo WhatsApp</span><i className="btn__arrow">→</i></button>
-            </form>
+            <p className="contact__sub">Um toque e a conversa abre no WhatsApp, com a mensagem pronta. Conte como funciona sua rotina hoje e onde ela trava — respondo com os próximos passos para um diagnóstico.</p>
+            <div className="contact__actions">
+              <a href={LINK_WHATSAPP} target="_blank" rel="noopener noreferrer" className="btn btn--big btn--wa magnetic js-whatsapp" data-cursor="Abrir">
+                <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4a.5.5 0 0 0 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.2c0-.1-.2-.2-.4-.3Z" /></svg>
+                <span>Conversar no WhatsApp</span><i className="btn__arrow">→</i>
+              </a>
+              <div className="contact__social">
+                <a href={LINK_INSTAGRAM} target="_blank" rel="noopener noreferrer" className="btn btn--ghost magnetic" data-cursor="↗"><span>Instagram</span></a>
+                <a href={LINK_LINKEDIN} target="_blank" rel="noopener noreferrer" className="btn btn--ghost magnetic" data-cursor="↗"><span>LinkedIn</span></a>
+              </div>
+            </div>
           </div>
         </section>
       </main>
@@ -434,8 +439,9 @@ export default function Home() {
         <div className="logo"><Logo size={84} /></div>
         <p>Entendemos o negócio. Transformamos processos. Desenvolvemos soluções.<br />© {new Date().getFullYear()} MAFRA Consultoria &amp; Tecnologia</p>
         <div className="footer__links">
-          <a href="#" data-cursor="↗">Instagram</a>
-          <a href="#" data-cursor="↗">LinkedIn</a>
+          <a href={LINK_INSTAGRAM} target="_blank" rel="noopener noreferrer" data-cursor="↗">Instagram</a>
+          <a href={LINK_LINKEDIN} target="_blank" rel="noopener noreferrer" data-cursor="↗">LinkedIn</a>
+          <a href={LINK_WHATSAPP} target="_blank" rel="noopener noreferrer" data-cursor="↗">WhatsApp</a>
           <a href="#top" data-cursor="↑">Voltar ao topo ↑</a>
         </div>
       </footer>
