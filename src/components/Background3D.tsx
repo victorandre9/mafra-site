@@ -1,7 +1,7 @@
 "use client";
 
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { MeshDistortMaterial, PerformanceMonitor, RoundedBox } from "@react-three/drei";
+import { PerformanceMonitor } from "@react-three/drei";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -27,19 +27,7 @@ const STAGES: Stage[] = [
   { sel: ".contact", d: [0.3, 0.0, 1.05, 0.9], m: [0.05, 0.28, 0.6, 0.6] },
 ];
 
-const ICONS = [
-  { color: "#3ddc84", radius: 2.25, speed: 0.42, tilt: 0.35, size: 0.4, phase: 0 },
-  { color: "#4f9bdc", radius: 2.6, speed: 0.31, tilt: -0.5, size: 0.48, phase: 1.3 },
-  { color: "#ffffff", radius: 2.05, speed: 0.5, tilt: 0.9, size: 0.32, phase: 2.6 },
-  { color: "#8ec5ff", radius: 2.8, speed: 0.26, tilt: -0.2, size: 0.3, phase: 3.9 },
-  { color: "#1f9d5a", radius: 2.4, speed: 0.37, tilt: 0.6, size: 0.36, phase: 5.1 },
-];
-
 const smooth = (t: number) => t * t * (3 - 2 * t);
-const C_BLUE = new THREE.Color("#1d5c9a");
-const C_GREEN = new THREE.Color("#178a52");
-const E_BLUE = new THREE.Color("#0b2a52");
-const E_GREEN = new THREE.Color("#0f4a3a");
 
 /** Âncoras: posição de rolagem em que cada seção está centralizada na tela. */
 function useAnchors() {
@@ -67,55 +55,6 @@ function useAnchors() {
     };
   }, []);
   return anchors;
-}
-
-function AppIcon({ color, radius, speed, tilt, size, phase }: (typeof ICONS)[number]) {
-  const ref = useRef<THREE.Mesh>(null);
-  useFrame(({ clock }) => {
-    const m = ref.current;
-    if (!m) return;
-    const t = clock.elapsedTime * speed + phase;
-    const x = Math.cos(t) * radius;
-    const z = Math.sin(t) * radius;
-    m.position.set(x, Math.sin(t) * radius * tilt * 0.45 + Math.sin(t * 2.3) * 0.12, z);
-    m.rotation.set(t * 0.9, t * 1.3, t * 0.4);
-  });
-  return (
-    <RoundedBox ref={ref} args={[size, size, size * 0.28]} radius={size * 0.22} smoothness={3}>
-      <meshStandardMaterial color={color} roughness={0.2} metalness={0.25} emissive={color} emissiveIntensity={0.35} />
-    </RoundedBox>
-  );
-}
-
-/** Anel de partículas que orbita o núcleo. */
-function Halo({ count }: { count: number }) {
-  const ref = useRef<THREE.Points>(null);
-  const positions = useMemo(() => {
-    const a = new Float32Array(count * 3);
-    for (let i = 0; i < count; i++) {
-      const th = (i / count) * Math.PI * 2;
-      const r = 1.95 + (Math.random() - 0.5) * 0.35;
-      a[i * 3] = Math.cos(th) * r;
-      a[i * 3 + 1] = (Math.random() - 0.5) * 0.12;
-      a[i * 3 + 2] = Math.sin(th) * r;
-    }
-    return a;
-  }, [count]);
-  useFrame(({ clock }, dt) => {
-    const p = ref.current;
-    if (!p) return;
-    p.rotation.y += dt * 0.35;
-    p.rotation.x = 1.1 + Math.sin(clock.elapsedTime * 0.3) * 0.15;
-    p.rotation.z = Math.sin(clock.elapsedTime * 0.2) * 0.25;
-  });
-  return (
-    <points ref={ref}>
-      <bufferGeometry>
-        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
-      </bufferGeometry>
-      <pointsMaterial size={0.035} color="#7dffb0" transparent opacity={0.85} sizeAttenuation depthWrite={false} blending={THREE.AdditiveBlending} />
-    </points>
-  );
 }
 
 /** Campo de estrelas com deriva, cintilar e parallax de rolagem. */
@@ -147,12 +86,50 @@ function Stars({ count }: { count: number }) {
   );
 }
 
+/** Malha de pontos: esfera de milhares de pontos que ondulam (respiram), verde → azul. */
+function PointSphere({ mobile, energy }: { mobile: boolean; energy: React.RefObject<{ v: number }> }) {
+  const ref = useRef<THREE.Points>(null);
+  const { positions, colors, orig } = useMemo(() => {
+    const n = mobile ? 1400 : 2600, R = 1.6;
+    const positions = new Float32Array(n * 3), colors = new Float32Array(n * 3);
+    const ca = new THREE.Color("#3ddc84"), cb = new THREE.Color("#4f9bdc"), c = new THREE.Color();
+    const golden = Math.PI * (3 - Math.sqrt(5));
+    for (let i = 0; i < n; i++) {
+      const y = 1 - (i / (n - 1)) * 2, r = Math.sqrt(1 - y * y), th = golden * i;
+      positions.set([Math.cos(th) * r * R, y * R, Math.sin(th) * r * R], i * 3);
+      c.copy(ca).lerp(cb, (y + 1) / 2);
+      colors.set([c.r, c.g, c.b], i * 3);
+    }
+    return { positions, colors, orig: positions.slice() };
+  }, [mobile]);
+  useFrame(({ clock }) => {
+    const g = ref.current;
+    if (!g) return;
+    const t = clock.elapsedTime;
+    const amp = 1 + (energy.current?.v ?? 0) * 2.5; // rolar mais rápido = onda maior
+    const arr = g.geometry.getAttribute("position") as THREE.BufferAttribute;
+    for (let i = 0; i < orig.length; i += 3) {
+      const x = orig[i], y = orig[i + 1], z = orig[i + 2];
+      const w = 1 + amp * (0.05 * Math.sin(y * 3.2 + t * 2.2) + 0.035 * Math.sin(x * 4 - t * 1.7) + 0.03 * Math.cos(z * 3.5 + t * 1.3));
+      arr.setXYZ(i / 3, x * w, y * w, z * w);
+    }
+    arr.needsUpdate = true;
+  });
+  return (
+    <points ref={ref}>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
+        <bufferAttribute attach="attributes-color" args={[colors, 3]} />
+      </bufferGeometry>
+      <pointsMaterial size={mobile ? 0.045 : 0.035} vertexColors transparent opacity={0.95} sizeAttenuation depthWrite={false} blending={THREE.AdditiveBlending} />
+    </points>
+  );
+}
+
 function Orb({ mobile, wrap }: { mobile: boolean; wrap: React.RefObject<HTMLDivElement | null> }) {
   const root = useRef<THREE.Group>(null);
   const spin = useRef<THREE.Group>(null);
-  const shell = useRef<THREE.Mesh>(null);
   const ring = useRef<THREE.Mesh>(null);
-  const blob = useRef<React.ComponentRef<typeof MeshDistortMaterial>>(null);
   const { viewport, camera } = useThree();
   const anchors = useAnchors();
   const cur = useRef({ x: 0.27, y: 0, s: 1, o: 0, v: 0, lastY: 0 });
@@ -202,20 +179,9 @@ function Orb({ mobile, wrap }: { mobile: boolean; wrap: React.RefObject<HTMLDivE
       spin.current.rotation.x = Math.sin(t * 0.21) * 0.35 + state.pointer.y * 0.2;
       spin.current.rotation.z = Math.cos(t * 0.17) * 0.18;
     }
-    if (shell.current) {
-      shell.current.rotation.x -= dt * 0.12;
-      shell.current.rotation.z += dt * 0.08;
-      shell.current.scale.setScalar(1.75 * (1 + Math.sin(t * 1.1 + Math.PI) * 0.035));
-    }
     if (ring.current) {
       ring.current.rotation.z += dt * 0.4;
       ring.current.rotation.x = 1.25 + Math.sin(t * 0.4) * 0.2;
-    }
-    if (blob.current) {
-      blob.current.distort = 0.3 + Math.sin(t * 0.8) * 0.1 + c.v * 0.25;
-      const mix = (Math.sin(t * 0.25) * 0.5 + 0.5) * 0.65;
-      blob.current.color.copy(C_BLUE).lerp(C_GREEN, mix);
-      blob.current.emissive.copy(E_BLUE).lerp(E_GREEN, mix);
     }
     // leve balanço de câmera
     camera.position.x = Math.sin(t * 0.13) * 0.25;
@@ -223,39 +189,26 @@ function Orb({ mobile, wrap }: { mobile: boolean; wrap: React.RefObject<HTMLDivE
     camera.lookAt(0, 0, 0);
 
     if (wrap.current) wrap.current.style.opacity = c.o.toFixed(3);
+    // posição do fundo na tela (frações da viewport): a Orbe usa para não ficar em cima dele
+    (window as Window & { __mafraBg?: { x: number; y: number; s: number } }).__mafraBg = {
+      x: 0.5 + g.position.x / viewport.width, y: 0.5 - g.position.y / viewport.height, s: g.scale.x * (2.4 / viewport.height),
+    };
   });
 
   return (
     <group ref={root}>
       <group ref={spin}>
-        <mesh>
-          <icosahedronGeometry args={[1.25, mobile ? 14 : 40]} />
-          <MeshDistortMaterial
-            ref={blob}
-            color="#1d5c9a"
-            emissive="#0b2a52"
-            emissiveIntensity={0.45}
-            roughness={0.08}
-            metalness={0.5}
-            clearcoat={1}
-            clearcoatRoughness={0.15}
-            distort={0.35}
-            speed={2.2}
-          />
-        </mesh>
-        <mesh ref={shell} scale={1.75}>
-          <icosahedronGeometry args={[1, 1]} />
-          <meshBasicMaterial color="#3ddc84" wireframe transparent opacity={0.2} />
-        </mesh>
+        <PointSphere mobile={mobile} energy={cur} />
+        {/* malha fina de ligação por trás dos pontos */}
+        <lineSegments>
+          <wireframeGeometry args={[new THREE.IcosahedronGeometry(1.6, 3)]} />
+          <lineBasicMaterial color="#3ddc84" transparent opacity={0.1} />
+        </lineSegments>
         <mesh ref={ring}>
-          <torusGeometry args={[2.25, 0.012, 8, 160]} />
-          <meshBasicMaterial color="#3ddc84" transparent opacity={0.55} blending={THREE.AdditiveBlending} />
+          <torusGeometry args={[2.25, 0.006, 6, 200]} />
+          <meshBasicMaterial color="#3ddc84" transparent opacity={0.5} />
         </mesh>
-        <Halo count={mobile ? 140 : 320} />
       </group>
-      {ICONS.slice(0, mobile ? 3 : ICONS.length).map((ic) => (
-        <AppIcon key={ic.color} {...ic} />
-      ))}
     </group>
   );
 }

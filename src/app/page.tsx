@@ -2,6 +2,7 @@ import Experience from "@/components/Experience";
 import { LINK_INSTAGRAM, LINK_LINKEDIN, LINK_WHATSAPP } from "@/lib/contato";
 import Hero3DLazy from "@/components/Hero3DLazy";
 import { Drone } from "@/components/Drone";
+import OrbMenu from "@/components/OrbMenu";
 import { HoloCards, Phone } from "@/components/Phone";
 import { SplitChars, SplitWords } from "@/components/Split";
 import { Chevron, Logo, LogoImage } from "@/components/Logo";
@@ -152,6 +153,7 @@ export default function Home() {
       </div>
 
       <Drone />
+      <OrbMenu />
 
       {/* HEADER */}
       <header className="header">
