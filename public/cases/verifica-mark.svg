@@ -1,0 +1,167 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Bel Log Checklists">
+  <title>Bel Log Checklists</title>
+  <defs>
+  <linearGradient id="corpoAzul" x1="0.1" y1="0" x2="0.8" y2="1">
+    <stop offset="0" stop-color="#4f9dff"/>
+    <stop offset="0.4" stop-color="#1f63ff"/>
+    <stop offset="1" stop-color="#1230e6"/>
+  </linearGradient>
+
+  <linearGradient id="corpoVermelho" x1="0" y1="1" x2="1" y2="0">
+    <stop offset="0" stop-color="#c8071f"/>
+    <stop offset="0.5" stop-color="#ff2436"/>
+    <stop offset="1" stop-color="#ff5e68"/>
+  </linearGradient>
+
+  <!-- O contorno pega vermelho do lado direito, como na referencia -->
+  <linearGradient id="corpoContorno" x1="0" y1="0" x2="1" y2="0.35">
+    <stop offset="0" stop-color="#5aa8ff"/>
+    <stop offset="0.42" stop-color="#1f63ff"/>
+    <stop offset="0.8" stop-color="#3a3ff0"/>
+    <stop offset="1" stop-color="#e01f33"/>
+  </linearGradient>
+
+  <linearGradient id="presilha" x1="0.2" y1="0" x2="0.7" y2="1">
+    <stop offset="0" stop-color="#7cbcff"/>
+    <stop offset="0.45" stop-color="#2a72ff"/>
+    <stop offset="1" stop-color="#1636cc"/>
+  </linearGradient>
+
+  <filter id="sombra" x="-40%" y="-40%" width="180%" height="180%">
+    <feGaussianBlur stdDeviation="7"/>
+  </filter>
+  <filter id="haloAzul" x="-40%" y="-40%" width="180%" height="180%">
+    <feGaussianBlur stdDeviation="8"/>
+  </filter>
+  <filter id="haloVermelho" x="-50%" y="-50%" width="200%" height="200%">
+    <feGaussianBlur stdDeviation="6"/>
+  </filter>
+
+  <!-- Vaza o furo da presilha, para funcionar sobre qualquer fundo -->
+  <mask id="furo">
+    <rect width="512" height="512" fill="#fff"/>
+    <circle cx="256" cy="97" r="12" fill="#000"/>
+  </mask></defs>
+  
+  
+    <!-- prancheta: sombra de contato -->
+    <g filter="url(#sombra)" opacity="0.5">
+      <rect x="110" y="105" width="290" height="345" rx="48"
+        fill="none" stroke="#000" stroke-width="26" transform="translate(4 6)"/>
+    </g>
+
+    <!-- prancheta: halo -->
+    <g filter="url(#haloAzul)" opacity="0.45">
+      <rect x="110" y="105" width="290" height="345" rx="48"
+      fill="none" stroke="url(#corpoContorno)" stroke-width="29" opacity="1"
+      transform="translate(0.00 0.00)"/>
+    </g>
+
+    <!-- prancheta: seccao -->
+    <rect x="110" y="105" width="290" height="345" rx="48"
+      fill="none" stroke="#0d1f7d" stroke-width="26" opacity="1"
+      transform="translate(0.00 0.00)"/>
+    <rect x="110" y="105" width="290" height="345" rx="48"
+      fill="none" stroke="url(#corpoContorno)" stroke-width="21.84" opacity="1"
+      transform="translate(0.00 0.00)"/>
+    <rect x="110" y="105" width="290" height="345" rx="48"
+      fill="none" stroke="#5aa8ff" stroke-width="11.96" opacity="0.85"
+      transform="translate(-1.41 -1.41)"/>
+    <rect x="110" y="105" width="290" height="345" rx="48"
+      fill="none" stroke="#c3e0ff" stroke-width="5.2" opacity="0.8"
+      transform="translate(-2.12 -2.12)"/>
+    <rect x="110" y="105" width="290" height="345" rx="48"
+      fill="none" stroke="#ffffff" stroke-width="2.08" opacity="0.7"
+      transform="translate(-2.65 -2.65)"/>
+
+  <!-- Linha fina interna, como na referencia -->
+  <rect x="128" y="123" width="254"
+    height="309" rx="33" fill="none"
+    stroke="#6fb2ff" stroke-width="2.5" opacity="0.34"/>
+
+  <!-- Presilha: peca cheia, com volume proprio -->
+  <g filter="url(#sombra)" opacity="0.5">
+    <rect x="184" y="64" width="182" height="64"
+      rx="18" fill="#000" transform="translate(4 6)"/>
+  </g>
+  <g mask="url(#furo)">
+    <rect x="184" y="64" width="182" height="64"
+      rx="18" fill="url(#presilha)"/>
+    <!-- Face superior iluminada -->
+    <rect x="190" y="69" width="170"
+      height="26.88" rx="11" fill="#9fd0ff" opacity="0.3"/>
+    <!-- Base em sombra -->
+    <rect x="189" y="103.68" width="172"
+      height="19.2" rx="10" fill="#0a1f8f" opacity="0.35"/>
+  </g>
+  <rect x="185.5" y="65.5" width="179"
+    height="61" rx="17" fill="none"
+    stroke="#cbe6ff" stroke-width="2.5" opacity="0.5" mask="url(#furo)"/>
+  <circle cx="256" cy="97" r="12" fill="none"
+    stroke="#0a1f8f" stroke-width="3.5" opacity="0.55"/>
+  <circle cx="255" cy="96" r="12" fill="none"
+    stroke="#cbe6ff" stroke-width="2" opacity="0.7"/>
+
+  
+    <!-- V azul: sombra de contato -->
+    <g filter="url(#sombra)" opacity="0.55">
+      <path d="M 106 190 L 264 452 L 410 210" fill="none" stroke="#000" stroke-width="56"
+        stroke-linecap="round" stroke-linejoin="round"
+        transform="translate(5 7)"/>
+    </g>
+
+    <!-- V azul: halo -->
+    <g filter="url(#haloAzul)" opacity="0.5">
+      <path d="M 106 190 L 264 452 L 410 210" fill="none" stroke="url(#corpoAzul)" stroke-width="60"
+      stroke-linecap="round" stroke-linejoin="round" opacity="1"
+      transform="translate(0.00 0.00)" />
+    </g>
+
+    <!-- V azul: seccao do tubo, da borda ao nucleo -->
+    <path d="M 106 190 L 264 452 L 410 210" fill="none" stroke="#0b1d8a" stroke-width="56"
+      stroke-linecap="round" stroke-linejoin="round" opacity="1"
+      transform="translate(0.00 0.00)" />
+    <path d="M 106 190 L 264 452 L 410 210" fill="none" stroke="url(#corpoAzul)" stroke-width="48.16"
+      stroke-linecap="round" stroke-linejoin="round" opacity="1"
+      transform="translate(0.00 0.00)" />
+    <path d="M 106 190 L 264 452 L 410 210" fill="none" stroke="#5aa8ff" stroke-width="28"
+      stroke-linecap="round" stroke-linejoin="round" opacity="0.9"
+      transform="translate(-3.05 -3.05)" />
+    <path d="M 106 190 L 264 452 L 410 210" fill="none" stroke="#b9dcff" stroke-width="13.44"
+      stroke-linecap="round" stroke-linejoin="round" opacity="0.85"
+      transform="translate(-4.57 -4.57)" />
+    <path d="M 106 190 L 264 452 L 410 210" fill="none" stroke="#ffffff" stroke-width="5.6000000000000005"
+      stroke-linecap="round" stroke-linejoin="round" opacity="0.75"
+      transform="translate(-5.71 -5.71)" />
+  
+    <!-- check vermelho: sombra de contato -->
+    <g filter="url(#sombra)" opacity="0.55">
+      <path d="M 208 250 L 274 340 L 414 128" fill="none" stroke="#000" stroke-width="36"
+        stroke-linecap="round" stroke-linejoin="round"
+        transform="translate(5 7)"/>
+    </g>
+
+    <!-- check vermelho: halo -->
+    <g filter="url(#haloVermelho)" opacity="0.5">
+      <path d="M 208 250 L 274 340 L 414 128" fill="none" stroke="url(#corpoVermelho)" stroke-width="40"
+      stroke-linecap="round" stroke-linejoin="round" opacity="1"
+      transform="translate(0.00 0.00)" />
+    </g>
+
+    <!-- check vermelho: seccao do tubo, da borda ao nucleo -->
+    <path d="M 208 250 L 274 340 L 414 128" fill="none" stroke="#8c0316" stroke-width="36"
+      stroke-linecap="round" stroke-linejoin="round" opacity="1"
+      transform="translate(0.00 0.00)" />
+    <path d="M 208 250 L 274 340 L 414 128" fill="none" stroke="url(#corpoVermelho)" stroke-width="30.96"
+      stroke-linecap="round" stroke-linejoin="round" opacity="1"
+      transform="translate(0.00 0.00)" />
+    <path d="M 208 250 L 274 340 L 414 128" fill="none" stroke="#ff6a76" stroke-width="18"
+      stroke-linecap="round" stroke-linejoin="round" opacity="0.9"
+      transform="translate(-1.96 -1.96)" />
+    <path d="M 208 250 L 274 340 L 414 128" fill="none" stroke="#ffc2c7" stroke-width="8.64"
+      stroke-linecap="round" stroke-linejoin="round" opacity="0.85"
+      transform="translate(-2.94 -2.94)" />
+    <path d="M 208 250 L 274 340 L 414 128" fill="none" stroke="#ffffff" stroke-width="3.6"
+      stroke-linecap="round" stroke-linejoin="round" opacity="0.75"
+      transform="translate(-3.67 -3.67)" />
+</svg>
