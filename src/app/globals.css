@@ -884,3 +884,17 @@ main, .footer { position: relative; z-index: 1; }
   .orbit--1 { width: 260px; height: 260px; } .orbit--2 { width: 320px; height: 320px; }
   .holo { display: none; }
 }
+
+/* faixas gigantes: largura do conteúdo, para o laço de -50% fechar certinho */
+.bigtext__row { width: max-content; }
+
+/* ===== Orbe Sentinela (mascote 3D) ===== */
+.drone { width: 130px; height: 130px; margin: -65px 0 0 -65px; }
+.drone__roll, .drone__orb { width: 130px; height: 130px; }
+.drone__orb canvas { display: block; }
+.drone__glow { top: 92%; }
+.drone__beam { top: 82%; }
+@media (max-width: 760px) {
+  .drone { width: 78px; height: 78px; margin: -39px 0 0 -39px; }
+  .drone__roll, .drone__orb { width: 78px; height: 78px; }
+}
