@@ -898,3 +898,47 @@ main, .footer { position: relative; z-index: 1; }
   .drone { width: 78px; height: 78px; margin: -39px 0 0 -39px; }
   .drone__roll, .drone__orb { width: 78px; height: 78px; }
 }
+
+/* ===== Menu da Orbe (assistente) ===== */
+.orbmenu { position: fixed; inset: 0; z-index: 120; pointer-events: none; }
+.orbmenu__backdrop { position: absolute; inset: 0; background: rgba(3, 10, 22, .55); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); opacity: 0; transition: opacity .35s; }
+.orbmenu__panel {
+  position: absolute; right: 24px; bottom: 24px; width: min(400px, calc(100vw - 32px)); max-height: calc(100vh - 48px); overflow: auto;
+  padding: 18px 18px 20px; border-radius: 22px; color: var(--text);
+  background: linear-gradient(160deg, rgba(13, 44, 82, .92), rgba(6, 20, 40, .95)); border: 1px solid rgba(61, 220, 132, .45);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .55), 0 0 40px rgba(61, 220, 132, .18), inset 0 1px 0 rgba(255, 255, 255, .08);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  opacity: 0; transform: translateY(24px) scale(.96); transform-origin: bottom right; transition: opacity .35s var(--ease), transform .45s var(--ease);
+}
+.orbmenu.is-open { pointer-events: auto; }
+.orbmenu.is-open .orbmenu__backdrop { opacity: 1; }
+.orbmenu.is-open .orbmenu__panel { opacity: 1; transform: none; }
+.orbmenu__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.orbmenu__id { display: inline-flex; align-items: center; gap: 8px; font: 600 .7rem ui-monospace, Menlo, monospace; letter-spacing: .1em; color: #9fffc4; text-transform: uppercase; }
+.orbmenu__id i { width: 8px; height: 8px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 10px var(--lime); animation: pulse 1.4s infinite; }
+.orbmenu__x { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border); background: transparent; color: var(--text); cursor: pointer; }
+.orbmenu__steps { display: flex; gap: 6px; margin-bottom: 12px; }
+.orbmenu__steps span { flex: 1; height: 3px; border-radius: 3px; background: rgba(143, 180, 220, .2); transition: background .3s; }
+.orbmenu__steps span.is-on { background: var(--lime); box-shadow: 0 0 8px rgba(61, 220, 132, .6); }
+.orbmenu__body { display: flex; flex-direction: column; gap: 10px; animation: orbin .45s var(--ease) both; }
+@keyframes orbin { from { opacity: 0; transform: translateX(16px); } }
+.orbmenu__q { font: 700 1.15rem var(--font-display); margin-bottom: 4px; }
+.orbmenu__opt { display: flex; flex-direction: column; gap: 2px; text-align: left; padding: 14px 16px; border-radius: 16px; cursor: pointer; color: var(--text);
+  background: rgba(255, 255, 255, .05); border: 1px solid var(--border); transition: border-color .25s, background .25s, transform .25s var(--ease); font: inherit; }
+.orbmenu__opt:hover { border-color: rgba(61, 220, 132, .6); background: rgba(61, 220, 132, .08); transform: translateX(4px); }
+.orbmenu__opt b { font: 700 1rem var(--font-display); }
+.orbmenu__opt span { font-size: .82rem; color: var(--muted); }
+.orbmenu__opt--hero { background: linear-gradient(135deg, rgba(31, 157, 90, .35), rgba(13, 44, 82, .6)); border-color: rgba(61, 220, 132, .55); }
+.orbmenu__chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.orbmenu__chip { padding: 10px 14px; border-radius: 999px; border: 1px solid var(--border); background: rgba(255, 255, 255, .05); color: var(--text); font: 500 .88rem var(--font-body); cursor: pointer; transition: all .2s; }
+.orbmenu__chip:hover { border-color: var(--lime); background: rgba(61, 220, 132, .14); }
+.orbmenu__back { align-self: flex-start; margin-top: 4px; background: none; border: 0; color: var(--muted); font-size: .85rem; cursor: pointer; }
+.orbmenu__resumo { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.orbmenu__resumo li { display: flex; flex-direction: column; padding: 10px 12px; border-radius: 12px; background: rgba(255, 255, 255, .05); }
+.orbmenu__resumo span { font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--lime); }
+.orbmenu__resumo b { font-size: .95rem; }
+.orbmenu__send { justify-content: center; margin-top: 6px; }
+@media (max-width: 760px) {
+  .orbmenu__panel { left: 12px; right: 12px; bottom: 12px; width: auto; transform-origin: bottom center; }
+}
+@media (hover: none) { .btn::before { display: none; } .btn--ghost:hover { color: var(--text); } }

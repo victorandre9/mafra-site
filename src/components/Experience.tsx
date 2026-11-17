@@ -82,9 +82,16 @@ export default function Experience() {
           .from(".reveal-up", { y: 40, opacity: 0, duration: 1, ease: "expo.out", stagger: 0.1 }, 0.4)
           .from(".header > *", { y: -60, opacity: 0, duration: 1, ease: "expo.out", stagger: 0.08 }, 0.3)
           .from(".hero__scroll", { opacity: 0, duration: 1 }, 1)
-          .add(() => droneSay("Oi! Eu sou o Mafrinha 👋 Role comigo!", 3), 0.8);
+          .add(() => droneSay("Oi! Toque em mim para um diagnóstico rápido 👋", 3.4), 0.8);
         ScrollTrigger.refresh();
       }
+
+      on(window, "mafra:goto", (e: CustomEvent<string>) => {
+        const el = $(e.detail);
+        if (!el) return;
+        if (lenis) lenis.scrollTo(el, { duration: 1.6 });
+        else el.scrollIntoView({ behavior: "smooth" });
+      });
 
       /* ---------- Header + barra de progresso ---------- */
       const header = $(".header");
@@ -390,14 +397,14 @@ export default function Experience() {
 
       // Rota em frações da viewport: fica nas laterais e cruza a tela entre as seções.
       const route: Array<[number, number]> = [
-        [0.84, 0.3], [0.9, 0.62], [0.55, 0.88], [0.12, 0.7], [0.08, 0.3],
+        [0.5, 0.82], [0.36, 0.72], [0.55, 0.88], [0.12, 0.7], [0.08, 0.3],
         [0.4, 0.14], [0.88, 0.22], [0.92, 0.55], [0.7, 0.82], [0.3, 0.86],
         [0.07, 0.55], [0.1, 0.22], [0.5, 0.12], [0.88, 0.35], [0.86, 0.75],
         [0.5, 0.88], [0.14, 0.78], [0.8, 0.3],
       ];
       // No celular o texto ocupa a largura toda: o drone fica nas bordas e no alto/baixo.
       const routeMobile: Array<[number, number]> = [
-        [0.86, 0.16], [0.9, 0.42], [0.88, 0.84], [0.5, 0.93], [0.12, 0.86],
+        [0.88, 0.6], [0.9, 0.42], [0.88, 0.84], [0.5, 0.93], [0.12, 0.86],
         [0.1, 0.5], [0.12, 0.14], [0.5, 0.08], [0.88, 0.18], [0.9, 0.6],
         [0.86, 0.9], [0.14, 0.9], [0.1, 0.2], [0.86, 0.12],
       ];
@@ -458,14 +465,7 @@ export default function Experience() {
           dodgeX((-dx / d) * push); dodgeY((-dy / d) * push);
         } else { dodgeX(0); dodgeY(0); }
       });
-      const quips = [
-        "Ei! Isso faz cócegas 😆",
-        "Quer um app assim pra sua empresa?",
-        "Escaneando sua operação… 🔎",
-        "Processo organizado = menos retrabalho ✅",
-        "Bora marcar o diagnóstico? 🚀",
-      ];
-      let qi = 0, rolling = false;
+      let rolling = false;
       const burst = () => {
         const r = droneBody.getBoundingClientRect();
         const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
@@ -484,7 +484,7 @@ export default function Experience() {
         drone.classList.add("is-boost");
         sysEl.textContent = "SCAN";
         burst();
-        droneSay(quips[qi++ % quips.length], 2.4);
+        window.dispatchEvent(new Event("mafra:orbmenu"));
         gsap.timeline({ onComplete: () => { rolling = false; drone.classList.remove("is-boost"); sysEl.textContent = "OK"; } })
           .to(svg, { rotationY: 360, scale: 1.2, y: -36, duration: 0.85, ease: "power3.inOut", transformOrigin: "50% 50%", transformPerspective: 600 })
           .to(svg, { y: 0, scale: 1, duration: 0.7, ease: "bounce.out" })
@@ -495,6 +495,27 @@ export default function Experience() {
       const layer = $(".drone-layer");
       const sparkEvery = isTouch ? 70 : 28;
       let lastSpark = 0, px = 0, py = 0;
+      // Desvio do fundo: se a rota passar sobre a malha de pontos, a Orbe se afasta.
+      const avoidX = gsap.quickTo(layer, "x", { duration: 0.9, ease: "power3" });
+      const avoidY = gsap.quickTo(layer, "y", { duration: 0.9, ease: "power3" });
+      const avoid = () => {
+        const bg = (window as Window & { __mafraBg?: { x: number; y: number; s: number } }).__mafraBg;
+        if (!bg) return;
+        const W = window.innerWidth, H = window.innerHeight;
+        const x = Number(gsap.getProperty(drone, "x")), y = Number(gsap.getProperty(drone, "y"));
+        const cx = bg.x * W, cy = bg.y * H, r = bg.s * H + 70;
+        const dx = x - cx, dy = y - cy, d = Math.hypot(dx, dy) || 1;
+        if (d < r) {
+          let ox = (dx / d) * (r - d), oy = (dy / d) * (r - d);
+          // nunca empurra para fora da tela
+          ox = gsap.utils.clamp(60 - x, W - 60 - x, ox);
+          oy = gsap.utils.clamp(70 - y, H - 70 - y, oy);
+          avoidX(ox); avoidY(oy);
+        } else { avoidX(0); avoidY(0); }
+      };
+      gsap.ticker.add(avoid);
+      cleanups.push(() => gsap.ticker.remove(avoid));
+
       const sparks = () => {
         const x = Number(gsap.getProperty(drone, "x")), y = Number(gsap.getProperty(drone, "y"));
         const now = performance.now();
