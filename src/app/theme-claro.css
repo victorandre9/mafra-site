@@ -614,3 +614,12 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 
 /* fundo só com a cor (pedido do Victor): sem a grade de pontinhos na página inteira */
 body { background-image: none !important; }
+
+/* faixa que passa: mesmo verde do botão "Agendar diagnóstico", um pouco mais leve para seguir translúcida */
+.marquee {
+  background:
+    radial-gradient(120% 70% at 50% -25%, rgba(255, 255, 255, .32), rgba(255, 255, 255, 0) 58%),
+    linear-gradient(180deg, rgba(52, 210, 122, .44) 0%, rgba(22, 150, 80, .6) 48%, rgba(8, 84, 44, .72) 100%) !important;
+  box-shadow: var(--vidro-verde-borda), 0 18px 40px -20px rgba(6, 64, 34, .45) !important;
+}
+.marquee span { text-shadow: 0 1px 2px rgba(4, 50, 26, .45) !important; }
