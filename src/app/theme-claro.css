@@ -611,3 +611,6 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 .step { transition: opacity .8s cubic-bezier(.22, 1, .36, 1), background .6s, box-shadow .6s !important; }
 /* celular: vão entre o parágrafo e os botões do topo com altura para o balão do Orbe caber no meio */
 @media (max-width: 760px) { .hero__ctas { margin-top: 74px !important; } }
+
+/* fundo só com a cor (pedido do Victor): sem a grade de pontinhos na página inteira */
+body { background-image: none !important; }
