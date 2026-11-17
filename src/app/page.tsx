@@ -157,7 +157,7 @@ export default function Home() {
 
       {/* HEADER */}
       <header className="header">
-        <a href="#top" className="logo" data-cursor="Topo" aria-label="MAFRA Consultoria & Tecnologia"><Logo size={62} /></a>
+        <a href="#top" className="logo" data-cursor="Topo" aria-label="MAFRA Consultoria & Tecnologia"><Logo size={92} /></a>
         <nav className="nav">
           {NAV.map(([href, label]) => (
             <a key={href} href={href} className="nav__link">{label}</a>
