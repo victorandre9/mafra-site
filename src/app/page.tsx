@@ -1,7 +1,7 @@
 import Experience from "@/components/Experience";
 import Hero3DLazy from "@/components/Hero3DLazy";
 import { Drone } from "@/components/Drone";
-import { Phone } from "@/components/Phone";
+import { HoloCards, Phone } from "@/components/Phone";
 import { SplitChars, SplitWords } from "@/components/Split";
 import { Chevron, Logo, LogoImage } from "@/components/Logo";
 
@@ -180,17 +180,21 @@ export default function Home() {
 
       <div className="progress" aria-hidden="true"><span /></div>
 
+      {/* Fundo: brilhos e chevrons do topo, e a cena 3D fixa atrás do site inteiro */}
+      <div className="hero-bg" aria-hidden="true">
+        <div className="hero__glow hero__glow--a" />
+        <div className="hero__glow hero__glow--b" />
+        <div className="hero__chevrons">
+          <Chevron className="chev chev--big" />
+          <Chevron className="chev chev--mid" />
+          <Chevron className="chev chev--small" />
+        </div>
+      </div>
+      <Hero3DLazy />
+
       <main id="top">
         {/* HERO */}
         <section className="hero">
-          <div className="hero__glow hero__glow--a" />
-          <div className="hero__glow hero__glow--b" />
-          <div className="hero__chevrons" aria-hidden="true">
-            <Chevron className="chev chev--big" />
-            <Chevron className="chev chev--mid" />
-            <Chevron className="chev chev--small" />
-          </div>
-          <Hero3DLazy />
           <div className="container hero__content">
             <p className="pill reveal-up">Consultoria &amp; implementação de aplicativos</p>
             <h1 className="hero__title">
@@ -297,9 +301,7 @@ export default function Home() {
                 <div className="orbit orbit--1"><span /></div>
                 <div className="orbit orbit--2"><span /></div>
                 <Phone />
-                <div className="float-chip chip--a">📊 Indicadores</div>
-                <div className="float-chip chip--b">🔒 Acesso por perfil</div>
-                <div className="float-chip chip--c">🔗 Integra ao ERP</div>
+                <HoloCards />
               </div>
             </div>
           </div>
@@ -309,6 +311,7 @@ export default function Home() {
         <section className="stats container">
           {STATS.map((s) => (
             <div key={s.label} className="stat">
+              <span className="stat__line" aria-hidden="true" />
               <div className="stat__n">
                 <span className="js-counter" data-to={s.to}>0</span>{s.suffix}
                 <small>{s.unit}</small>

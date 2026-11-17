@@ -18,7 +18,8 @@ export default function Experience() {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
 
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Animações sempre ativas: a experiência em movimento é parte do produto.
+    const reduce = false;
     const isTouch = window.matchMedia("(hover: none), (pointer: coarse)").matches;
     const $ = (s: string, c: ParentNode = document) => c.querySelector(s) as HTMLElement;
     const $$ = <T extends HTMLElement = HTMLElement>(s: string, c: ParentNode = document) => [...c.querySelectorAll<T>(s)];
@@ -39,7 +40,7 @@ export default function Experience() {
     const raf = (t: number) => lenis?.raf(t * 1000);
     if (!reduce) {
       // No celular mantém a rolagem nativa (mais fluida e econômica); no desktop, suaviza.
-      lenis = new Lenis({ duration: 1.15, smoothWheel: true });
+      lenis = new Lenis({ lerp: 0.085, smoothWheel: true, wheelMultiplier: 0.95 });
       lenis.on("scroll", ScrollTrigger.update);
       gsap.ticker.add(raf);
       gsap.ticker.lagSmoothing(0);
@@ -78,11 +79,10 @@ export default function Experience() {
         lenis?.start();
         gsap
           .timeline()
-          .from(".hero__title .char", { yPercent: 120, rotate: 8, duration: 1.1, ease: "expo.out", stagger: 0.025 })
+          .from(".hero__title .char", { yPercent: 120, rotate: 10, filter: "blur(10px)", opacity: 0, duration: 1.3, ease: "expo.out", stagger: 0.028 })
           .from(".hero__title .rotator", { yPercent: 120, duration: 1, ease: "expo.out" }, 0.3)
           .from(".reveal-up", { y: 40, opacity: 0, duration: 1, ease: "expo.out", stagger: 0.1 }, 0.4)
           .from(".header > *", { y: -60, opacity: 0, duration: 1, ease: "expo.out", stagger: 0.08 }, 0.3)
-          .from(".hero__canvas", { opacity: 0, scale: 0.9, duration: 1.6, ease: "expo.out" }, 0.2)
           .from(".hero__scroll", { opacity: 0, duration: 1 }, 1)
           .add(() => droneSay("Oi! Eu sou o Mafrinha 👋 Role comigo!", 3), 0.8);
         ScrollTrigger.refresh();
@@ -179,7 +179,7 @@ export default function Experience() {
         x: () => -sDist(), ease: "none",
         scrollTrigger: { trigger: ".services", pin: ".services__pin", start: "top top", end: () => "+=" + sDist(), scrub: 1, invalidateOnRefresh: true, anticipatePin: 1 },
       });
-      gsap.from(".services__track .card", { y: 80, opacity: 0, stagger: 0.08, duration: 1, ease: "expo.out", scrollTrigger: { trigger: ".services", start: "top 70%" } });
+      gsap.from(".services__track .card", { y: 120, rotationY: -25, rotationX: 10, opacity: 0, stagger: 0.09, duration: 1.4, ease: "expo.out", transformPerspective: 1000, scrollTrigger: { trigger: ".services", start: "top 70%" } });
 
       /* ---------- Processo: celular 3D pinado, telas trocam ---------- */
       const steps = $$(".step"), screens = $$(".screen");
@@ -190,6 +190,13 @@ export default function Experience() {
         current = i;
         steps.forEach((s, k) => s.classList.toggle("is-active", k === i));
         screens.forEach((s, k) => s.classList.toggle("is-active", k === i));
+        $$(".holo").forEach((h) => h.classList.toggle("is-on", Number(h.dataset.step) === i));
+        if (i === 3) {
+          $$(".js-kpi").forEach((el) => {
+            const o = { v: 0 };
+            gsap.to(o, { v: Number(el.dataset.to), duration: 1.4, ease: "power3.out", onUpdate: () => { el.textContent = String(Math.round(o.v)); } });
+          });
+        }
         if (i === 2) {
           const b = { v: 0 };
           gsap.fromTo(buildBar, { width: "0%" }, { width: "100%", duration: 1.6, ease: "power2.inOut" });
@@ -208,7 +215,21 @@ export default function Experience() {
         })
         .fromTo(".phone", { rotationY: -28, rotationX: 10, rotationZ: -4 }, { rotationY: 22, rotationX: -6, rotationZ: 3, ease: "none", duration: 1 })
         .fromTo(".orbit--1", { scale: 0.85 }, { scale: 1.1, ease: "none", duration: 1 }, 0)
-        .fromTo(".float-chip", { y: 40 }, { y: -60, stagger: 0.1, ease: "none", duration: 0.9 }, 0);
+        .fromTo(".holo", { y: 30 }, { y: -40, ease: "none", duration: 1 }, 0);
+
+      // Celular inclina com o mouse (camada separada da rotação da rolagem)
+      if (!isTouch) {
+        const frame = $(".phone__frame");
+        const stage = $(".process__stage");
+        const fx = gsap.quickTo(frame, "rotationY", { duration: 0.8, ease: "power3" });
+        const fy = gsap.quickTo(frame, "rotationX", { duration: 0.8, ease: "power3" });
+        on(stage, "pointermove", (e: PointerEvent) => {
+          const r = stage.getBoundingClientRect();
+          fx(((e.clientX - r.left) / r.width - 0.5) * 18);
+          fy((0.5 - (e.clientY - r.top) / r.height) * 14);
+        });
+        on(stage, "pointerleave", () => { fx(0); fy(0); });
+      }
 
       /* ---------- Fluxo do pedido: linha se desenha, pacote viaja, setores acendem ---------- */
       const nodes = $$(".flow__node");
@@ -244,12 +265,64 @@ export default function Experience() {
           onEnter: () => gsap.to(o, { v: to, duration: 2, ease: "power3.out", onUpdate: () => { el.textContent = String(Math.round(o.v)); } }),
         });
       });
-      gsap.from(".stat", { y: 60, opacity: 0, stagger: 0.1, duration: 1, ease: "expo.out", scrollTrigger: { trigger: ".stats", start: "top 80%" } });
+      gsap.from(".stat", { y: 60, opacity: 0, filter: "blur(6px)", stagger: 0.12, duration: 1.2, ease: "expo.out", scrollTrigger: { trigger: ".stats", start: "top 80%" } });
+      gsap.from(".stat__line", { scaleX: 0, transformOrigin: "left", stagger: 0.12, duration: 1.4, ease: "expo.inOut", scrollTrigger: { trigger: ".stats", start: "top 80%" } });
 
       /* ---------- Projetos, títulos, texto gigante ---------- */
-      gsap.from(".project", { y: 100, opacity: 0, rotationX: -15, stagger: 0.1, duration: 1.2, ease: "expo.out", scrollTrigger: { trigger: ".work__grid", start: "top 80%" } });
+      gsap.utils.toArray<HTMLElement>(".project").forEach((card, i) => {
+        gsap.from(card, {
+          clipPath: "inset(18% 8% 18% 8% round 24px)", y: 80, opacity: 0, duration: 1.4, ease: "expo.out", delay: (i % 2) * 0.12,
+          scrollTrigger: { trigger: card, start: "top 88%" },
+        });
+        const media = card.querySelector(".project__media > :not(.project__chev):not(.project__badge)");
+        if (media) gsap.fromTo(media, { yPercent: 12 }, { yPercent: -12, ease: "none", scrollTrigger: { trigger: card, start: "top bottom", end: "bottom top", scrub: true } });
+      });
+      // Títulos: cada palavra sobe de dentro de uma "janela" (máscara)
+      const maskWords = (el: HTMLElement) => {
+        const walk = (node: Node, grad: boolean) => {
+          [...node.childNodes].forEach((n) => {
+            if (n.nodeType === 3) {
+              const frag = document.createDocumentFragment();
+              (n.textContent || "").split(/(\s+)/).forEach((w) => {
+                if (!w) return;
+                if (/^\s+$/.test(w)) { frag.appendChild(document.createTextNode(w)); return; }
+                const outer = document.createElement("span");
+                outer.className = "wm";
+                const inner = document.createElement("span");
+                inner.className = "wm__i" + (grad ? " grad" : "");
+                inner.textContent = w;
+                outer.appendChild(inner);
+                frag.appendChild(outer);
+              });
+              n.replaceWith(frag);
+            } else if (n.nodeType === 1) {
+              const e = n as HTMLElement;
+              const isGrad = e.classList.contains("grad");
+              if (isGrad) e.classList.remove("grad");
+              walk(e, grad || isGrad);
+            }
+          });
+        };
+        walk(el, false);
+      };
       $$(".section-title").forEach((t) => {
-        gsap.from(t, { y: 60, opacity: 0, duration: 1.1, ease: "expo.out", scrollTrigger: { trigger: t, start: "top 85%" } });
+        maskWords(t);
+        gsap.from(t.querySelectorAll(".wm__i"), {
+          yPercent: 115, rotate: 5, duration: 1.2, ease: "expo.out", stagger: 0.07,
+          scrollTrigger: { trigger: t, start: "top 85%" },
+        });
+      });
+
+      // Textos de apoio: sobem saindo do desfoque
+      $$(".flow__sub, .work__lead, .about__lead, .contact__sub, .process__note, .eyebrow:not(.reveal-up)").forEach((p) => {
+        gsap.from(p, { y: 30, opacity: 0, filter: "blur(8px)", duration: 1.2, ease: "expo.out", scrollTrigger: { trigger: p, start: "top 88%" } });
+      });
+
+      // Faixa de tecnologias e textos gigantes reagem à velocidade da rolagem
+      const skewTo = gsap.quickTo(".marquee__group, .bigtext__row", "skewX", { duration: 0.6, ease: "power3" });
+      ScrollTrigger.create({
+        start: 0, end: "max",
+        onUpdate: (self) => skewTo(gsap.utils.clamp(-12, 12, self.getVelocity() / -250)),
       });
       $$(".bigtext__row").forEach((row) => {
         const dir = Number(row.dataset.dir);
@@ -272,6 +345,7 @@ export default function Experience() {
          DRONE — voa pela tela acompanhando a rolagem
          ===================================================== */
       const drone = $(".drone"), droneBody = $(".drone__body"), bubble = $(".drone__bubble"), bubbleTxt = $(".drone__bubble span");
+      const altEl = $(".js-alt");
       let bubbleTl: gsap.core.Timeline | undefined;
       function droneSay(text: string, hold = 2.6) {
         bubbleTxt.textContent = text;
@@ -301,6 +375,7 @@ export default function Experience() {
         const prog = flyTween?.scrollTrigger?.progress ?? 0;
         flyTween?.scrollTrigger?.kill();
         flyTween?.kill();
+        gsap.set(drone, toPx()[0]); // a rota começa do ponto atual: posiciona no 1º ponto
         flyTween = gsap.to(drone, {
           motionPath: { path: toPx(), curviness: 1.4 },
           ease: "none",
@@ -314,6 +389,7 @@ export default function Experience() {
               lastX = x;
               gsap.to(droneBody, { rotation: gsap.utils.clamp(-28, 28, dx * 1.4), duration: 0.5, overwrite: "auto" });
               drone.classList.toggle("is-right", x > window.innerWidth * 0.55);
+              altEl.textContent = String(120 + Math.round((flyTween?.scrollTrigger?.progress ?? 0) * 880)).padStart(3, "0");
             },
           },
         });
@@ -329,6 +405,60 @@ export default function Experience() {
         lastW = window.innerWidth;
         clearTimeout(rt);
         rt = setTimeout(() => { buildFlight(); ScrollTrigger.refresh(); }, 250);
+      });
+
+      // ---------- Interação do drone ----------
+      const sysEl = $(".js-sys");
+      const pupil = drone.querySelector(".drone__pupil") as SVGElement;
+      const svg = droneBody.querySelector("svg") as SVGElement;
+      const dodge = $(".drone__dodge");
+      const dodgeX = gsap.quickTo(dodge, "x", { duration: 0.7, ease: "power3" });
+      const dodgeY = gsap.quickTo(dodge, "y", { duration: 0.7, ease: "power3" });
+      const pupilX = gsap.quickTo(pupil, "x", { duration: 0.25 });
+      const pupilY = gsap.quickTo(pupil, "y", { duration: 0.25 });
+      on(window, "pointermove", (e: PointerEvent) => {
+        const r = droneBody.getBoundingClientRect();
+        const dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
+        const d = Math.hypot(dx, dy) || 1;
+        // o olho segue o cursor
+        pupilX((dx / d) * 3.4); pupilY((dy / d) * 3.4);
+        // desvia quando o cursor chega perto (no toque, só reage ao clique)
+        if (!isTouch && d < 150) {
+          const push = ((150 - d) / 150) * 80;
+          dodgeX((-dx / d) * push); dodgeY((-dy / d) * push);
+        } else { dodgeX(0); dodgeY(0); }
+      });
+      const quips = [
+        "Ei! Isso faz cócegas 😆",
+        "Quer um app assim pra sua empresa?",
+        "Escaneando sua operação… 🔎",
+        "Processo organizado = menos retrabalho ✅",
+        "Bora marcar o diagnóstico? 🚀",
+      ];
+      let qi = 0, rolling = false;
+      const burst = () => {
+        const r = droneBody.getBoundingClientRect();
+        const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+        for (let k = 0; k < 18; k++) {
+          const s = document.createElement("i");
+          s.className = "spark";
+          layer.appendChild(s);
+          const a = (k / 18) * Math.PI * 2, dist = gsap.utils.random(50, 110);
+          gsap.set(s, { x: cx, y: cy, scale: gsap.utils.random(0.8, 1.6) });
+          gsap.to(s, { x: cx + Math.cos(a) * dist, y: cy + Math.sin(a) * dist, opacity: 0, scale: 0, duration: gsap.utils.random(0.6, 1), ease: "power3.out", onComplete: () => s.remove() });
+        }
+      };
+      on(droneBody, "click", () => {
+        if (rolling) return;
+        rolling = true;
+        drone.classList.add("is-boost");
+        sysEl.textContent = "SCAN";
+        burst();
+        droneSay(quips[qi++ % quips.length], 2.4);
+        gsap.timeline({ onComplete: () => { rolling = false; drone.classList.remove("is-boost"); sysEl.textContent = "OK"; } })
+          .to(svg, { rotation: 360, scale: 1.2, y: -36, duration: 0.85, ease: "power3.inOut", transformOrigin: "50% 50%" })
+          .to(svg, { y: 0, scale: 1, duration: 0.7, ease: "bounce.out" })
+          .set(svg, { rotation: 0 });
       });
 
       // Faíscas atrás do drone (menos no celular)
