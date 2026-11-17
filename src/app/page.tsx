@@ -449,8 +449,14 @@ export default function Home() {
                 <span>Conversar no WhatsApp</span><i className="btn__arrow">→</i>
               </a>
               <div className="contact__social">
-                <a href={LINK_INSTAGRAM} target="_blank" rel="noopener noreferrer" className="btn btn--ghost magnetic" data-cursor="↗"><span>Instagram</span></a>
-                <a href={LINK_LINKEDIN} target="_blank" rel="noopener noreferrer" className="btn btn--ghost magnetic" data-cursor="↗"><span>LinkedIn</span></a>
+                <a href={LINK_INSTAGRAM} target="_blank" rel="noopener noreferrer" className="btn btn--ig magnetic" data-cursor="↗">
+                  <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M12 7.3A4.7 4.7 0 1 0 16.7 12 4.7 4.7 0 0 0 12 7.3Zm0 7.7a3 3 0 1 1 3-3 3 3 0 0 1-3 3Zm6-7.9a1.1 1.1 0 1 1-1.1-1.1A1.1 1.1 0 0 1 18 7.1ZM21.1 8.2a5.4 5.4 0 0 0-1.5-3.8 5.4 5.4 0 0 0-3.8-1.5C14.3 2.8 9.7 2.8 8.2 2.9a5.4 5.4 0 0 0-3.8 1.5 5.4 5.4 0 0 0-1.5 3.8c-.1 1.5-.1 6.1 0 7.6a5.4 5.4 0 0 0 1.5 3.8 5.4 5.4 0 0 0 3.8 1.5c1.5.1 6.1.1 7.6 0a5.4 5.4 0 0 0 3.8-1.5 5.4 5.4 0 0 0 1.5-3.8c.1-1.5.1-6.1 0-7.6Zm-2 9.3a3 3 0 0 1-1.7 1.7c-1.2.5-4 .4-5.4.4s-4.2.1-5.4-.4a3 3 0 0 1-1.7-1.7c-.5-1.2-.4-4-.4-5.4s-.1-4.2.4-5.4a3 3 0 0 1 1.7-1.7c1.2-.5 4-.4 5.4-.4s4.2-.1 5.4.4a3 3 0 0 1 1.7 1.7c.5 1.2.4 4 .4 5.4s.1 4.2-.4 5.4Z" /></svg>
+                  <span>Instagram</span>
+                </a>
+                <a href={LINK_LINKEDIN} target="_blank" rel="noopener noreferrer" className="btn btn--in magnetic" data-cursor="↗">
+                  <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M20.4 2H3.6A1.6 1.6 0 0 0 2 3.6v16.8A1.6 1.6 0 0 0 3.6 22h16.8a1.6 1.6 0 0 0 1.6-1.6V3.6A1.6 1.6 0 0 0 20.4 2ZM8 19H5V9.5h3Zm-1.5-10.8a1.7 1.7 0 1 1 1.7-1.7 1.7 1.7 0 0 1-1.7 1.7ZM19 19h-3v-4.6c0-1.1 0-2.5-1.5-2.5S12.8 13 12.8 14.3V19h-3V9.5h2.8v1.3a3.1 3.1 0 0 1 2.8-1.5c3 0 3.6 2 3.6 4.6Z" /></svg>
+                  <span>LinkedIn</span>
+                </a>
               </div>
             </div>
           </div>
@@ -458,12 +464,10 @@ export default function Home() {
       </main>
 
       <footer className="footer container">
-        <div className="logo"><Logo size={84} /></div>
+        {/* logo grande e centralizada; os links de redes ficam só no Contato, logo acima */}
+        <div className="logo footer__logo"><Logo size={170} /></div>
         <p>Entendemos o negócio. Transformamos processos. Desenvolvemos soluções.<br />© {new Date().getFullYear()} MAFRA Consultoria &amp; Tecnologia</p>
         <div className="footer__links">
-          <a href={LINK_INSTAGRAM} target="_blank" rel="noopener noreferrer" data-cursor="↗">Instagram</a>
-          <a href={LINK_LINKEDIN} target="_blank" rel="noopener noreferrer" data-cursor="↗">LinkedIn</a>
-          <a href={LINK_WHATSAPP} target="_blank" rel="noopener noreferrer" data-cursor="↗">WhatsApp</a>
           <a href="#top" data-cursor="↑">Voltar ao topo ↑</a>
         </div>
       </footer>
