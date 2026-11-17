@@ -32,5 +32,4 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
 
 ## Pendências conhecidas
 
-- Número de WhatsApp em `src/components/Experience.tsx` (`WHATSAPP`).
 - Links de Instagram/LinkedIn no rodapé e foto do Victor na seção Sobre.

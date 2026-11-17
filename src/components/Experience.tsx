@@ -7,7 +7,7 @@ import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 import Lenis from "lenis";
 
 // >>> Coloque aqui seu número de WhatsApp (DDI + DDD + número, só dígitos). Ex: "5511999999999"
-const WHATSAPP = "";
+const WHATSAPP = "5531996693991";
 
 /**
  * Orquestra todas as animações da página: preloader, smooth scroll, cursor,
