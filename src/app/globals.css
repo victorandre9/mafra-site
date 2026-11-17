@@ -101,7 +101,7 @@ body::after {
 }
 .preloader__inner { width: min(320px, 80vw); text-align: center; }
 .preloader__logo { font: 700 3rem var(--font-display); letter-spacing: -.04em; margin-bottom: 24px; }
-.preloader__logo span, .logo span { color: var(--lime); }
+.preloader__logo span { color: var(--lime); }
 .preloader__bar { height: 2px; background: var(--border); overflow: hidden; border-radius: 2px; }
 .preloader__bar span { display: block; height: 100%; width: 0; background: var(--grad); }
 .preloader__count { margin-top: 14px; font: 500 .9rem var(--font-display); color: var(--muted); }
