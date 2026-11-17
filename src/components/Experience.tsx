@@ -208,18 +208,10 @@ export default function Experience() {
           const k = Math.round(sTrack.scrollLeft / step());
           [...dots.children].forEach((d, j) => d.classList.toggle("is-on", j === k));
         }, { passive: true });
-        ScrollTrigger.create({
-          trigger: sTrack, start: "top 75%", once: true,
-          onEnter: () => {
-            sTrack.style.scrollSnapType = "none";
-            gsap.timeline({ delay: 0.5, onComplete: () => { sTrack.style.scrollSnapType = ""; } })
-              .to(sTrack, { scrollLeft: step() * 0.45, duration: 0.7, ease: "power2.inOut" })
-              .to(sTrack, { scrollLeft: 0, duration: 0.6, ease: "power2.inOut" }, "+=0.25");
-          },
-        });
+        // sem espiadinha automática: no celular os cards só se mexem quando a pessoa arrasta (pedido do Victor)
       }
 
-      gsap.from(".services__track .card", { y: mobileLayout ? 60 : 120, rotationY: mobileLayout ? 0 : -25, rotationX: mobileLayout ? 0 : 10, opacity: 0, stagger: 0.09, duration: 1.4, ease: "expo.out", transformPerspective: 1000, scrollTrigger: { trigger: ".services", start: "top 70%" } });
+      if (!mobileLayout) gsap.from(".services__track .card", { y: 120, rotationY: -25, rotationX: 10, opacity: 0, stagger: 0.09, duration: 1.4, ease: "expo.out", transformPerspective: 1000, scrollTrigger: { trigger: ".services", start: "top 70%" } });
 
       /* ---------- Processo: celular 3D pinado, telas trocam ---------- */
       const steps = $$(".step"), screens = $$(".screen");
@@ -428,7 +420,7 @@ export default function Experience() {
               const x = Number(gsap.getProperty(drone, "x"));
               const dx = x - lastX;
               lastX = x;
-              gsap.to(droneBody, { rotation: gsap.utils.clamp(-28, 28, dx * 1.4), duration: 0.5, overwrite: "auto" });
+              gsap.to(droneBody, { rotation: gsap.utils.clamp(-12, 12, dx * 0.8), duration: 0.6, overwrite: "auto" });
               drone.classList.toggle("is-right", x > window.innerWidth * 0.5);
               altEl.textContent = String(120 + Math.round((flyTween?.scrollTrigger?.progress ?? 0) * 880)).padStart(3, "0");
             },
@@ -496,23 +488,62 @@ export default function Experience() {
       const layer = $(".drone-layer");
       const sparkEvery = isTouch ? 70 : 28;
       let lastSpark = 0, px = 0, py = 0;
-      // Desvio do fundo: se a rota passar sobre a malha de pontos, a Orbe se afasta.
-      const avoidX = gsap.quickTo(layer, "x", { duration: 0.9, ease: "power3" });
-      const avoidY = gsap.quickTo(layer, "y", { duration: 0.9, ease: "power3" });
+      // Desvio: a Orbe procura espaço livre — longe dos TEXTOS (títulos, parágrafos, botões, cards),
+      // da malha de pontos do fundo e do cabeçalho. Se o ponto da rota estiver ocupado, ela flutua até o
+      // espaço vazio mais próximo; se não houver nenhum (comum no celular, onde o texto ocupa a largura
+      // toda), ela fica onde está e fica translúcida enquanto o texto passa por baixo.
+      const avoidX = gsap.quickTo(layer, "x", { duration: 1.1, ease: "power3" });
+      const avoidY = gsap.quickTo(layer, "y", { duration: 1.1, ease: "power3" });
+      const corpo = $(".drone__dodge");
+      const SEL_TEXTO = "main h1, main h2, main h3, main p, main li, main .btn, main .pill, main .eyebrow, main .step.is-active, main .stat, main .holo.is-on, main .card__icon, main .project__media, main .phone__frame, main .about__badge, .footer .logo, .footer p, .footer__links";
+      let obst: Element[] = [];
+      const coletar = () => { obst = Array.from(document.querySelectorAll(SEL_TEXTO)); };
+      coletar();
+      on(window, "resize", coletar);
+      let tx = 0, ty = 0, apagado = false, ultimo = 0;
       const avoid = () => {
-        const bg = (window as Window & { __mafraBg?: { x: number; y: number; s: number } }).__mafraBg;
-        if (!bg) return;
+        const agora = performance.now();
+        if (agora - ultimo < 120) return; // 8x por segundo basta e não pesa
+        ultimo = agora;
         const W = window.innerWidth, H = window.innerHeight;
         const x = Number(gsap.getProperty(drone, "x")), y = Number(gsap.getProperty(drone, "y"));
-        const cx = bg.x * W, cy = bg.y * H, r = bg.s * H + 70;
-        const dx = x - cx, dy = y - cy, d = Math.hypot(dx, dy) || 1;
-        let ox = 0, oy = 0;
-        if (d < r) { ox = (dx / d) * (r - d); oy = (dy / d) * (r - d); }
-        // a Orbe (com o anel e o brilho) nunca encosta na borda da tela
-        const mx = drone.offsetWidth / 2 + 14, my = drone.offsetHeight / 2 + 24;
-        ox = gsap.utils.clamp(mx - x, W - mx - x, ox);
-        oy = gsap.utils.clamp(my - y, H - my - y, oy);
-        avoidX(ox); avoidY(oy);
+        const orbEl = corpo.querySelector(".drone__orb") as HTMLElement | null;
+        const tam = Math.max(orbEl?.offsetWidth ?? 0, drone.offsetWidth);
+        const hw = tam / 2 + 14, hh = Math.max(orbEl?.offsetHeight ?? 0, drone.offsetHeight) / 2 + 18; // folga para o balanço
+        // limites: nunca embaixo do cabeçalho (com espaço para o HUD) nem colado nas bordas
+        const topo = ($(".header")?.getBoundingClientRect().bottom ?? 80) + hh + 30;
+        const base = H - hh - 18, esq = hw + 8, dir = W - hw - 8;
+        const rs = obst.map((e) => e.getBoundingClientRect()).filter((r) => r.width > 0 && r.bottom > 0 && r.top < H && r.right > 0 && r.left < W);
+        const bg = (window as Window & { __mafraBg?: { x: number; y: number; s: number } }).__mafraBg;
+        const bcx = bg ? bg.x * W : -9999, bcy = bg ? bg.y * H : -9999, br = bg ? bg.s * H * 0.85 : 0;
+        const livre = (ox: number, oy: number) => {
+          const px = x + ox, py = y + oy;
+          if (px < esq || px > dir || py < topo || py > base) return false;
+          if (bg && Math.hypot(px - bcx, py - bcy) < br) return false;
+          return !rs.some((r) => px + hw > r.left - 8 && px - hw < r.right + 8 && py + hh > r.top - 8 && py - hh < r.bottom + 8);
+        };
+        let alvo: [number, number] | null = null;
+        if (livre(0, 0)) alvo = [0, 0]; // a rota está livre: segue a rota
+        else if (livre(tx, ty) && Math.hypot(tx, ty) < 520) alvo = [tx, ty]; // continua no esconderijo (sem tremer)
+        else {
+          busca: for (let raio = 60; raio <= 520; raio += 40) {
+            for (let k = 0; k < 20; k++) {
+              const a = (k / 20) * Math.PI * 2;
+              const ox = Math.cos(a) * raio, oy = Math.sin(a) * raio * 0.8;
+              if (livre(ox, oy)) { alvo = [ox, oy]; break busca; }
+            }
+          }
+        }
+        const semSaida = !alvo;
+        if (!alvo) alvo = [0, 0];
+        // mesmo sem espaço livre, a Orbe respeita as bordas e o cabeçalho
+        tx = gsap.utils.clamp(esq - x, dir - x, alvo[0]);
+        ty = gsap.utils.clamp(topo - y, base - y, alvo[1]);
+        avoidX(tx); avoidY(ty);
+        if (semSaida !== apagado) {
+          apagado = semSaida;
+          gsap.to(corpo, { opacity: semSaida ? 0.38 : 1, duration: 0.5, overwrite: "auto" });
+        }
       };
       gsap.ticker.add(avoid);
       cleanups.push(() => gsap.ticker.remove(avoid));

@@ -31,7 +31,7 @@ export default function DroneOrb() {
   }, []);
   return (
     <div ref={host} className="drone__orb">
-      <Canvas dpr={dpr} camera={{ position: [0, 0.3, 3.7], fov: 38 }} gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}>
+      <Canvas dpr={dpr} camera={{ position: [0, 0.25, 4.15], fov: 38 }} gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}>
         <ambientLight intensity={0.12} />
         <directionalLight position={[3, 4.5, 2.5]} intensity={3} />
         <pointLight position={[-2.6, 1.2, -2]} intensity={30} color={ESM_CLARO} />

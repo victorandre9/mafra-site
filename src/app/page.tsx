@@ -6,6 +6,7 @@ import OrbMenu from "@/components/OrbMenu";
 import { HoloCards, Phone } from "@/components/Phone";
 import { SplitChars, SplitWords } from "@/components/Split";
 import { Chevron, Logo, LogoImage } from "@/components/Logo";
+import { LogoZoom } from "@/components/LogoZoom";
 
 const TECH = [
   "Ordens de serviço", "Força de vendas", "Logística & entregas", "Financeiro", "Checklists",
@@ -157,7 +158,7 @@ export default function Home() {
 
       {/* HEADER */}
       <header className="header">
-        <a href="#top" className="logo" data-cursor="Topo" aria-label="MAFRA Consultoria & Tecnologia"><Logo size={92} /></a>
+        <a href="#top" className="logo" data-cursor="Ampliar" aria-label="MAFRA Consultoria & Tecnologia"><Logo size={92} /></a>
         <nav className="nav">
           {NAV.map(([href, label]) => (
             <a key={href} href={href} className="nav__link">{label}</a>
@@ -463,6 +464,7 @@ export default function Home() {
         </section>
       </main>
 
+      <LogoZoom />
       <footer className="footer container">
         {/* logo grande e centralizada; os links de redes ficam só no Contato, logo acima */}
         <div className="logo footer__logo"><Logo size={170} /></div>
