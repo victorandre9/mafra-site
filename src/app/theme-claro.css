@@ -1,0 +1,292 @@
+/* ================= TEMA CLARO "BRANCO GELO" + fontes Engenharia (Syne + Inter + JetBrains Mono) =================
+   Camada por cima do globals.css: o tema escuro continua escrito lá embaixo, este arquivo o substitui. */
+:root {
+  --bg: #f3f6f9; --bg-2: #e9eff5; --text: #0b1a2e; --muted: #4f6078;
+  --surface: rgba(255, 255, 255, .8); --border: rgba(13, 44, 82, .1);
+  --lime: #1b8f52; --violet: #1b7a4b; --cyan: #2fbf68;
+  --grad: linear-gradient(100deg, #157a45, #22b562);
+}
+/* fundo gelo com grade técnica de pontinhos */
+body {
+  background-color: #f3f6f9 !important; color: var(--text);
+  background-image: radial-gradient(rgba(13, 44, 82, .09) 1px, transparent 1.2px) !important;
+  background-size: 22px 22px !important;
+}
+body::after { opacity: .02 !important; }
+
+/* topo */
+.hero__glow--a { background: #c6ecd6 !important; opacity: .75 !important; }
+.hero__glow--b { background: #d4e6f8 !important; opacity: .8 !important; }
+.chev--big { color: #e2f2e8 !important; opacity: 1 !important; }
+.chev--mid { color: #c9eadb !important; opacity: .7 !important; }
+.chev--small { color: #22b562 !important; }
+.chev--contact { color: #e3f3ea !important; opacity: 1 !important; }
+.header.is-scrolled { background: rgba(243, 246, 249, .85) !important; border-bottom-color: rgba(13, 44, 82, .08) !important; }
+.nav__link { color: #33465f !important; }
+.nav__link::after { background: #1b8f52 !important; }
+.pill { background: #0d2c52 !important; color: #fff !important; box-shadow: 0 10px 30px rgba(13, 44, 82, .18) !important; }
+.outline { -webkit-text-stroke: 1.5px #0b1a2e !important; }
+.hero__tagline { color: #4f6078 !important; }
+
+/* botões */
+.btn { color: #fff !important; background: #1b8f52 !important; box-shadow: 0 10px 24px rgba(27, 143, 82, .25); }
+.btn--ghost { background: #fff !important; color: #0b1a2e !important; box-shadow: inset 0 0 0 1px rgba(13, 44, 82, .14), 0 6px 18px rgba(13, 44, 82, .06) !important; }
+.btn--wa { background: #25d366 !important; color: #052e16 !important; }
+
+/* faixa e seções alternadas */
+.marquee { background: #0d2c52 !important; color: #fff; border: 0 !important; }
+.marquee i { color: #3ddc84 !important; }
+.services, .stats, .about { background: linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,.65) 12%, rgba(255,255,255,.65) 88%, rgba(255,255,255,0)); }
+.manifesto__text em { color: #1b8f52 !important; }
+.manifesto__text .word { opacity: .22; }
+
+/* cards */
+.card, .project, .about__item { background: #fff !important; border: 1px solid rgba(13, 44, 82, .08) !important; box-shadow: 0 14px 40px rgba(13, 44, 82, .07); }
+.card:hover { border-color: rgba(27, 143, 82, .45) !important; }
+.card::before { background: radial-gradient(400px circle at var(--mx, 50%) var(--my, 50%), rgba(34, 181, 98, .12), transparent 60%) !important; }
+.card__icon svg { stroke: #1b8f52 !important; }
+.card li, .project__info li { color: #0b1a2e; background: #f3f6f9; border-color: transparent !important; }
+.card--cta { background: linear-gradient(135deg, #0d2c52, #1b7a4b) !important; color: #fff; }
+.card--cta p { color: rgba(255, 255, 255, .88) !important; }
+.card--cta .btn { background: #fff !important; color: #0b1a2e !important; }
+.project__tag { color: #1b8f52 !important; }
+.project__gain { background: #eef8f2 !important; border-left-color: #1b8f52 !important; }
+.project__gain strong { color: #1b8f52 !important; }
+.project--cta { background: linear-gradient(160deg, #eef8f2, #ffffff) !important; border: 1px dashed rgba(27, 143, 82, .5) !important; }
+
+/* números */
+.stat { background: transparent !important; box-shadow: none; }
+.stat__line { background: linear-gradient(90deg, #1b8f52, rgba(13, 44, 82, .12)) !important; }
+.stat__n small { color: #4f6078 !important; }
+
+/* metodologia */
+.step { opacity: .5 !important; }
+.step.is-active { opacity: 1 !important; background: #fff !important; box-shadow: 0 14px 40px rgba(13, 44, 82, .08); border: 1px solid rgba(27, 143, 82, .3); }
+.step__n { color: #1b8f52 !important; }
+.process__bar { background: rgba(13, 44, 82, .1) !important; }
+.orbit { border-color: rgba(13, 44, 82, .12) !important; }
+.phone__glow { background: radial-gradient(closest-side, rgba(34, 181, 98, .25), transparent 70%) !important; }
+.holo { background: rgba(255, 255, 255, .78) !important; border: 1px solid rgba(27, 143, 82, .35) !important; box-shadow: 0 20px 50px rgba(13, 44, 82, .12) !important; }
+.holo b { color: #0b1a2e !important; } .holo span { color: #4f6078 !important; }
+
+/* sobre */
+.about__ring text { fill: #4f6078 !important; }
+.about__n { color: #1b8f52 !important; }
+
+/* faixas gigantes */
+.bigtext__row { color: #0d2c52; }
+.bigtext__row.outline { -webkit-text-stroke: 1.5px rgba(13, 44, 82, .25) !important; color: transparent; }
+
+/* contato em painel verde suave */
+.contact { background: linear-gradient(160deg, #eaf7ef, #f3f6f9 60%) !important; border-top: 1px solid rgba(13, 44, 82, .06) !important; }
+.contact__glow { background: radial-gradient(closest-side, rgba(34, 181, 98, .18), transparent) !important; }
+.footer { color: var(--muted); border-top-color: rgba(13, 44, 82, .08) !important; }
+
+/* malha de pontos mais nítida no claro */
+.bg3d { mix-blend-mode: multiply; filter: saturate(1.8) brightness(.62) contrast(1.15); }
+
+/* Orbe e falas */
+.drone__orb { filter: drop-shadow(0 12px 18px rgba(13, 44, 82, .35)); }
+.drone__glow { background: radial-gradient(closest-side, rgba(34, 181, 98, .35), transparent) !important; }
+.drone__beam { background: linear-gradient(180deg, rgba(34, 181, 98, .22), rgba(34, 181, 98, 0)) !important; mix-blend-mode: normal !important; }
+.drone__hud { background: rgba(255, 255, 255, .9) !important; color: #1b8f52 !important; border-color: rgba(27, 143, 82, .4) !important; }
+.drone__hud-id { color: #0b1a2e !important; }
+.drone__hud b { color: #1b8f52 !important; }
+.drone__bubble { background: #0d2c52 !important; color: #fff !important; box-shadow: 0 10px 24px rgba(13, 44, 82, .25); }
+.swipe-hint { background: #eef8f2 !important; border-color: rgba(27, 143, 82, .35) !important; color: #0b1a2e !important; }
+.services__dots i { background: rgba(13, 44, 82, .18) !important; } .services__dots i.is-on { background: #1b8f52 !important; }
+.progress span { background: linear-gradient(90deg, #157a45, #22b562) !important; }
+
+/* ===== v3: referências de 2026 (bento grid, mesh gradient sutil, vidro fosco) ===== */
+/* mesh gradient: manchas de cor suaves e fixas atrás de tudo */
+html { background: #f3f6f9; }
+body::before {
+  content: ""; position: fixed; inset: -10%; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(40% 35% at 85% 10%, rgba(61, 220, 132, .16), transparent 70%),
+    radial-gradient(35% 30% at 10% 60%, rgba(79, 155, 220, .14), transparent 70%),
+    radial-gradient(30% 30% at 70% 85%, rgba(31, 157, 90, .12), transparent 70%);
+  filter: blur(20px);
+}
+/* header de vidro fosco sempre */
+.header { background: rgba(243, 246, 249, .6) !important; backdrop-filter: blur(14px) saturate(1.4) !important; -webkit-backdrop-filter: blur(14px) saturate(1.4) !important; border-bottom: 1px solid rgba(13, 44, 82, .06) !important; }
+/* tipografia: título do hero com tracking mais justo e subtítulo maior */
+.hero__title { letter-spacing: -.055em !important; }
+.hero__sub { font-size: 1.22rem !important; color: #3b4d66 !important; }
+
+/* SERVIÇOS EM BENTO GRID (computador): um card destaque grande + cards menores + faixa CTA */
+@media (min-width: 761px) {
+  .services__pin { min-height: 0 !important; padding: 110px 0 90px !important; }
+  .services__track { display: grid !important; grid-template-columns: repeat(4, 1fr); gap: 18px !important; width: auto !important; max-width: 1280px; margin: 0 auto; transform: none !important; }
+  .services__track .card { width: auto !important; min-height: 0 !important; padding: 28px 26px !important; border-radius: 26px !important; }
+  .services__track .card:nth-child(1) { grid-column: span 2; grid-row: span 2; background: linear-gradient(160deg, #ffffff 40%, #eaf7ef) !important; }
+  .services__track .card:nth-child(1) h3 { font-size: 2.1rem !important; }
+  .services__track .card:nth-child(1) p { font-size: 1.08rem; }
+  .services__track .card:nth-child(1) .card__icon svg { width: 76px; height: 76px; }
+  .services__track .card--cta { grid-column: span 4; flex-direction: row !important; align-items: center !important; justify-content: space-between !important; padding: 30px 36px !important; }
+  .services__track .card--cta h3 { font-size: 1.8rem !important; }
+  .services__track .card ul { margin-top: 12px; }
+}
+/* números em destaque com cartão de vidro */
+.stats { gap: 18px !important; }
+.stat { background: rgba(255, 255, 255, .7) !important; border-radius: 22px; padding: 26px 24px !important; border: 1px solid rgba(13, 44, 82, .07); backdrop-filter: blur(8px); }
+.stat__line { display: none !important; }
+/* cases: imagem com moldura interna e leve zoom */
+.project__media { margin: 10px 10px 0; border-radius: 18px; }
+/* chips com cara de "tag" de produto */
+.card li, .project__info li { font-weight: 600; font-size: .74rem !important; letter-spacing: .01em; }
+@media (min-width: 761px) {
+  .services__track .card:nth-child(1) { justify-content: flex-start; position: relative; overflow: hidden; }
+  .services__track .card:nth-child(1)::after {
+    content: ""; position: absolute; right: -60px; bottom: -60px; width: 340px; height: 340px; border-radius: 50%; pointer-events: none;
+    background: radial-gradient(rgba(27, 143, 82, .35) 1.4px, transparent 1.6px) 0 0 / 14px 14px;
+    -webkit-mask-image: radial-gradient(circle, #000 35%, transparent 70%); mask-image: radial-gradient(circle, #000 35%, transparent 70%);
+  }
+  .services__track .card:nth-child(1) ul { margin-top: auto; }
+}
+@media (min-width: 761px) {
+  .services__track .card:nth-child(1) { grid-row: span 1 !important; }
+  .services__track .card--cta { grid-column: span 2 !important; flex-direction: column !important; align-items: flex-start !important; justify-content: center !important; }
+  .services__track .card--cta h3 { font-size: 2rem !important; }
+}
+
+/* ================= FONTES: ENGENHARIA ================= */
+:root {
+  --font-display: "Syne Variable", system-ui, sans-serif;
+  --font-body: "Inter Variable", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
+  --g-deep: #0c6b38; --g-mid: #18a057; --g-bright: #34d27a; --g-ice: #d9ffe9;
+}
+.hero__title { font-size: clamp(2.4rem, 6.4vw, 6rem) !important; font-weight: 700 !important; letter-spacing: -.02em !important; line-height: 1.02 !important; }
+.section-title, .contact__title { font-weight: 700 !important; letter-spacing: -.02em !important; font-size: clamp(2rem, 4.4vw, 4rem) !important; }
+.card h3 { font-weight: 700 !important; letter-spacing: -.015em !important; }
+.eyebrow, .nav__link, .card__num, .step__n, .project__tag, .stat__n small, .drone__hud, .swipe-hint, .hero__tagline, .preloader__count {
+  font-family: var(--font-mono) !important; letter-spacing: .04em !important;
+}
+.hero__tagline { font-style: normal !important; font-size: .82rem; }
+.marquee span, .stat__n { font-family: var(--font-mono) !important; letter-spacing: -.02em !important; }
+
+/* ================= VERDE COM LUZ BRANCA POR DENTRO =================
+   Referência: o "vidro líquido" dos sites de produto americanos de 2026 — a cor nunca é chapada:
+   tem um degradê de cima para baixo, uma quina de luz branca de 1px no topo, um brilho branco
+   difuso por dentro e um reflexo que passa de vez em quando. As quatro camadas juntas é que dão
+   a impressão de material; uma sozinha só parece cor. */
+
+/* texto verde: degradê com um reflexo branco que atravessa devagar */
+.grad, .manifesto__text em {
+  background: linear-gradient(100deg, var(--g-deep) 0%, var(--g-mid) 30%, var(--g-bright) 44%, #effff5 50%, var(--g-bright) 56%, var(--g-mid) 70%, var(--g-deep) 100%) !important;
+  background-size: 260% 100% !important;
+  -webkit-background-clip: text !important; background-clip: text !important; color: transparent !important;
+  animation: verde-reflexo 7s ease-in-out infinite;
+  filter: drop-shadow(0 6px 18px rgba(24, 160, 87, .18));
+}
+@keyframes verde-reflexo { 0%, 18% { background-position: 100% 0; } 62%, 100% { background-position: 0% 0; } }
+
+/* botão principal: vidro verde */
+.btn:not(.btn--ghost):not(.btn--wa) {
+  background:
+    radial-gradient(120% 90% at 50% -20%, rgba(255, 255, 255, .55), rgba(255, 255, 255, 0) 55%),
+    linear-gradient(180deg, var(--g-bright), var(--g-mid) 55%, var(--g-deep)) !important;
+  color: #fff !important; text-shadow: 0 1px 1px rgba(5, 60, 30, .35);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .75),
+    inset 0 0 0 1px rgba(255, 255, 255, .18),
+    inset 0 -3px 8px rgba(4, 70, 35, .35),
+    0 1px 2px rgba(12, 107, 56, .35),
+    0 12px 28px -6px rgba(24, 160, 87, .45) !important;
+}
+.btn:not(.btn--ghost)::after {
+  content: ""; position: absolute; top: 0; bottom: 0; left: -60%; width: 45%; z-index: 1; pointer-events: none;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .55), transparent);
+  transform: skewX(-20deg); animation: verde-varre 5.5s ease-in-out infinite;
+}
+.btn > * { position: relative; z-index: 2; }
+@keyframes verde-varre { 0%, 70% { left: -60%; } 100% { left: 130%; } }
+.btn--ghost {
+  background: linear-gradient(180deg, #ffffff, #f4f8fb) !important;
+  box-shadow: inset 0 1px 0 #fff, inset 0 0 0 1px rgba(13, 44, 82, .12), 0 8px 22px -8px rgba(13, 44, 82, .18) !important;
+}
+
+/* selo do topo ("Consultoria & implementação"): pastilha de vidro verde */
+.pill {
+  background:
+    radial-gradient(100% 120% at 30% -30%, rgba(255, 255, 255, .6), rgba(255, 255, 255, 0) 60%),
+    linear-gradient(180deg, var(--g-mid), var(--g-deep)) !important;
+  color: #fff !important; font-family: var(--font-mono) !important; letter-spacing: .08em !important; border-radius: 999px !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7), inset 0 -2px 6px rgba(4, 70, 35, .3), 0 10px 26px -8px rgba(24, 160, 87, .55) !important;
+}
+
+/* chevrons: verde com luz branca por dentro (degradê definido no SVG da página) */
+.chev--small path, .project__chev path { fill: url(#verde-vidro) !important; }
+.chev--small { filter: drop-shadow(0 14px 24px rgba(24, 160, 87, .35)); }
+.chev--mid path { fill: url(#verde-vidro-suave) !important; }
+.chev--mid { opacity: .55 !important; }
+
+/* faixa que corre: deixa de ser azul-marinho e vira uma lâmina de vidro verde */
+.marquee {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .35), rgba(255, 255, 255, 0) 45%),
+    linear-gradient(100deg, var(--g-deep), var(--g-mid) 45%, var(--g-bright) 75%, var(--g-mid)) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6), inset 0 -1px 0 rgba(4, 70, 35, .4), 0 20px 50px -18px rgba(24, 160, 87, .55) !important;
+}
+.marquee span { color: #fff !important; text-shadow: 0 1px 0 rgba(4, 70, 35, .3); }
+.marquee i { color: var(--g-ice) !important; }
+
+/* cartão-chamada dos serviços: placa verde com reflexos brancos */
+.card--cta {
+  background:
+    radial-gradient(70% 60% at 85% 0%, rgba(255, 255, 255, .45), rgba(255, 255, 255, 0) 60%),
+    radial-gradient(60% 50% at 0% 100%, rgba(217, 255, 233, .35), rgba(217, 255, 233, 0) 60%),
+    linear-gradient(145deg, var(--g-deep), var(--g-mid) 55%, var(--g-bright)) !important;
+  border: 0 !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7), inset 0 0 0 1px rgba(255, 255, 255, .16), 0 24px 60px -20px rgba(24, 160, 87, .6) !important;
+}
+.card--cta h3 { color: #fff; }
+.card--cta .btn { background: #fff !important; color: var(--g-deep) !important; text-shadow: none !important; box-shadow: inset 0 -2px 0 rgba(13, 44, 82, .08), 0 10px 24px -8px rgba(4, 70, 35, .5) !important; }
+
+/* cards brancos: aresta de luz + brilho verde que segue o mouse */
+.card, .project, .about__item, .stat {
+  box-shadow: inset 0 1px 0 #fff, 0 1px 2px rgba(13, 44, 82, .05), 0 18px 44px -18px rgba(13, 44, 82, .16) !important;
+}
+.card::before { background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(52, 210, 122, .16), transparent 60%) !important; }
+.card__icon {
+  display: inline-grid; place-items: center; border-radius: 16px; padding: 10px;
+  background: radial-gradient(90% 90% at 30% 0%, #fff, rgba(255, 255, 255, 0) 70%), linear-gradient(180deg, #e3f8ec, #c9efd9);
+  box-shadow: inset 0 1px 0 #fff, inset 0 0 0 1px rgba(24, 160, 87, .18), 0 8px 18px -8px rgba(24, 160, 87, .45);
+}
+.card__icon svg { stroke: var(--g-deep) !important; }
+
+/* números: o valor em verde-vidro */
+.stat__n { background: linear-gradient(180deg, var(--g-bright), var(--g-deep)); -webkit-background-clip: text; background-clip: text; color: transparent !important; }
+
+/* metodologia: etapa ativa com borda de luz verde */
+.step.is-active {
+  background: linear-gradient(180deg, #ffffff, #f3fbf6) !important;
+  border: 1px solid rgba(24, 160, 87, .35) !important;
+  box-shadow: inset 0 1px 0 #fff, 0 0 0 4px rgba(52, 210, 122, .08), 0 18px 40px -16px rgba(24, 160, 87, .35) !important;
+}
+.process__bar span, .progress span { background: linear-gradient(90deg, var(--g-deep), var(--g-bright), #c9ffe0) !important; box-shadow: 0 0 12px rgba(52, 210, 122, .6); }
+
+/* ganho dos cases */
+.project__gain { background: linear-gradient(90deg, #e6f8ee, #f6fdf9) !important; border-left: 3px solid var(--g-mid) !important; box-shadow: inset 0 1px 0 #fff; }
+
+/* contato */
+.contact { background: radial-gradient(60% 70% at 80% 10%, rgba(52, 210, 122, .18), transparent 70%), linear-gradient(160deg, #e8f7ee, #f3f6f9 65%) !important; }
+
+/* barra do topo */
+.header .btn--small { padding: 10px 20px; }
+
+/* telas com pouco movimento: o reflexo fica parado */
+@media (prefers-reduced-motion: reduce) { .grad, .manifesto__text em, .btn::after { animation: none !important; } }
+
+/* Syne tem descendentes longos ("p" de aplicativos): a janela das palavras que giram ganha folga */
+.rotator { height: 1.1em !important; line-height: 1.1 !important; }
+.rotator__track span {
+  height: 1.1em !important;
+  background: linear-gradient(100deg, var(--g-deep) 0%, var(--g-mid) 30%, var(--g-bright) 44%, #effff5 50%, var(--g-bright) 56%, var(--g-mid) 70%, var(--g-deep) 100%) !important;
+  background-size: 260% 100% !important; -webkit-background-clip: text !important; background-clip: text !important;
+  animation: verde-reflexo 7s ease-in-out infinite;
+}
+/* o ícone do card é uma pastilha do tamanho do desenho, não uma faixa */
+.card__icon { width: fit-content !important; }
+.card__icon svg { width: 40px !important; height: 40px !important; }

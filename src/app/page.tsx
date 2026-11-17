@@ -178,6 +178,22 @@ export default function Home() {
       <div className="hero-bg" aria-hidden="true">
         <div className="hero__glow hero__glow--a" />
         <div className="hero__glow hero__glow--b" />
+        {/* Degradês "verde com luz branca por dentro" usados pelos chevrons (tema claro) */}
+        <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
+          <defs>
+            <linearGradient id="verde-vidro" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stopColor="#d9ffe9" />
+              <stop offset=".28" stopColor="#34d27a" />
+              <stop offset=".7" stopColor="#18a057" />
+              <stop offset="1" stopColor="#0c6b38" />
+            </linearGradient>
+            <linearGradient id="verde-vidro-suave" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stopColor="#ffffff" />
+              <stop offset=".5" stopColor="#c9f0da" />
+              <stop offset="1" stopColor="#7fdcaa" />
+            </linearGradient>
+          </defs>
+        </svg>
         <div className="hero__chevrons">
           <Chevron className="chev chev--big" />
           <Chevron className="chev chev--mid" />

@@ -1,10 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import "@fontsource-variable/space-grotesk";
+import "@fontsource-variable/syne";
+import "@fontsource-variable/jetbrains-mono";
 import "@fontsource-variable/inter";
 import "@fontsource/montserrat/400.css";
 import "@fontsource/montserrat/500.css";
 import "lenis/dist/lenis.css";
 import "./globals.css";
+import "./theme-claro.css";
 
 export const metadata: Metadata = {
   title: "MAFRA Consultoria & Tecnologia — Apps sob medida",
@@ -19,7 +21,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#061428",
+  themeColor: "#f3f6f9",
   width: "device-width",
   initialScale: 1,
 };
