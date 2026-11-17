@@ -173,13 +173,18 @@ export default function Experience() {
       });
 
       /* ---------- Serviços: rolagem horizontal ---------- */
+      // No celular, título + card não cabem na altura da tela com a seção travada:
+      // ali os cards deslizam com o dedo (scroll-snap no CSS), sem trava.
+      const mobileLayout = window.matchMedia("(max-width: 760px)").matches;
       const sTrack = $(".services__track");
       const sDist = () => Math.max(0, sTrack.scrollWidth - window.innerWidth);
-      gsap.to(sTrack, {
-        x: () => -sDist(), ease: "none",
-        scrollTrigger: { trigger: ".services", pin: ".services__pin", start: "top top", end: () => "+=" + sDist(), scrub: 1, invalidateOnRefresh: true, anticipatePin: 1 },
-      });
-      gsap.from(".services__track .card", { y: 120, rotationY: -25, rotationX: 10, opacity: 0, stagger: 0.09, duration: 1.4, ease: "expo.out", transformPerspective: 1000, scrollTrigger: { trigger: ".services", start: "top 70%" } });
+      if (!mobileLayout) {
+        gsap.to(sTrack, {
+          x: () => -sDist(), ease: "none",
+          scrollTrigger: { trigger: ".services", pin: ".services__pin", start: "top top", end: () => "+=" + sDist(), scrub: 1, invalidateOnRefresh: true, anticipatePin: 1 },
+        });
+      }
+      gsap.from(".services__track .card", { y: mobileLayout ? 60 : 120, rotationY: mobileLayout ? 0 : -25, rotationX: mobileLayout ? 0 : 10, opacity: 0, stagger: 0.09, duration: 1.4, ease: "expo.out", transformPerspective: 1000, scrollTrigger: { trigger: ".services", start: "top 70%" } });
 
       /* ---------- Processo: celular 3D pinado, telas trocam ---------- */
       const steps = $$(".step"), screens = $$(".screen");
@@ -230,27 +235,6 @@ export default function Experience() {
         });
         on(stage, "pointerleave", () => { fx(0); fy(0); });
       }
-
-      /* ---------- Fluxo do pedido: linha se desenha, pacote viaja, setores acendem ---------- */
-      const nodes = $$(".flow__node");
-      const desktopFlow = window.innerWidth > 860;
-      const flowTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: ".flow",
-          pin: desktopFlow ? ".flow__pin" : false,
-          start: desktopFlow ? "top top" : "top 70%",
-          end: desktopFlow ? "+=180%" : "bottom 60%",
-          scrub: 1,
-          onUpdate: (self) => {
-            const n = Math.max(1, Math.round(self.progress * nodes.length));
-            nodes.forEach((el, k) => el.classList.toggle("is-on", k < n));
-          },
-        },
-      });
-      flowTl
-        .to(".flow__line-fg", { strokeDashoffset: 0, ease: "none", duration: 1 }, 0)
-        .to(".flow__packet", { x: () => $(".flow__line").getBoundingClientRect().width - 30, ease: "none", duration: 1 }, 0)
-        .to(".flow__packet", { y: -10, rotation: 8, yoyo: true, repeat: 7, ease: "sine.inOut", duration: 0.125 }, 0);
 
       /* ---------- Sobre ---------- */
       gsap.from(".about__badge", { scale: 0.6, rotation: -90, opacity: 0, duration: 1.4, ease: "expo.out", scrollTrigger: { trigger: ".about", start: "top 75%" } });
@@ -314,7 +298,7 @@ export default function Experience() {
       });
 
       // Textos de apoio: sobem saindo do desfoque
-      $$(".flow__sub, .work__lead, .about__lead, .contact__sub, .process__note, .eyebrow:not(.reveal-up)").forEach((p) => {
+      $$(".work__lead, .about__lead, .contact__sub, .process__note, .eyebrow:not(.reveal-up)").forEach((p) => {
         gsap.from(p, { y: 30, opacity: 0, filter: "blur(8px)", duration: 1.2, ease: "expo.out", scrollTrigger: { trigger: p, start: "top 88%" } });
       });
 
@@ -368,7 +352,13 @@ export default function Experience() {
         [0.07, 0.55], [0.1, 0.22], [0.5, 0.12], [0.88, 0.35], [0.86, 0.75],
         [0.5, 0.88], [0.14, 0.78], [0.8, 0.3],
       ];
-      const toPx = () => route.map(([x, y]) => ({ x: x * window.innerWidth, y: y * window.innerHeight }));
+      // No celular o texto ocupa a largura toda: o drone fica nas bordas e no alto/baixo.
+      const routeMobile: Array<[number, number]> = [
+        [0.86, 0.16], [0.9, 0.42], [0.88, 0.84], [0.5, 0.93], [0.12, 0.86],
+        [0.1, 0.5], [0.12, 0.14], [0.5, 0.08], [0.88, 0.18], [0.9, 0.6],
+        [0.86, 0.9], [0.14, 0.9], [0.1, 0.2], [0.86, 0.12],
+      ];
+      const toPx = () => (window.innerWidth <= 760 ? routeMobile : route).map(([x, y]) => ({ x: x * window.innerWidth, y: y * window.innerHeight }));
       let lastX = 0;
       let flyTween: gsap.core.Tween | undefined;
       const buildFlight = () => {
@@ -485,7 +475,6 @@ export default function Experience() {
       const lines: Array<[string, string]> = [
         [".services", "Olha tudo que dá pra fazer ✨"],
         [".process", "Esse é o método MAFRA 📱"],
-        [".flow", "Fala comigo que eu anoto! 🎙️"],
         ["#cases", "Tecnologia que já está em uso 💪"],
         ["#sobre", "Prazer, esse é o Victor 🤝"],
         [".contact", "Chegamos! Qual processo vamos organizar? 🚀"],
