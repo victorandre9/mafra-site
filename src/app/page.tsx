@@ -3,7 +3,7 @@ import Hero3DLazy from "@/components/Hero3DLazy";
 import { Drone } from "@/components/Drone";
 import { Phone } from "@/components/Phone";
 import { SplitChars, SplitWords } from "@/components/Split";
-import { Chevron, Logo, LogoBadge } from "@/components/Logo";
+import { Chevron, Logo, LogoImage } from "@/components/Logo";
 
 const TECH = [
   "Ordens de serviço", "Força de vendas", "Logística & entregas", "Financeiro", "Checklists",
@@ -147,7 +147,7 @@ export default function Home() {
       {/* PRELOADER */}
       <div className="preloader" aria-hidden="true">
         <div className="preloader__inner">
-          <div className="preloader__logo"><LogoBadge uid="pre" size={190} /></div>
+          <div className="preloader__logo"><LogoImage size={200} priority /></div>
           <div className="preloader__bar"><span /></div>
           <div className="preloader__count"><span className="js-count">0</span>%</div>
         </div>
@@ -163,7 +163,7 @@ export default function Home() {
 
       {/* HEADER */}
       <header className="header">
-        <a href="#top" className="logo" data-cursor="Topo" aria-label="MAFRA Consultoria & Tecnologia"><Logo uid="head" /></a>
+        <a href="#top" className="logo" data-cursor="Topo" aria-label="MAFRA Consultoria & Tecnologia"><Logo size={62} /></a>
         <nav className="nav">
           {NAV.map(([href, label]) => (
             <a key={href} href={href} className="nav__link">{label}</a>
@@ -407,7 +407,7 @@ export default function Home() {
                 <defs><path id="circ" d="M100 100m-78 0a78 78 0 1 1 156 0a78 78 0 1 1-156 0" /></defs>
                 <text><textPath href="#circ">GESTÃO NA PRÁTICA ✦ TECNOLOGIA COM PROPÓSITO ✦ </textPath></text>
               </svg>
-              <LogoBadge uid="sobre" size={176} />
+              <LogoImage size={180} />
             </div>
             <div>
               <Eyebrow>Quem está por trás</Eyebrow>
@@ -457,7 +457,7 @@ export default function Home() {
       </main>
 
       <footer className="footer container">
-        <div className="logo"><Logo uid="foot" /></div>
+        <div className="logo"><Logo size={84} /></div>
         <p>Entendemos o negócio. Transformamos processos. Desenvolvemos soluções.<br />© {new Date().getFullYear()} MAFRA Consultoria &amp; Tecnologia</p>
         <div className="footer__links">
           <a href="#" data-cursor="↗">Instagram</a>
