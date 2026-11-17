@@ -331,14 +331,30 @@ export default function Experience() {
       });
 
       // Faixa de tecnologias e textos gigantes reagem à velocidade da rolagem
+      let skewRest: ReturnType<typeof setTimeout> | undefined;
+      cleanups.push(() => clearTimeout(skewRest));
       const skewTo = gsap.quickTo(".marquee__group, .bigtext__row", "skewX", { duration: 0.6, ease: "power3" });
       ScrollTrigger.create({
         start: 0, end: "max",
-        onUpdate: (self) => skewTo(gsap.utils.clamp(-12, 12, self.getVelocity() / -250)),
+        onUpdate: (self) => {
+          skewTo(gsap.utils.clamp(-12, 12, self.getVelocity() / -250));
+          clearTimeout(skewRest);
+          skewRest = setTimeout(() => skewTo(0), 160);
+        },
       });
-      $$(".bigtext__row").forEach((row) => {
+      // Faixas gigantes: correm sozinhas sem parar (em sentidos opostos) e
+      // aceleram com a velocidade da rolagem. O texto é repetido 2x, então
+      // andar -50% e recomeçar fecha o laço sem emenda.
+      const loops = $$(".bigtext__row").map((row) => {
         const dir = Number(row.dataset.dir);
-        gsap.fromTo(row, { xPercent: dir > 0 ? -30 : 0 }, { xPercent: dir > 0 ? 0 : -30, ease: "none", scrollTrigger: { trigger: ".bigtext", start: "top bottom", end: "bottom top", scrub: true } });
+        return gsap.fromTo(row, { xPercent: dir > 0 ? -50 : 0 }, { xPercent: dir > 0 ? 0 : -50, duration: 28, ease: "none", repeat: -1 });
+      });
+      ScrollTrigger.create({
+        start: 0, end: "max",
+        onUpdate: (self) => {
+          const boost = 1 + Math.min(Math.abs(self.getVelocity()) / 400, 6);
+          loops.forEach((t) => gsap.to(t, { timeScale: boost, duration: 0.2, overwrite: true, onComplete: () => { gsap.to(t, { timeScale: 1, duration: 1.2 }); } }));
+        },
       });
 
       /* ---------- Contato ---------- */
@@ -355,6 +371,12 @@ export default function Experience() {
       function droneSay(text: string, hold = 2.6) {
         bubbleTxt.textContent = text;
         bubbleTl?.kill();
+        // o balão nunca sai da tela: mede no tamanho final e empurra para dentro
+        gsap.set(bubble, { x: 0, scale: 1 });
+        const r = bubble.getBoundingClientRect();
+        const pad = 10, W = window.innerWidth;
+        const shift = r.left < pad ? pad - r.left : r.right > W - pad ? W - pad - r.right : 0;
+        gsap.set(bubble, { x: shift, scale: 0.6 });
         bubbleTl = gsap
           .timeline()
           .to(bubble, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(2)" })
@@ -420,19 +442,16 @@ export default function Experience() {
 
       // ---------- Interação do drone ----------
       const sysEl = $(".js-sys");
-      const pupil = drone.querySelector(".drone__pupil") as SVGElement;
-      const svg = droneBody.querySelector("svg") as SVGElement;
+      // o olho da Orbe segue o cursor sozinho (DroneOrb.tsx); aqui fica o giro do clique
+      const svg = droneBody.querySelector(".drone__roll") as HTMLElement;
       const dodge = $(".drone__dodge");
       const dodgeX = gsap.quickTo(dodge, "x", { duration: 0.7, ease: "power3" });
       const dodgeY = gsap.quickTo(dodge, "y", { duration: 0.7, ease: "power3" });
-      const pupilX = gsap.quickTo(pupil, "x", { duration: 0.25 });
-      const pupilY = gsap.quickTo(pupil, "y", { duration: 0.25 });
       on(window, "pointermove", (e: PointerEvent) => {
         const r = droneBody.getBoundingClientRect();
         const dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
         const d = Math.hypot(dx, dy) || 1;
         // o olho segue o cursor
-        pupilX((dx / d) * 3.4); pupilY((dy / d) * 3.4);
         // desvia quando o cursor chega perto (no toque, só reage ao clique)
         if (!isTouch && d < 150) {
           const push = ((150 - d) / 150) * 80;
@@ -467,9 +486,9 @@ export default function Experience() {
         burst();
         droneSay(quips[qi++ % quips.length], 2.4);
         gsap.timeline({ onComplete: () => { rolling = false; drone.classList.remove("is-boost"); sysEl.textContent = "OK"; } })
-          .to(svg, { rotation: 360, scale: 1.2, y: -36, duration: 0.85, ease: "power3.inOut", transformOrigin: "50% 50%" })
+          .to(svg, { rotationY: 360, scale: 1.2, y: -36, duration: 0.85, ease: "power3.inOut", transformOrigin: "50% 50%", transformPerspective: 600 })
           .to(svg, { y: 0, scale: 1, duration: 0.7, ease: "bounce.out" })
-          .set(svg, { rotation: 0 });
+          .set(svg, { rotationY: 0 });
       });
 
       // Faíscas atrás do drone (menos no celular)
