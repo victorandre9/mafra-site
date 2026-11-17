@@ -404,9 +404,9 @@ export default function Experience() {
       ];
       // No celular o texto ocupa a largura toda: o drone fica nas bordas e no alto/baixo.
       const routeMobile: Array<[number, number]> = [
-        [0.88, 0.6], [0.9, 0.42], [0.88, 0.84], [0.5, 0.93], [0.12, 0.86],
-        [0.1, 0.5], [0.12, 0.14], [0.5, 0.08], [0.88, 0.18], [0.9, 0.6],
-        [0.86, 0.9], [0.14, 0.9], [0.1, 0.2], [0.86, 0.12],
+        [0.8, 0.6], [0.82, 0.42], [0.8, 0.82], [0.5, 0.88], [0.2, 0.84],
+        [0.18, 0.5], [0.2, 0.16], [0.5, 0.12], [0.8, 0.2], [0.82, 0.6],
+        [0.8, 0.86], [0.2, 0.86], [0.18, 0.22], [0.8, 0.16],
       ];
       const toPx = () => (window.innerWidth <= 760 ? routeMobile : route).map(([x, y]) => ({ x: x * window.innerWidth, y: y * window.innerHeight }));
       let lastX = 0;
@@ -505,13 +505,13 @@ export default function Experience() {
         const x = Number(gsap.getProperty(drone, "x")), y = Number(gsap.getProperty(drone, "y"));
         const cx = bg.x * W, cy = bg.y * H, r = bg.s * H + 70;
         const dx = x - cx, dy = y - cy, d = Math.hypot(dx, dy) || 1;
-        if (d < r) {
-          let ox = (dx / d) * (r - d), oy = (dy / d) * (r - d);
-          // nunca empurra para fora da tela
-          ox = gsap.utils.clamp(60 - x, W - 60 - x, ox);
-          oy = gsap.utils.clamp(70 - y, H - 70 - y, oy);
-          avoidX(ox); avoidY(oy);
-        } else { avoidX(0); avoidY(0); }
+        let ox = 0, oy = 0;
+        if (d < r) { ox = (dx / d) * (r - d); oy = (dy / d) * (r - d); }
+        // a Orbe (com o anel e o brilho) nunca encosta na borda da tela
+        const mx = drone.offsetWidth / 2 + 14, my = drone.offsetHeight / 2 + 24;
+        ox = gsap.utils.clamp(mx - x, W - mx - x, ox);
+        oy = gsap.utils.clamp(my - y, H - my - y, oy);
+        avoidX(ox); avoidY(oy);
       };
       gsap.ticker.add(avoid);
       cleanups.push(() => gsap.ticker.remove(avoid));

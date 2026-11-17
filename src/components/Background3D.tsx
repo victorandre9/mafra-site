@@ -86,10 +86,40 @@ function Stars({ count }: { count: number }) {
   );
 }
 
-/** Malha de pontos: esfera de milhares de pontos que ondulam (respiram), verde → azul. */
+/**
+ * Malha de pontos: esfera de milhares de pontos que ondulam (respiram), verde → azul.
+ * A onda é calculada na PLACA DE VÍDEO (shader), não no processador: recalcular
+ * 2.600 pontos em JavaScript a cada quadro fazia a malha engasgar em aparelhos modestos.
+ */
+const POINT_VERT = /* glsl */ `
+  uniform float uTime;
+  uniform float uAmp;
+  uniform float uSize;
+  uniform float uScale;
+  attribute vec3 color;
+  varying vec3 vColor;
+  void main() {
+    vec3 p = position;
+    float w = 1.0 + uAmp * (0.05 * sin(p.y * 3.2 + uTime * 2.2) + 0.035 * sin(p.x * 4.0 - uTime * 1.7) + 0.03 * cos(p.z * 3.5 + uTime * 1.3));
+    vec4 mv = modelViewMatrix * vec4(p * w, 1.0);
+    gl_Position = projectionMatrix * mv;
+    gl_PointSize = uSize * (uScale / -mv.z);
+    vColor = color;
+  }
+`;
+const POINT_FRAG = /* glsl */ `
+  uniform float uOpacity;
+  varying vec3 vColor;
+  void main() {
+    vec2 c = gl_PointCoord - 0.5;
+    float d = length(c);
+    if (d > 0.5) discard;
+    gl_FragColor = vec4(vColor, uOpacity * smoothstep(0.5, 0.38, d));
+  }
+`;
+
 function PointSphere({ mobile, energy }: { mobile: boolean; energy: React.RefObject<{ v: number }> }) {
-  const ref = useRef<THREE.Points>(null);
-  const { positions, colors, orig } = useMemo(() => {
+  const { positions, colors } = useMemo(() => {
     const n = mobile ? 1400 : 2600, R = 1.6;
     const positions = new Float32Array(n * 3), colors = new Float32Array(n * 3);
     const ca = new THREE.Color("#3ddc84"), cb = new THREE.Color("#4f9bdc"), c = new THREE.Color();
@@ -100,28 +130,31 @@ function PointSphere({ mobile, energy }: { mobile: boolean; energy: React.RefObj
       c.copy(ca).lerp(cb, (y + 1) / 2);
       colors.set([c.r, c.g, c.b], i * 3);
     }
-    return { positions, colors, orig: positions.slice() };
+    return { positions, colors };
   }, [mobile]);
-  useFrame(({ clock }) => {
-    const g = ref.current;
-    if (!g) return;
-    const t = clock.elapsedTime;
-    const amp = 1 + (energy.current?.v ?? 0) * 2.5; // rolar mais rápido = onda maior
-    const arr = g.geometry.getAttribute("position") as THREE.BufferAttribute;
-    for (let i = 0; i < orig.length; i += 3) {
-      const x = orig[i], y = orig[i + 1], z = orig[i + 2];
-      const w = 1 + amp * (0.05 * Math.sin(y * 3.2 + t * 2.2) + 0.035 * Math.sin(x * 4 - t * 1.7) + 0.03 * Math.cos(z * 3.5 + t * 1.3));
-      arr.setXYZ(i / 3, x * w, y * w, z * w);
-    }
-    arr.needsUpdate = true;
+  const uniforms = useMemo(
+    () => ({ uTime: { value: 0 }, uAmp: { value: 1 }, uSize: { value: mobile ? 0.045 : 0.035 }, uScale: { value: 400 }, uOpacity: { value: 0.95 } }),
+    [mobile],
+  );
+  useFrame(({ clock, gl }) => {
+    uniforms.uTime.value = clock.elapsedTime;
+    uniforms.uAmp.value = 1 + (energy.current?.v ?? 0) * 2.5; // rolar mais rápido = onda maior
+    uniforms.uScale.value = gl.domElement.height / 2; // mesma fórmula do sizeAttenuation do three
   });
   return (
-    <points ref={ref}>
+    <points>
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
         <bufferAttribute attach="attributes-color" args={[colors, 3]} />
       </bufferGeometry>
-      <pointsMaterial size={mobile ? 0.045 : 0.035} vertexColors transparent opacity={0.75} sizeAttenuation depthWrite={false} blending={THREE.AdditiveBlending} />
+      <shaderMaterial
+        vertexShader={POINT_VERT}
+        fragmentShader={POINT_FRAG}
+        uniforms={uniforms}
+        transparent
+        depthWrite={false}
+        blending={THREE.AdditiveBlending}
+      />
     </points>
   );
 }
@@ -222,7 +255,7 @@ export default function Background3D() {
   useEffect(() => {
     const m = window.matchMedia("(max-width: 760px), (pointer: coarse)").matches;
     setMobile(m);
-    setDpr(m ? 1 : Math.min(window.devicePixelRatio, 1.6));
+    setDpr(m ? 1 : Math.min(window.devicePixelRatio, 1.25));
   }, []);
 
   return (
