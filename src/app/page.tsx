@@ -207,7 +207,7 @@ export default function Home() {
         {/* HERO */}
         <section className="hero">
           <div className="container hero__content">
-            <p className="pill reveal-up">Consultoria &amp; implementação de aplicativos</p>
+            <p className="pill reveal-up">Processos mais inteligentes. Equipes mais produtivas. Empresa mais lucrativa.</p>
             <h1 className="hero__title">
               <span className="line"><SplitChars text="Transformo" /></span>
               <span className="line">

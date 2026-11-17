@@ -127,7 +127,8 @@ export default function Experience() {
         gsap.to(".chev--mid", { y: -16, repeat: -1, yoyo: true, duration: 2.2, ease: "sine.inOut" });
         gsap.fromTo(".chev--contact", { xPercent: 40 }, { xPercent: -10, scrollTrigger: { trigger: ".contact", start: "top bottom", end: "bottom bottom", scrub: true } });
         gsap.to(".hero__glow--a", { yPercent: 40, scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
-        gsap.to(".hero__content", { y: 120, opacity: 0.2, scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
+        // o texto do topo sobe e esmaece suavemente (antes descia e entrava embaixo da faixa verde)
+        gsap.to(".hero__content", { y: -50, opacity: 0, ease: "power1.in", scrollTrigger: { trigger: ".hero", start: "35% top", end: "bottom 15%", scrub: 0.6 } });
       }
 
       /* ---------- Cursor, botões magnéticos e tilt (só com mouse) ---------- */
@@ -326,7 +327,7 @@ export default function Experience() {
 
       // Textos de apoio: sobem saindo do desfoque
       $$(".work__lead, .about__lead, .contact__sub, .process__note, .eyebrow:not(.reveal-up)").forEach((p) => {
-        gsap.from(p, { y: 30, opacity: 0, filter: "blur(8px)", duration: 1.2, ease: "expo.out", scrollTrigger: { trigger: p, start: "top 88%" } });
+        gsap.from(p, { y: 24, opacity: 0, filter: "blur(4px)", duration: 1.4, ease: "power3.out", scrollTrigger: { trigger: p, start: "top 90%" } });
       });
 
       // Faixa de tecnologias e textos gigantes reagem à velocidade da rolagem
@@ -372,11 +373,24 @@ export default function Experience() {
         bubbleTxt.textContent = text;
         bubbleTl?.kill();
         // o balão nunca sai da tela: mede no tamanho final e empurra para dentro
-        gsap.set(bubble, { x: 0, scale: 1 });
+        gsap.set(bubble, { x: 0, y: 0, scale: 1 });
         const r = bubble.getBoundingClientRect();
         const pad = 10, W = window.innerWidth;
         const shift = r.left < pad ? pad - r.left : r.right > W - pad ? W - pad - r.right : 0;
-        gsap.set(bubble, { x: shift, scale: 0.6 });
+        // o balão escolhe onde fica: acima do Orbe (padrão), um pouco mais alto/baixo, ou embaixo dele —
+        // o lugar que cobre MENOS texto e botão (pedido do Victor: no celular ele cobria o botão)
+        const orbR = (droneBody.querySelector(".drone__orb") as HTMLElement | null)?.getBoundingClientRect();
+        const abaixo = orbR ? orbR.bottom + 8 - r.top : 160;
+        const rs = $$("main h1, main h2, main h3, main p, main li, main .btn, main .pill").map((e) => e.getBoundingClientRect());
+        const foraDaTela = (dy: number) => r.top + dy < 70 || r.bottom + dy > window.innerHeight - 10;
+        const cobre = (dy: number) => rs.reduce((t, q) => {
+          const w = Math.min(r.right + shift, q.right) - Math.max(r.left + shift, q.left);
+          const h = Math.min(r.bottom + dy, q.bottom) - Math.max(r.top + dy, q.top);
+          return t + (w > 0 && h > 0 ? w * h : 0);
+        }, foraDaTela(dy) ? 1000000000 : 0);
+        let dy = 0, melhor = cobre(0);
+        for (const c of [-24, 24, -48, 48, abaixo]) { const v = cobre(c); if (v < melhor - 1) { melhor = v; dy = c; } }
+        gsap.set(bubble, { x: shift, y: dy, scale: 0.6 });
         bubbleTl = gsap
           .timeline()
           .to(bubble, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(2)" })
@@ -397,7 +411,7 @@ export default function Experience() {
       ];
       // No celular o texto ocupa a largura toda: o drone fica nas bordas e no alto/baixo.
       const routeMobile: Array<[number, number]> = [
-        [0.8, 0.6], [0.82, 0.42], [0.8, 0.82], [0.5, 0.88], [0.2, 0.84],
+        [0.8, 0.5], [0.82, 0.42], [0.8, 0.82], // começa um pouco mais alto: o balão não cobre o botão [0.5, 0.88], [0.2, 0.84],
         [0.18, 0.5], [0.2, 0.16], [0.5, 0.12], [0.8, 0.2], [0.82, 0.6],
         [0.8, 0.86], [0.2, 0.86], [0.18, 0.22], [0.8, 0.16],
       ];
