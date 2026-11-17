@@ -53,7 +53,7 @@ const STEPS = [
 const STATS = [
   { to: 30, suffix: "–60", unit: "dias", label: "prazo típico de implantação de um app de gestão" },
   { to: 30, suffix: "", unit: "dias", label: "de acompanhamento assistido após a entrada em uso" },
-  { to: 3, suffix: "", unit: "canais", label: "de registro já aplicados em produção: voz, foto e WhatsApp" },
+  { to: 4, suffix: "", unit: "etapas", label: "no Programa de Eficiência Operacional — do diagnóstico à gestão de desempenho" },
   { to: 100, suffix: "%", unit: "", label: "sob medida para a sua empresa — do diagnóstico ao suporte" },
 ];
 
@@ -108,19 +108,10 @@ const CASES = [
     bullets: ["Quantidade de pessoas no local", "Nível de lotação", "Comparação entre estabelecimentos", "Planejamento da visita"],
     gain: "Mostra como transformar dados de movimento em decisão: útil para capacidade, escalas e atendimento.",
     icon: "",
-    logo: "",
-    wordmark: "",
+    logo: "/cases/ifluxo.webp",
+    wordmark: "arte",
     badge: "iFluxo",
   },
-];
-
-const FLOW = [
-  ["Você fala", "“Gastei 42 no mercado”"],
-  ["Transcrição", "O áudio vira texto"],
-  ["IA entende", "Valor, categoria e data"],
-  ["Cupom dividido", "Cada item na categoria certa"],
-  ["Você confere", "Nada é salvo sem ok"],
-  ["Relatórios", "Mês, tendências e orçamento"],
 ];
 
 const NAV = [
@@ -321,33 +312,6 @@ export default function Home() {
           ))}
         </section>
 
-        {/* FLUXO DO PEDIDO */}
-        <section className="flow" aria-labelledby="flow-title">
-          <div className="flow__pin">
-            <div className="container">
-              <Eyebrow>Tecnologia aplicada</Eyebrow>
-              <h2 id="flow-title" className="section-title">Da fala ao relatório, <span className="grad">em segundos.</span></h2>
-              <p className="flow__sub">Voz e inteligência artificial no lugar da digitação. Aqui, o exemplo é o registro de um gasto — na sua empresa, pode ser a visita do vendedor, a ocorrência do técnico ou o checklist do motorista.</p>
-            </div>
-            <div className="flow__track container">
-              <svg className="flow__line" viewBox="0 0 1000 20" preserveAspectRatio="none" aria-hidden="true">
-                <path className="flow__line-bg" d="M0 10H1000" />
-                <path className="flow__line-fg" d="M0 10H1000" />
-              </svg>
-              <div className="flow__packet" aria-hidden="true">💸</div>
-              <ol className="flow__nodes">
-                {FLOW.map(([who, what], i) => (
-                  <li key={who} className="flow__node">
-                    <span className="flow__dot">{String(i + 1).padStart(2, "0")}</span>
-                    <strong>{who}</strong>
-                    <span>{what}</span>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          </div>
-        </section>
-
         {/* CASES */}
         <section className="work container" id="cases">
           <Eyebrow>Cases</Eyebrow>
@@ -376,7 +340,14 @@ export default function Home() {
                     </span>
                   ) : c.logo ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img className="project__logo" src={c.logo} alt={`Logo ${c.badge}`} width={180} height={180} loading="lazy" />
+                    <img
+                      className={c.wordmark === "arte" ? "project__art" : "project__logo"}
+                      src={c.logo}
+                      alt={`Logo ${c.badge}`}
+                      width={c.wordmark === "arte" ? 900 : 180}
+                      height={c.wordmark === "arte" ? 751 : 180}
+                      loading="lazy"
+                    />
                   ) : (
                     <div className="project__emoji">{c.icon}</div>
                   )}

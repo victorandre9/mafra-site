@@ -803,3 +803,40 @@ main, .footer { position: relative; z-index: 1; }
 
 .drone__body { animation: none; }
 .drone__float { animation: hover 2.6s ease-in-out infinite; }
+
+/* ================= AJUSTES DE CELULAR ================= */
+@media (max-width: 760px) {
+  /* Serviços: sem trava; os cards deslizam com o dedo e encaixam um por vez */
+  .services__pin { min-height: 0; padding: 90px 0 30px; overflow: visible; }
+  .services__head { margin-bottom: 24px; }
+  .services__head .section-title { font-size: 2.1rem; }
+  .services__track {
+    width: auto; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch; scrollbar-width: none; padding: 4px var(--gutter) 18px; gap: 14px;
+  }
+  .services__track::-webkit-scrollbar { display: none; }
+  .services__track .card { width: 82vw; min-height: 0; padding: 26px 22px; gap: 12px; scroll-snap-align: center; }
+  .card h3 { font-size: 1.35rem; }
+  .card p { font-size: .95rem; }
+  .card--cta h3 { font-size: 1.7rem; }
+  .services__head::after { content: "Deslize para o lado →"; display: block; margin-top: 12px; font-size: .8rem; letter-spacing: .08em; color: var(--muted); }
+
+  /* Drone menor e discreto: sem HUD e sem feixe, balão para dentro da tela */
+  .drone { width: 72px; height: 58px; margin: -29px 0 0 -36px; }
+  .drone__body svg { width: 72px; height: 58px; }
+  .drone__hud, .drone__beam { display: none; }
+  .drone__glow { width: 60px; height: 20px; }
+  .drone__bubble { top: -44px; left: 50%; transform-origin: center bottom; font-size: .72rem; max-width: 62vw; white-space: normal; }
+  .drone.is-right .drone__bubble { right: 50%; left: auto; }
+
+  /* "Da fala ao relatório": os números voltam a ser bolinhas */
+  .flow__node > span:not(.flow__dot) { width: 100%; padding-left: 46px; margin-top: -10px; }
+  .flow__node .flow__dot { width: 46px; height: 46px; padding: 0; margin: 0 0 0 -33px; }
+}
+
+/* iFluxo: arte original inteira (sem corte), fundo na cor das bordas dela */
+.p-ifluxo { background: radial-gradient(circle at 50% 45%, #2a1f4a, #120f22 75%); }
+.project__art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; z-index: 1; transition: transform .7s var(--ease); }
+.project:hover .project__art { transform: scale(1.04); }
+.p-ifluxo .project__chev { display: none; }
+@media (max-width: 760px) { .drone__bubble { width: max-content; max-width: 58vw; } }
