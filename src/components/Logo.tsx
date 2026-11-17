@@ -18,10 +18,10 @@ export function LogoMark({ size = 36, className = "" }: { size?: number; classNa
   );
 }
 
-export function Logo({ sub = true }: { sub?: boolean }) {
+export function Logo({ uid, sub = true }: { uid: string; sub?: boolean }) {
   return (
     <span className="brand">
-      <LogoMark size={34} />
+      <LogoBadge uid={uid} size={48} withText={false} />
       <span className="brand__text">
         <span className="brand__name">MAFRA</span>
         {sub && <span className="brand__sub">Consultoria &amp; Tecnologia</span>}

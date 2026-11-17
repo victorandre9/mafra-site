@@ -578,3 +578,12 @@ body::after {
 .project__gain { margin-top: 16px; padding: 12px 14px; border-radius: 12px; background: rgba(61, 220, 132, .08); border-left: 3px solid var(--lime); font-size: .9rem; color: var(--text) !important; margin-bottom: 0 !important; }
 .project__gain strong { color: var(--lime); }
 .p-ifluxo { background: radial-gradient(circle at 50% 40%, #3b1a6e, #0d0a1f 72%); }
+
+/* Verifica: marca original do app */
+.vf-mark__icon { width: 64px; height: 64px; flex-shrink: 0; }
+.vf-mark__name { font: 600 2rem var(--font-body); letter-spacing: -.025em; color: #fff; display: inline-flex; align-items: baseline; }
+svg.vf-mark__a { display: inline-block; width: 1.06em; height: 1.06em; vertical-align: -0.16em; border: 0; border-radius: 0; color: oklch(0.62 0.19 253); margin-left: 0; align-self: center; }
+/* Header com o selo oficial */
+.brand { gap: 12px; }
+.brand .logo-badge { flex-shrink: 0; filter: drop-shadow(0 4px 14px rgba(0, 0, 0, .35)); }
+.brand__name { color: #fff; }

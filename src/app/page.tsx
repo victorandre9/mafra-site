@@ -107,7 +107,7 @@ const CASES = [
     text: "Consulta do nível de lotação de bares, restaurantes, academias e outros estabelecimentos para escolher o melhor momento da visita.",
     bullets: ["Quantidade de pessoas no local", "Nível de lotação", "Comparação entre estabelecimentos", "Planejamento da visita"],
     gain: "Mostra como transformar dados de movimento em decisão: útil para capacidade, escalas e atendimento.",
-    icon: "🦉",
+    icon: "",
     logo: "",
     wordmark: "",
     badge: "iFluxo",
@@ -163,7 +163,7 @@ export default function Home() {
 
       {/* HEADER */}
       <header className="header">
-        <a href="#top" className="logo" data-cursor="Topo" aria-label="MAFRA Consultoria & Tecnologia"><Logo /></a>
+        <a href="#top" className="logo" data-cursor="Topo" aria-label="MAFRA Consultoria & Tecnologia"><Logo uid="head" /></a>
         <nav className="nav">
           {NAV.map(([href, label]) => (
             <a key={href} href={href} className="nav__link">{label}</a>
@@ -357,13 +357,17 @@ export default function Home() {
                   <Chevron className="project__chev" />
                   {"wordmark" in c && c.wordmark === "verifica" ? (
                     <span className="vf-mark" role="img" aria-label="Verifica — Gestão Operacional Inteligente">
-                      <svg viewBox="0 0 48 56" width="54" height="63" aria-hidden="true">
-                        <rect x="4" y="8" width="40" height="44" rx="6" fill="none" stroke="#3b82f6" strokeWidth="4" />
-                        <rect x="15" y="3" width="18" height="10" rx="3" fill="#0b1830" stroke="#3b82f6" strokeWidth="3" />
-                        <path d="M14 30l8 8 14-16" fill="none" stroke="#ef4444" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src="/cases/verifica-mark.svg" alt="" width={64} height={64} className="vf-mark__icon" />
                       <span className="vf-mark__text">
-                        <span className="vf-mark__name">Verific<span className="vf-mark__a">A</span></span>
+                        <span className="vf-mark__name">
+                          Verific
+                          <svg viewBox="0 0 120 120" className="vf-mark__a" aria-hidden="true">
+                            <circle cx="60" cy="60" r="52" fill="none" stroke="currentColor" strokeWidth="8" />
+                            <path d="M 36 88 L 60 32 L 84 88" fill="none" stroke="currentColor" strokeWidth="13" strokeLinecap="round" strokeLinejoin="round" />
+                            <path d="M 44 68 L 53 79 L 78 64" fill="none" stroke="oklch(0.65 0.21 22)" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </span>
                         <span className="vf-mark__sub">Gestão Operacional Inteligente</span>
                       </span>
                     </span>
@@ -453,7 +457,7 @@ export default function Home() {
       </main>
 
       <footer className="footer container">
-        <div className="logo"><Logo /></div>
+        <div className="logo"><Logo uid="foot" /></div>
         <p>Entendemos o negócio. Transformamos processos. Desenvolvemos soluções.<br />© {new Date().getFullYear()} MAFRA Consultoria &amp; Tecnologia</p>
         <div className="footer__links">
           <a href="#" data-cursor="↗">Instagram</a>
