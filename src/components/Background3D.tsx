@@ -91,6 +91,19 @@ function Stars({ count }: { count: number }) {
  * A onda é calculada na PLACA DE VÍDEO (shader), não no processador: recalcular
  * 2.600 pontos em JavaScript a cada quadro fazia a malha engasgar em aparelhos modestos.
  */
+
+/**
+ * Malha de pontos "Pérola com núcleo esmeralda" (escolha do Victor, 17/11/2026): cada ponto tem o
+ * centro verde e a borda pérola, mais transparente que a anterior para não brigar com o texto.
+ * window.__mafraFundo sobrescreve (só para testar outras cores, sem publicar).
+ */
+const MALHA_PEROLA = { a: "#18a057", b: "#18a057", anel: "#7fcfa3", dentro: "#14a85a", fora: "#f2f5f7", bead: 0.5, opMul: 0.28, tam: 2.7, normal: true };
+type TemaMalha = { a: string; b: string; anel: string; perola?: number; bead?: number; opMul?: number; tam?: number; normal?: boolean; dentro?: string; fora?: string };
+function temaMalha(): TemaMalha {
+  const t = typeof window !== "undefined" ? (window as unknown as { __mafraFundo?: TemaMalha }).__mafraFundo : undefined;
+  return t ?? MALHA_PEROLA;
+}
+
 const POINT_VERT = /* glsl */ `
   uniform float uTime;
   uniform float uAmp;
@@ -109,12 +122,21 @@ const POINT_VERT = /* glsl */ `
 `;
 const POINT_FRAG = /* glsl */ `
   uniform float uOpacity;
+  uniform float uBead;
+  uniform float uDuo;
+  uniform vec3 uIn;
+  uniform vec3 uOut;
   varying vec3 vColor;
   void main() {
     vec2 c = gl_PointCoord - 0.5;
     float d = length(c);
     if (d > 0.5) discard;
-    gl_FragColor = vec4(vColor, uOpacity * smoothstep(0.5, 0.38, d));
+    // "conta" (pérola): brilho branco no alto-esquerdo e borda mais escura, para ler no fundo claro
+    float hl = smoothstep(0.28, 0.0, length(c - vec2(-0.14, -0.14)));
+    float rim = smoothstep(0.22, 0.5, d);
+    vec3 base = mix(vColor, mix(uIn, uOut, smoothstep(0.16, 0.44, d)), uDuo); // duas cores no mesmo ponto
+    vec3 col = mix(base, vec3(1.0), hl * 0.75 * uBead) * (1.0 - rim * 0.3 * uBead);
+    gl_FragColor = vec4(col, uOpacity * smoothstep(0.5, 0.42, d));
   }
 `;
 
@@ -122,18 +144,20 @@ function PointSphere({ mobile, energy }: { mobile: boolean; energy: React.RefObj
   const { positions, colors } = useMemo(() => {
     const n = mobile ? 1400 : 2600, R = 1.6;
     const positions = new Float32Array(n * 3), colors = new Float32Array(n * 3);
-    const ca = new THREE.Color("#3ddc84"), cb = new THREE.Color("#4f9bdc"), c = new THREE.Color();
+    const tm = temaMalha();
+    const ca = new THREE.Color(tm?.a ?? "#3ddc84"), cb = new THREE.Color(tm?.b ?? "#4f9bdc"), c = new THREE.Color();
     const golden = Math.PI * (3 - Math.sqrt(5));
     for (let i = 0; i < n; i++) {
       const y = 1 - (i / (n - 1)) * 2, r = Math.sqrt(1 - y * y), th = golden * i;
       positions.set([Math.cos(th) * r * R, y * R, Math.sin(th) * r * R], i * 3);
-      c.copy(ca).lerp(cb, (y + 1) / 2);
+      if (tm?.perola) c.copy(Math.abs(Math.sin(i * 12.9898) * 43758.5453) % 1 < tm.perola ? cb : ca);
+      else c.copy(ca).lerp(cb, (y + 1) / 2);
       colors.set([c.r, c.g, c.b], i * 3);
     }
     return { positions, colors };
   }, [mobile]);
   const uniforms = useMemo(
-    () => ({ uTime: { value: 0 }, uAmp: { value: 1 }, uSize: { value: mobile ? 0.045 : 0.035 }, uScale: { value: 400 }, uOpacity: { value: 0.95 } }),
+    () => ({ uTime: { value: 0 }, uAmp: { value: 1 }, uSize: { value: (mobile ? 0.045 : 0.035) * (temaMalha()?.tam ?? 1) }, uScale: { value: 400 }, uOpacity: { value: 0.95 }, uBead: { value: temaMalha()?.bead ?? 0 }, uDuo: { value: temaMalha()?.dentro ? 1 : 0 }, uIn: { value: new THREE.Color(temaMalha()?.dentro ?? "#ffffff") }, uOut: { value: new THREE.Color(temaMalha()?.fora ?? "#ffffff") } }),
     [mobile],
   );
   useFrame(({ clock, gl }) => {
@@ -153,7 +177,7 @@ function PointSphere({ mobile, energy }: { mobile: boolean; energy: React.RefObj
         uniforms={uniforms}
         transparent
         depthWrite={false}
-        blending={THREE.AdditiveBlending}
+        blending={temaMalha()?.normal ? THREE.NormalBlending : THREE.AdditiveBlending}
       />
     </points>
   );
@@ -222,7 +246,7 @@ function Orb({ mobile, wrap }: { mobile: boolean; wrap: React.RefObject<HTMLDivE
     camera.lookAt(0, 0, 0);
 
     // fundo discreto: a malha fica translúcida para não competir com o conteúdo
-    if (wrap.current) wrap.current.style.opacity = (c.o * 0.5).toFixed(3);
+    if (wrap.current) wrap.current.style.opacity = (c.o * (temaMalha()?.opMul ?? 0.5)).toFixed(3);
     // posição do fundo na tela (frações da viewport): a Orbe usa para não ficar em cima dele
     (window as Window & { __mafraBg?: { x: number; y: number; s: number } }).__mafraBg = {
       x: 0.5 + g.position.x / viewport.width, y: 0.5 - g.position.y / viewport.height, s: g.scale.x * (2.4 / viewport.height),
@@ -236,11 +260,11 @@ function Orb({ mobile, wrap }: { mobile: boolean; wrap: React.RefObject<HTMLDivE
         {/* malha fina de ligação por trás dos pontos */}
         <lineSegments>
           <wireframeGeometry args={[new THREE.IcosahedronGeometry(1.6, 3)]} />
-          <lineBasicMaterial color="#3ddc84" transparent opacity={0.1} />
+          <lineBasicMaterial color={temaMalha()?.anel ?? "#3ddc84"} transparent opacity={temaMalha() ? 0.22 : 0.1} />
         </lineSegments>
         <mesh ref={ring}>
           <torusGeometry args={[2.25, 0.006, 6, 200]} />
-          <meshBasicMaterial color="#3ddc84" transparent opacity={0.5} />
+          <meshBasicMaterial color={temaMalha()?.anel ?? "#3ddc84"} transparent opacity={0.5} />
         </mesh>
       </group>
     </group>

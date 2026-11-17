@@ -38,7 +38,7 @@ body::after { opacity: .02 !important; }
 .marquee i { color: #3ddc84 !important; }
 .services, .stats, .about { background: linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,.65) 12%, rgba(255,255,255,.65) 88%, rgba(255,255,255,0)); }
 .manifesto__text em { color: #1b8f52 !important; }
-.manifesto__text .word { opacity: .22; }
+.manifesto__text .word { opacity: .32; }
 
 /* cards */
 .card, .project, .about__item { background: #fff !important; border: 1px solid rgba(13, 44, 82, .08) !important; box-shadow: 0 14px 40px rgba(13, 44, 82, .07); }
@@ -590,3 +590,24 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
   background: linear-gradient(180deg, #ffffff, #eefaf3) !important; color: var(--g-deep) !important; text-shadow: none !important;
   box-shadow: inset 0 1px 0 #fff, inset 0 -2px 0 rgba(12, 107, 56, .18), 0 10px 24px -10px rgba(4, 50, 26, .5) !important;
 }
+
+/* malha de pontos pérola: sem o filtro de multiplicar do esboço antigo (as cores já vêm certas) */
+.bg3d { mix-blend-mode: normal !important; filter: none !important; }
+
+/* faixa verde: continua correndo, mas com espaço próprio entre os textos (sem cobrir a frase de cima) */
+.marquee { margin-block: 56px 40px; position: relative; z-index: 0; }
+@media (max-width: 760px) { .marquee { margin-block: 40px 28px; } }
+
+/* selo do topo com a frase nova: no celular pode quebrar em duas linhas, com respiro */
+.pill { line-height: 1.45; max-width: 100%; }
+
+/* celular: balão do Orbe um pouco mais alto, para não ficar em cima dos botões */
+/* (balão: a posição é escolhida no código, pelo lugar que cobre menos texto) */
+/* troca de etapa da metodologia mais suave (o texto novo entra sem "piscar") */
+@media (max-width: 900px) {
+  .step.is-active { animation: stepin-suave .9s cubic-bezier(.22, 1, .36, 1) both !important; }
+  @keyframes stepin-suave { from { opacity: 0; transform: translateY(10px); filter: blur(2px); } to { opacity: 1; transform: none; filter: none; } }
+}
+.step { transition: opacity .8s cubic-bezier(.22, 1, .36, 1), background .6s, box-shadow .6s !important; }
+/* celular: vão entre o parágrafo e os botões do topo com altura para o balão do Orbe caber no meio */
+@media (max-width: 760px) { .hero__ctas { margin-top: 74px !important; } }

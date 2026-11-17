@@ -82,7 +82,7 @@ export default function Experience() {
           .from(".reveal-up", { y: 40, opacity: 0, duration: 1, ease: "expo.out", stagger: 0.1 }, 0.4)
           .from(".header > *", { y: -60, opacity: 0, duration: 1, ease: "expo.out", stagger: 0.08 }, 0.3)
           .from(".hero__scroll", { opacity: 0, duration: 1 }, 1)
-          .add(() => droneSay("Oi! Toque em mim para um diagnóstico rápido 👋", 3.4), 0.8);
+          .add(() => droneSay("Oi! Toque em mim para um diagnóstico rápido 👋", 3.4, [".hero__sub", ".hero__ctas"]), 0.8);
         ScrollTrigger.refresh();
       }
 
@@ -127,7 +127,8 @@ export default function Experience() {
         gsap.to(".chev--mid", { y: -16, repeat: -1, yoyo: true, duration: 2.2, ease: "sine.inOut" });
         gsap.fromTo(".chev--contact", { xPercent: 40 }, { xPercent: -10, scrollTrigger: { trigger: ".contact", start: "top bottom", end: "bottom bottom", scrub: true } });
         gsap.to(".hero__glow--a", { yPercent: 40, scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
-        gsap.to(".hero__content", { y: 120, opacity: 0.2, scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
+        // o texto do topo sobe e esmaece suavemente (antes descia e entrava embaixo da faixa verde)
+        gsap.to(".hero__content", { y: -50, opacity: 0, ease: "power2.in", scrollTrigger: { trigger: ".hero", start: "55% top", end: "bottom top", scrub: 0.6 } }); // só esmaece quando já está saindo pelo alto
       }
 
       /* ---------- Cursor, botões magnéticos e tilt (só com mouse) ---------- */
@@ -173,8 +174,9 @@ export default function Experience() {
 
       /* ---------- Manifesto: palavras acendem com a rolagem ---------- */
       gsap.to(".manifesto__text .word", {
+        // acende no ritmo da leitura: começa quando a frase entra e termina antes do meio da tela
         opacity: 1, stagger: 0.1, ease: "none",
-        scrollTrigger: { trigger: ".manifesto", start: "top 75%", end: "bottom 55%", scrub: true },
+        scrollTrigger: { trigger: ".manifesto", start: "top 88%", end: "center 52%", scrub: 0.5 },
       });
 
       /* ---------- Serviços: rolagem horizontal ---------- */
@@ -326,7 +328,7 @@ export default function Experience() {
 
       // Textos de apoio: sobem saindo do desfoque
       $$(".work__lead, .about__lead, .contact__sub, .process__note, .eyebrow:not(.reveal-up)").forEach((p) => {
-        gsap.from(p, { y: 30, opacity: 0, filter: "blur(8px)", duration: 1.2, ease: "expo.out", scrollTrigger: { trigger: p, start: "top 88%" } });
+        gsap.from(p, { y: 24, opacity: 0, filter: "blur(4px)", duration: 1.4, ease: "power3.out", scrollTrigger: { trigger: p, start: "top 90%" } });
       });
 
       // Faixa de tecnologias e textos gigantes reagem à velocidade da rolagem
@@ -367,18 +369,79 @@ export default function Experience() {
       const drone = $(".drone"), droneBody = $(".drone__body"), bubble = $(".drone__bubble"), bubbleTxt = $(".drone__bubble span");
       const altEl = $(".js-alt");
       let bubbleTl: gsap.core.Timeline | undefined;
-      function droneSay(text: string, hold = 4) {
+      let grudar: (() => void) | undefined;
+      cleanups.push(() => { if (grudar) gsap.ticker.remove(grudar); });
+      function droneSay(text: string, hold = 4, vao?: [string, string]) {
         hold = Math.max(4, hold); // pedido do Victor: toda fala do Orbe fica pelo menos 4 s na tela
         bubbleTxt.textContent = text;
         bubbleTl?.kill();
         // o balão nunca sai da tela: mede no tamanho final e empurra para dentro
-        gsap.set(bubble, { x: 0, scale: 1 });
+        gsap.set(bubble, { x: 0, y: 0, scale: 1 });
         const r = bubble.getBoundingClientRect();
         const pad = 10, W = window.innerWidth;
         const shift = r.left < pad ? pad - r.left : r.right > W - pad ? W - pad - r.right : 0;
-        gsap.set(bubble, { x: shift, scale: 0.6 });
+        // o balão escolhe onde fica: acima do Orbe (padrão), um pouco mais alto/baixo, ou embaixo dele —
+        // o lugar que cobre MENOS texto e botão (pedido do Victor: no celular ele cobria o botão)
+        const orbR = (droneBody.querySelector(".drone__orb") as HTMLElement | null)?.getBoundingClientRect();
+        const abaixo = orbR ? orbR.bottom + 8 - r.top : 160;
+        const rs = $$("main h1, main h2, main h3, main p, main li, main .btn, main .pill").map((e) => e.getBoundingClientRect());
+        if (orbR) rs.push(orbR); // nunca em cima do próprio Orbe
+        const topoLivre = ($(".header")?.getBoundingClientRect().bottom ?? 70) + 8; // nem atrás do cabeçalho
+        const foraDaTela = (dy: number) => r.top + dy < topoLivre || r.bottom + dy > window.innerHeight - 10;
+        const cobre = (dy: number) => rs.reduce((t, q) => {
+          const w = Math.min(r.right + shift, q.right) - Math.max(r.left + shift, q.left);
+          const h = Math.min(r.bottom + dy, q.bottom) - Math.max(r.top + dy, q.top);
+          return t + (w > 0 && h > 0 ? w * h : 0);
+        }, foraDaTela(dy) ? 1000000000 : 0);
+        // folga até o texto mais próximo (acima e abaixo) na faixa horizontal do balão
+        const folga = (dy: number) => {
+          let cima = 9999, baixo = 9999;
+          for (const q of rs) {
+            if (Math.min(r.right + shift, q.right) - Math.max(r.left + shift, q.left) <= 0) continue;
+            if (q.bottom <= r.top + dy) cima = Math.min(cima, r.top + dy - q.bottom);
+            if (q.top >= r.bottom + dy) baixo = Math.min(baixo, q.top - (r.bottom + dy));
+          }
+          return Math.min(cima, baixo, 60);
+        };
+        // procura, perto do Orbe, a posição sem sobreposição e CENTRALIZADA no vão entre textos
+        // (ex.: no meio do espaço entre o parágrafo e o botão)
+        let dy = 0, melhor = Infinity;
+        for (let c = -240; c <= Math.max(240, abaixo); c += 4) {
+          const v = cobre(c) * 1000 - folga(c) * 10 + Math.abs(c) * 0.15;
+          if (v < melhor) { melhor = v; dy = c; }
+        }
+        // vão pedido (ex.: entre o parágrafo e os botões do topo): se couber, o balão fica no MEIO dele
+        if (vao) {
+          const a = $(vao[0])?.getBoundingClientRect(), b = $(vao[1])?.getBoundingClientRect();
+          if (a && b && b.top - a.bottom >= r.height + 6) {
+            const c = (a.bottom + b.top) / 2 - (r.top + r.bottom) / 2;
+            if (!foraDaTela(c)) dy = c;
+          }
+        }
+        gsap.set(bubble, { x: shift, y: dy, scale: 0.6 });
+        // o balão é filho do Orbe e anda com ele: com vão pedido, ele "gruda" no vão enquanto aparece
+        if (grudar) gsap.ticker.remove(grudar);
+        grudar = undefined;
+        if (vao) {
+          grudar = () => {
+            const a = $(vao[0])?.getBoundingClientRect(), b = $(vao[1])?.getBoundingClientRect();
+            if (!a || !b) return;
+            const atual = bubble.getBoundingClientRect();
+            const yAtual = Number(gsap.getProperty(bubble, "y"));
+            const altura = atual.height / (Number(gsap.getProperty(bubble, "scale")) || 1);
+            if (b.top - a.bottom < altura + 6) return; // não cabe: fica onde a busca colocou
+            const centroSemY = (atual.top + atual.bottom) / 2 - yAtual;
+            const alvo = (a.bottom + b.top) / 2 - centroSemY;
+            const xAtual = Number(gsap.getProperty(bubble, "x"));
+            const esqSemX = atual.left - xAtual, dirSemX = atual.right - xAtual, W2 = window.innerWidth;
+            const x = esqSemX < 10 ? 10 - esqSemX : dirSemX > W2 - 10 ? W2 - 10 - dirSemX : 0;
+            gsap.set(bubble, { y: alvo, x });
+          };
+          gsap.ticker.add(grudar);
+        }
+        const soltar = () => { if (grudar) gsap.ticker.remove(grudar); grudar = undefined; };
         bubbleTl = gsap
-          .timeline()
+          .timeline({ onComplete: soltar, onInterrupt: soltar })
           .to(bubble, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(2)" })
           .to(bubble, { opacity: 0, scale: 0.6, duration: 0.3, ease: "power2.in" }, `+=${hold}`);
       }
@@ -397,7 +460,7 @@ export default function Experience() {
       ];
       // No celular o texto ocupa a largura toda: o drone fica nas bordas e no alto/baixo.
       const routeMobile: Array<[number, number]> = [
-        [0.8, 0.6], [0.82, 0.42], [0.8, 0.82], [0.5, 0.88], [0.2, 0.84],
+        [0.8, 0.5], [0.82, 0.42], [0.8, 0.82], // começa um pouco mais alto: o balão não cobre o botão [0.5, 0.88], [0.2, 0.84],
         [0.18, 0.5], [0.2, 0.16], [0.5, 0.12], [0.8, 0.2], [0.82, 0.6],
         [0.8, 0.86], [0.2, 0.86], [0.18, 0.22], [0.8, 0.16],
       ];
