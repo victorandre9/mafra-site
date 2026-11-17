@@ -592,7 +592,7 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 }
 
 /* malha de pontos pérola: sem o filtro de multiplicar do esboço antigo (as cores já vêm certas) */
-.bg3d { mix-blend-mode: normal !important; filter: none !important; }
+/* malha: volta ao filtro original do tema claro (cor que o Victor aprovou no print) */
 
 /* faixa verde: continua correndo, mas com espaço próprio entre os textos (sem cobrir a frase de cima) */
 .marquee { margin-block: 56px 40px; position: relative; z-index: 0; }
