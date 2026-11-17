@@ -357,7 +357,7 @@ body::after {
   .step { display: none; padding: 10px 0; background: none !important; }
   .step.is-active { display: flex; }
   .process__stage { height: 440px; }
-  .phone { transform: scale(.68); }
+
   .orbit--1 { width: 340px; height: 340px; } .orbit--2 { width: 420px; height: 420px; }
   .float-chip { font-size: .72rem; }
 }
@@ -819,7 +819,6 @@ main, .footer { position: relative; z-index: 1; }
   .card h3 { font-size: 1.35rem; }
   .card p { font-size: .95rem; }
   .card--cta h3 { font-size: 1.7rem; }
-  .services__head::after { content: "Deslize para o lado →"; display: block; margin-top: 12px; font-size: .8rem; letter-spacing: .08em; color: var(--muted); }
 
   /* Drone menor e discreto: sem HUD e sem feixe, balão para dentro da tela */
   .drone { width: 72px; height: 58px; margin: -29px 0 0 -36px; }
@@ -848,3 +847,40 @@ main, .footer { position: relative; z-index: 1; }
 .contact__social { display: flex; flex-wrap: wrap; gap: 12px; }
 @media (max-width: 480px) { .btn--wa { width: 100%; justify-content: center; } }
 @media (max-width: 760px) { .drone__bubble { max-width: 44vw; } }
+
+/* ===== Serviços no celular: evidenciar os cards escondidos ===== */
+.swipe-hint, .services__dots { display: none; }
+@media (max-width: 760px) {
+  .swipe-hint { display: inline-flex; align-items: center; gap: 10px; margin-top: 14px; padding: 8px 14px; border-radius: 999px;
+    background: rgba(61, 220, 132, .12); border: 1px solid rgba(61, 220, 132, .4); color: var(--text); font: 600 .82rem var(--font-body); }
+  .swipe-hint__hand { font-style: normal; display: inline-block; animation: swipehand 1.6s ease-in-out infinite; }
+  @keyframes swipehand { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(10px); } }
+  /* a borda direita esmaece: "tem mais para lá" */
+  .services__track { -webkit-mask-image: linear-gradient(90deg, #000 80%, transparent); mask-image: linear-gradient(90deg, #000 80%, transparent); }
+  .services__dots { display: flex; justify-content: center; gap: 8px; margin-top: 6px; }
+  .services__dots i { width: 8px; height: 8px; border-radius: 8px; background: rgba(143, 180, 220, .3); transition: width .35s var(--ease), background .35s; }
+  .services__dots i.is-on { width: 24px; background: var(--lime); }
+}
+
+/* ===== Metodologia no celular: celular inteiro na tela, foco no texto ===== */
+@media (max-width: 900px) {
+  .process__pin { padding: 74px 0 16px; }
+  .process__text .section-title { font-size: 1.75rem; }
+  .process__text .eyebrow { margin-bottom: 10px; }
+  .steps { margin-top: 12px; }
+  .step.is-active {
+    display: flex; padding: 14px 16px; border-radius: 16px;
+    background: linear-gradient(135deg, rgba(31, 157, 90, .22), rgba(13, 44, 82, .55)) !important;
+    border: 1px solid rgba(61, 220, 132, .45); box-shadow: 0 0 30px rgba(61, 220, 132, .15);
+    animation: stepin .6s var(--ease) both;
+  }
+  .step.is-active h3 { font-size: 1.15rem; }
+  .step.is-active p { font-size: .9rem; color: #c9d6e8; }
+  @keyframes stepin { from { opacity: 0; transform: translateY(14px); filter: blur(4px); } }
+  .process__bar { margin-top: 10px; }
+  /* o celular encolhe por zoom (o transform é do GSAP) e sobe */
+  .process__stage { height: 340px; margin-top: -6px; }
+  .phone { zoom: .52; }
+  .orbit--1 { width: 260px; height: 260px; } .orbit--2 { width: 320px; height: 320px; }
+  .holo { display: none; }
+}

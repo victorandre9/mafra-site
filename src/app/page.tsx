@@ -251,6 +251,10 @@ export default function Home() {
             <div className="services__head container">
               <Eyebrow>Serviços</Eyebrow>
               <h2 className="section-title">Gestão na prática. <span className="grad">Tecnologia com propósito.</span></h2>
+              <p className="swipe-hint" aria-hidden="true">
+                <span>Deslize para ver os {SERVICES.length + 1} cards</span>
+                <i className="swipe-hint__hand">👉</i>
+              </p>
             </div>
             <div className="services__track">
               {SERVICES.map((s, i) => (

@@ -182,6 +182,36 @@ export default function Experience() {
           scrollTrigger: { trigger: ".services", pin: ".services__pin", start: "top top", end: () => "+=" + sDist(), scrub: 1, invalidateOnRefresh: true, anticipatePin: 1 },
         });
       }
+      // Celular: deixa claro que há cards escondidos — bolinhas de posição e uma
+      // "espiadinha" automática para o lado quando a seção aparece.
+      if (mobileLayout) {
+        const cards = $$(".services__track .card");
+        const dots = document.createElement("div");
+        dots.className = "services__dots";
+        dots.setAttribute("aria-hidden", "true");
+        cards.forEach((_, k) => {
+          const d = document.createElement("i");
+          if (k === 0) d.className = "is-on";
+          dots.appendChild(d);
+        });
+        sTrack.after(dots);
+        cleanups.push(() => dots.remove());
+        const step = () => (cards[1] ? cards[1].offsetLeft - cards[0].offsetLeft : 1);
+        on(sTrack, "scroll", () => {
+          const k = Math.round(sTrack.scrollLeft / step());
+          [...dots.children].forEach((d, j) => d.classList.toggle("is-on", j === k));
+        }, { passive: true });
+        ScrollTrigger.create({
+          trigger: sTrack, start: "top 75%", once: true,
+          onEnter: () => {
+            sTrack.style.scrollSnapType = "none";
+            gsap.timeline({ delay: 0.5, onComplete: () => { sTrack.style.scrollSnapType = ""; } })
+              .to(sTrack, { scrollLeft: step() * 0.45, duration: 0.7, ease: "power2.inOut" })
+              .to(sTrack, { scrollLeft: 0, duration: 0.6, ease: "power2.inOut" }, "+=0.25");
+          },
+        });
+      }
+
       gsap.from(".services__track .card", { y: mobileLayout ? 60 : 120, rotationY: mobileLayout ? 0 : -25, rotationX: mobileLayout ? 0 : 10, opacity: 0, stagger: 0.09, duration: 1.4, ease: "expo.out", transformPerspective: 1000, scrollTrigger: { trigger: ".services", start: "top 70%" } });
 
       /* ---------- Processo: celular 3D pinado, telas trocam ---------- */
