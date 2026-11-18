@@ -377,11 +377,10 @@ export default function Experience() {
       let grudar: (() => void) | undefined;
       let ultimaFala = -1e9; // hora da última fala (vale para todas, inclusive a saudação)
       cleanups.push(() => { if (grudar) gsap.ticker.remove(grudar); });
-      function droneSay(text: string, hold = 4, vao?: [string, string]) {
+      function droneSay(text: string, hold = 4, vao?: [string, string]): boolean {
         hold = Math.max(4, hold); // pedido do Victor: toda fala do Orbe fica pelo menos 4 s na tela
-        ultimaFala = performance.now();
+        if (bubbleTl?.isActive()) return false; // nunca troca a frase no meio de outra
         bubbleTxt.textContent = text;
-        bubbleTl?.kill();
         // ===== POSIÇÃO DO BALÃO: 360° em volta do Orbe (pedido do Victor) =====
         // Testa 12 direções (em cima, embaixo, esquerda, direita e diagonais), sempre COLADO no Orbe,
         // e fica com a que cabe inteira na tela e cobre menos texto. A direção escolhida vale enquanto a
@@ -392,7 +391,9 @@ export default function Experience() {
         const W0 = window.innerWidth, H0 = window.innerHeight;
         const topo0 = ($(".header")?.getBoundingClientRect().bottom ?? 60) + 8;
         const bw = bubble.offsetWidth, bh = bubble.offsetHeight;
-        const textos = $$("main h1, main h2, main h3, main p, main li, main .btn, main .pill").map((e) => e.getBoundingClientRect());
+        const textosEls = $$("main h1, main h2, main h3, main p, main li, main .btn, main .pill, main summary, main .stat__n, main .swipe-hint, .footer p");
+        const textos = textosEls.map((e) => e.getBoundingClientRect());
+        const soltarGrudar = () => { if (grudar) gsap.ticker.remove(grudar); grudar = undefined; };
         const centroOrbe = () => {
           const o = (orbEl ?? droneBody).getBoundingClientRect();
           return { x: o.left + o.width / 2, y: o.top + o.height / 2, rx: o.width * 0.42, ry: o.height * 0.42 };
@@ -422,6 +423,16 @@ export default function Experience() {
           const v = custo(o.x, o.y) + i * 2;
           if (v < melhor) { melhor = v; off = o; }
         });
+        // REGRA DE OURO (pedido do Victor: "toda hora entra fala em cima dos textos"):
+        // se nenhuma das 12 posições em volta do Orbe está livre de texto, ele NÃO fala agora —
+        // o ciclo tenta de novo no segundo seguinte, quando a rolagem abrir espaço.
+        const cobertoMelhor = custo(off.x, off.y);
+        const temVao = !!vao && window.scrollY < 30;
+        if (!temVao && cobertoMelhor > bw * bh * 0.03) {
+          gsap.set(bubble, { opacity: 0 });
+          return false;
+        }
+        ultimaFala = performance.now();
         // abertura (vão pedido): com a página no topo, centraliza o balão no vão entre o texto e os botões
         const alvoVao = () => {
           if (!vao || window.scrollY > 30) return null;
@@ -443,6 +454,21 @@ export default function Experience() {
           cx = gsap.utils.clamp(MARGEM + bw / 2, W2 - MARGEM - bw / 2, cx);
           cy = gsap.utils.clamp(topo + bh / 2, H2 - MARGEM - bh / 2, cy);
           gsap.set(bubble, { x: cx - (natL + bw / 2), y: cy - (natT + bh / 2) });
+          // vigia: com a página rolando, se o balão passar a cobrir texto, ele some na hora
+          if (yv === null && Number(gsap.getProperty(bubble, "opacity")) > 0.05) { // confere a cada quadro
+            const l = cx - bw / 2, rr = cx + bw / 2, t = cy - bh / 2, bb = cy + bh / 2;
+            let cob = 0;
+            for (const el of textosEls) {
+              const q = el.getBoundingClientRect();
+              const w = Math.min(rr, q.right) - Math.max(l, q.left), h = Math.min(bb, q.bottom) - Math.max(t, q.top);
+              if (w > 0 && h > 0) cob += w * h;
+            }
+            if (cob > bw * bh * 0.02) {
+              bubbleTl?.kill();
+              gsap.to(bubble, { opacity: 0, scale: 0.9, duration: 0.1, overwrite: true });
+              soltarGrudar();
+            }
+          }
         };
         grudar();
         gsap.set(bubble, { scale: 0.6, transformOrigin: "50% 50%" });
@@ -452,6 +478,7 @@ export default function Experience() {
           .timeline({ onComplete: soltar, onInterrupt: soltar })
           .to(bubble, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(2)" })
           .to(bubble, { opacity: 0, scale: 0.6, duration: 0.3, ease: "power2.in" }, `+=${hold}`);
+        return true;
       }
 
       if (reduce) {
@@ -714,9 +741,11 @@ export default function Experience() {
         if (ultimaFala < 0 || document.hidden || menuAberto()) return; // começa só depois da saudação de abertura
         // 10 s de SILÊNCIO entre uma frase sumir e a próxima aparecer (cada frase fica ~5 s na tela)
         if (performance.now() - ultimaFala < INTERVALO + DURACAO_FALA) return;
-        const texto = passo % 2 === 0 ? TOQUE[iToque++ % TOQUE.length] : OUTRAS[iOutra++ % OUTRAS.length];
+        const ehToque = passo % 2 === 0;
+        const texto = ehToque ? TOQUE[iToque % TOQUE.length] : OUTRAS[iOutra % OUTRAS.length];
+        if (!droneSay(texto)) return; // sem lugar livre agora: tenta de novo no próximo segundo
+        if (ehToque) iToque++; else iOutra++;
         passo++;
-        droneSay(texto);
       }, 1000);
       cleanups.push(() => clearInterval(timerFala));
     });
