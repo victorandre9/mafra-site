@@ -306,7 +306,7 @@ export default function Home() {
           <div className="process__pin">
             <div className="container process__grid">
               <div className="process__text">
-                <Eyebrow>Metodologia MAFRA</Eyebrow>
+                <Eyebrow>Metodologia de trabalho</Eyebrow>
                 <h2 className="section-title">Programa de <span className="grad">Eficiência Operacional</span></h2>
                 <div className="steps">
                   {STEPS.map(([t, d], i) => (
