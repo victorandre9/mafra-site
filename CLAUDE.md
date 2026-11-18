@@ -45,6 +45,11 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   Verde só na própria logo e no botão do **WhatsApp** (cor da marca dele, não trocar).
 - A troca foi feita mudando o matiz de todas as cores verdes (CSS, robô 3D, malha, celular);
   script de referência: só os verdes com matiz 80°–175° viram azul 213°.
+- **Os dois temas estão salvos no GitHub** (pedido do Victor), cada um com todas as melhorias até 18/11/2026:
+  branch `tema-azul` (o que está no ar) e branch `tema-verde`. A cor NÃO é trocável pelo visitante.
+  Para voltar ao verde: aplicar no `main` a diferença de cores do `tema-verde` (CSS, `Background3D.tsx`,
+  `Phone.tsx`, `robo/ModelosPerola.tsx`, `page.tsx` e a foto `public/sobre/`), mantendo o que mudou depois.
+- Botões: **arredondados** (cantos suaves de 8px foram testados e recusados).
 
 ## Pendências conhecidas
 
