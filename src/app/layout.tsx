@@ -9,12 +9,12 @@ import "./globals.css";
 import "./theme-claro.css";
 
 export const metadata: Metadata = {
-  title: "MAFRA Consultoria & Tecnologia — Apps sob medida",
+  title: "MAFRA Consultoria & Tecnologia — Eficiência operacional com tecnologia",
   description:
-    "MAFRA Consultoria & Tecnologia: consultoria e implementação de aplicativos. Da necessidade operacional à solução digital.",
+    "Consultoria em processos e aplicativos de gestão sob medida para empresas: menos retrabalho, informação certa para quem decide e equipes mais produtivas.",
   openGraph: {
     title: "MAFRA Consultoria & Tecnologia",
-    description: "Consultoria e implementação de aplicativos iOS, Android e Web.",
+    description: "Processos mais inteligentes. Equipes mais produtivas. Empresa mais lucrativa.",
     type: "website",
     locale: "pt_BR",
   },

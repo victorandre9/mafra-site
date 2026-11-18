@@ -639,3 +639,8 @@ html, body { overflow-x: hidden; overscroll-behavior-x: none; }
 html { touch-action: pan-y pinch-zoom; }
 .services__track { touch-action: pan-x pan-y; overscroll-behavior-x: contain; }
 main, section, footer { max-width: 100vw; }
+
+/* público-alvo logo abaixo do título de Serviços */
+.services__lead { margin-top: 14px; max-width: 640px; color: #4f6078; font-size: 1.05rem; line-height: 1.55; }
+/* números: só os dois prazos reais, lado a lado */
+.stats { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; max-width: 900px; margin-inline: auto; }

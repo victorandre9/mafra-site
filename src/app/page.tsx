@@ -28,13 +28,13 @@ const SERVICES = [
   },
   {
     title: "Integração com ERP & sistemas",
-    text: "O app complementa o que você já usa. Pedidos, crédito e faturamento continuam no ERP; a operação ganha uma interface ágil conectada por API.",
-    tags: ["API autenticada", "ERP existente", "Dados centralizados"],
+    text: "O app complementa o que você já usa. Pedidos, crédito e faturamento continuam no ERP; a operação ganha um app simples que conversa com ele — sem digitar duas vezes.",
+    tags: ["Conexão segura", "Usa o ERP que você já tem", "Dados centralizados"],
     icon: <><rect x="4" y="16" width="14" height="16" rx="3" /><rect x="30" y="16" width="14" height="16" rx="3" /><path d="M18 24h12M24 20l4 4-4 4" /></>,
   },
   {
     title: "Indicadores & dashboards",
-    text: "Registros, alertas e painéis em tempo útil. Sócios e gestores acompanham equipes, pendências, recebíveis e resultados sem depender de mensagens.",
+    text: "Registros, alertas e painéis na hora certa. Sócios e gestores acompanham equipes, pendências, recebíveis e resultados sem depender de mensagens.",
     tags: ["Painéis por perfil", "Alertas", "Relatórios"],
     icon: <><path d="M6 42V6M6 42h36" /><path d="M14 32l8-9 7 6 11-14" /></>,
   },
@@ -49,15 +49,13 @@ const SERVICES = [
 const STEPS = [
   ["Diagnóstico das rotinas", "Entendo atividades, dificuldades, gargalos e as informações que faltam ao gestor."],
   ["Organização dos processos", "Defino fluxos, padrões, responsabilidades e oportunidades de melhoria."],
-  ["Indicadores e controles digitais", "Crio registros, alertas, dashboards e informações em tempo útil — no app."],
-  ["Gestão de desempenho", "Acompanhamos equipes, produtividade, qualidade e a evolução dos resultados."],
+  ["Indicadores e controles digitais", "Crio registros, alertas, painéis e a informação na hora certa — no app."],
+  ["Gestão de desempenho", "Acompanho equipes, produtividade, qualidade e a evolução dos resultados."],
 ];
 
 const STATS = [
   { to: 30, suffix: "–60", unit: "dias", label: "prazo típico de implantação de um app de gestão" },
   { to: 30, suffix: "", unit: "dias", label: "de acompanhamento assistido após a entrada em uso" },
-  { to: 4, suffix: "", unit: "etapas", label: "no Programa de Eficiência Operacional — do diagnóstico à gestão de desempenho" },
-  { to: 100, suffix: "%", unit: "", label: "sob medida para a sua empresa — do diagnóstico ao suporte" },
 ];
 
 const ABOUT = [
@@ -84,7 +82,7 @@ const CASES = [
     tag: "Solução empresarial · Gestão operacional",
     title: "Verifica — Gestão Operacional Inteligente",
     text: "Sistema sob medida para uma transportadora: checklists, frota, qualidade e RH no mesmo lugar. Indicadores clicáveis levam direto ao detalhe, e a gestão monta apresentações com as telas do próprio app.",
-    bullets: ["Checklists e frota", "Qualidade (ROQ) com indicadores", "RH, férias e documentação", "Despesas, multas e premiações", "Exporta Excel e PDF"],
+    bullets: ["Checklists e frota", "Ocorrências de qualidade com indicadores", "RH, férias e documentação", "Despesas, multas e premiações", "Exporta Excel e PDF"],
     gain: "Rotinas que viviam em planilhas e mensagens viraram um sistema único, com histórico pronto para auditoria.",
     icon: "✅",
     logo: "",
@@ -93,10 +91,10 @@ const CASES = [
   },
   {
     cls: "p-vos",
-    tag: "Projeto autoral · Voz e inteligência artificial",
-    title: "Vo$ — registro por voz e foto",
-    text: "Você fala o gasto ou manda a foto do cupom; a IA transcreve, entende valor e categoria e até divide a compra entre categorias. Funciona também pelo WhatsApp.",
-    bullets: ["Voz, foto e WhatsApp", "IA lê o cupom fiscal", "Espaços compartilhados", "Relatórios e metas"],
+    tag: "Projeto autoral · Finanças com inteligência artificial",
+    title: "Vo$ — o seu dinheiro sob controle",
+    text: "Controle financeiro com inteligência artificial: gastos organizados sozinhos, orçamento do mês sempre à vista e metas que viram plano — do carro novo à viagem dos sonhos.",
+    bullets: ["Gastos organizados por categoria", "Orçamento do mês", "Metas para realizar sonhos", "Relatórios claros", "Finanças da família no mesmo app"],
     gain: "A mesma tecnologia pode registrar uma visita, uma ocorrência ou uma despesa da equipe em campo — sem digitar.",
     icon: "🎙️",
     logo: "/cases/vos-logo.webp",
@@ -216,7 +214,7 @@ export default function Home() {
               <span className="line">
                 <span className="rotator">
                   <span className="rotator__track">
-                    <span>aplicativos</span><span>controle</span><span>resultados</span><span>aplicativos</span>
+                    <span>aplicativos</span><span>indicadores</span><span>resultados</span><span>aplicativos</span>
                   </span>
                 </span>
               </span>
@@ -227,19 +225,19 @@ export default function Home() {
               equipe usa de verdade — no celular e no computador, integrado ao que você já tem.
             </p>
             <div className="hero__ctas reveal-up">
-              <a href="#contato" className="btn magnetic" data-cursor="Bora"><span>Agendar diagnóstico</span><i className="btn__arrow">→</i></a>
+              <a href="#contato" className="btn magnetic" data-cursor="Vamos"><span>Conversar sobre o diagnóstico</span><i className="btn__arrow">→</i></a>
               <a href="#metodo" className="btn btn--ghost magnetic" data-cursor="Ver"><span>Conhecer o método</span></a>
             </div>
             <p className="hero__tagline reveal-up"><span className="hero__rule" />Da necessidade operacional à solução digital.</p>
           </div>
           <div className="hero__scroll">
-            <span>role para voar</span>
+            <span>role para conhecer</span>
             <div className="hero__mouse"><span /></div>
           </div>
         </section>
 
         {/* MARQUEE */}
-        <section className="marquee" aria-label="O que digitalizamos">
+        <section className="marquee" aria-label="O que eu digitalizo">
           <div className="marquee__track">
             {[0, 1].map((g) => (
               <div key={g} className="marquee__group" aria-hidden={g === 1}>
@@ -260,7 +258,7 @@ export default function Home() {
             <em><SplitWords text="nasce da rotina real," /></em>{" "}
             <SplitWords text="elimina retrabalho e coloca" />{" "}
             <em><SplitWords text="a informação certa" /></em>{" "}
-            <SplitWords text="nas mãos de quem decide. Entendemos o negócio. Transformamos processos. Desenvolvemos soluções." />
+            <SplitWords text="nas mãos de quem decide. Entendo o negócio. Transformo processos. Desenvolvo soluções." />
           </p>
         </section>
 
@@ -270,6 +268,7 @@ export default function Home() {
             <div className="services__head container">
               <Eyebrow>Serviços</Eyebrow>
               <h2 className="section-title">Gestão na prática. <span className="grad">Tecnologia com propósito.</span></h2>
+            <p className="services__lead">Para empresas de comércio, indústria, logística e serviços técnicos que cresceram e ainda dependem de planilha e WhatsApp para operar.</p>
               <p className="swipe-hint" aria-hidden="true">
                 <span>Deslize para ver os {SERVICES.length + 1} cards</span>
                 <i className="swipe-hint__hand">👉</i>
@@ -287,8 +286,8 @@ export default function Home() {
               ))}
               <article className="card card--cta">
                 <h3>Qual é o gargalo da sua operação?</h3>
-                <p>Me conta. O diagnóstico é o primeiro passo — e a conversa é sem compromisso.</p>
-                <a href="#contato" className="btn magnetic" data-cursor="Bora"><span>Conversar</span><i className="btn__arrow">→</i></a>
+                <p>Conte para mim. O diagnóstico é o primeiro passo — e a conversa é sem compromisso.</p>
+                <a href="#contato" className="btn magnetic" data-cursor="Vamos"><span>Conversar</span><i className="btn__arrow">→</i></a>
               </article>
             </div>
           </div>
@@ -386,7 +385,7 @@ export default function Home() {
                 </div>
               </article>
             ))}
-            <a className="project project--cta tilt" href="#contato" data-cursor="Bora">
+            <a className="project project--cta tilt" href="#contato" data-cursor="Vamos">
               <div className="project__info">
                 <span className="project__tag">Próximo case</span>
                 <h3>O app da sua empresa</h3>
@@ -468,7 +467,7 @@ export default function Home() {
       <footer className="footer container">
         {/* logo grande e centralizada; os links de redes ficam só no Contato, logo acima */}
         <div className="logo footer__logo"><Logo size={170} /></div>
-        <p>Entendemos o negócio. Transformamos processos. Desenvolvemos soluções.<br />© {new Date().getFullYear()} MAFRA Consultoria &amp; Tecnologia</p>
+        <p>Entendo o negócio. Transformo processos. Desenvolvo soluções.<br />© {new Date().getFullYear()} MAFRA Consultoria &amp; Tecnologia</p>
         <div className="footer__links">
           <a href="#top" data-cursor="↑">Voltar ao topo ↑</a>
         </div>

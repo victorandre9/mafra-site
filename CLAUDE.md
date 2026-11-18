@@ -23,8 +23,10 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
 ## Regras de conteúdo
 
 - **Site institucional: o trabalho da MAFRA é solução para EMPRESAS**, não criar produtos.
-  Vo$, iFluxo e Verifica aparecem só como cases/prova técnica, sem explicar o uso deles
-  (nada de "como registrar gastos").
+  Vo$, iFluxo e Verifica aparecem como cases: falar dos BENEFÍCIOS e funcionalidades
+  (ex.: Vo$ = controle financeiro, metas, realizar sonhos), nunca um passo a passo de uso.
+- **Voz do site: primeira pessoa ("eu")**. O Victor atua como profissional autônomo —
+  nada de "nós", "entendemos", "desenvolvemos" (decisão de 18/11/2026).
 - **Galato e Thermobrás são clientes em potencial: nunca citar** (nem dados derivados das propostas).
 - **Logos são sempre os arquivos originais** (`public/brand/mafra-logo.png`, `public/cases/*`).
   Nunca redesenhar/recriar logo com SVG, texto ou CSS.
