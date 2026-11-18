@@ -59,7 +59,8 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
 
 - **Voo do menu (computador)**: clicar em Serviços/Método/Cases/Sobre/Contato escurece a tela, a luz do
   robô cresce (brilho, largura e comprimento do facho) e ele desce até o tema em 3 s, 4 s, 5 s, 6 s, 7 s;
-  estaciona à direita do título e a tela volta ao normal (`mafra:voo` em `Experience.tsx`).
+  a rolagem é nossa, quadro a quadro (o scrollTo do Lenis pulava direto no PC do Victor); o robô desce em
+  linha reta e estaciona POR CIMA do título, com a lanterna em cima dele; a tela volta ao normal (`mafra:voo`).
 - Botões verdes: flash claro passando da esquerda para a direita a cada 3 s (`verde-varre`).
 
 ## Pendências conhecidas
