@@ -665,7 +665,7 @@ export default function Experience() {
       const lines: Array<[string, string]> = [
         [".manifesto", "Sistema bom nasce da rotina real 🎯"],
         [".services", "Do diagnóstico ao suporte, tudo em um só lugar ✨"],
-        [".process", "Conheça o Programa de Eficiência Operacional e Produtividade 📈"],
+        [".process", "Programa de Eficiência Operacional e Produtividade: do diagnóstico à gestão 📈"],
         [".stats", "Prazos claros, do início ao acompanhamento ⏱️"],
         ["#cases", "Soluções que já estão rodando em empresas reais 💼"],
         ["#sobre", "Prazer, este é o Victor, à frente da MAFRA 🤝"],

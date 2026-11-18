@@ -56,7 +56,7 @@ const STEPS = [
 const STATS = [
   { to: 30, suffix: "–60", unit: "dias", label: "prazo típico de implantação de um app de gestão" },
   { to: 30, suffix: "", unit: "dias", label: "de acompanhamento assistido após a entrada em uso" },
-  { to: 4, suffix: "", unit: "etapas", label: "no Programa de Eficiência Operacional — do diagnóstico à gestão de desempenho" },
+  { to: 4, suffix: "", unit: "etapas", label: "no Programa de Eficiência Operacional e Produtividade — do diagnóstico à gestão de desempenho" },
   { to: 100, suffix: "%", unit: "", label: "sob medida para a sua empresa — do diagnóstico ao suporte" },
 ];
 
@@ -119,7 +119,7 @@ const CASES = [
 
 const NAV = [
   ["#servicos", "Serviços"],
-  ["#metodo", "Método"],
+  ["#metodo", "Programa"],
   ["#cases", "Cases"],
   ["#sobre", "Sobre"],
   ["#contato", "Contato"],
@@ -228,7 +228,7 @@ export default function Home() {
             </p>
             <div className="hero__ctas reveal-up">
               <a href="#contato" className="btn magnetic" data-cursor="Bora"><span>Agendar diagnóstico</span><i className="btn__arrow">→</i></a>
-              <a href="#metodo" className="btn btn--ghost magnetic" data-cursor="Ver"><span>Conhecer o método</span></a>
+              <a href="#metodo" className="btn btn--ghost magnetic" data-cursor="Ver"><span>Programa de Eficiência Operacional</span></a>
             </div>
             <p className="hero__tagline reveal-up"><span className="hero__rule" />Da necessidade operacional à solução digital.</p>
           </div>
@@ -300,7 +300,7 @@ export default function Home() {
             <div className="container process__grid">
               <div className="process__text">
                 <Eyebrow>Metodologia MAFRA</Eyebrow>
-                <h2 className="section-title">Programa de <span className="grad">Eficiência Operacional</span></h2>
+                <h2 className="section-title">Programa de <span className="grad">Eficiência Operacional</span> e Produtividade</h2>
                 <div className="steps">
                   {STEPS.map(([t, d], i) => (
                     <div key={t} className={`step${i === 0 ? " is-active" : ""}`}>
