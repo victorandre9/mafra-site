@@ -56,9 +56,10 @@ export default function Experience() {
           document.body.classList.remove("menu-open");
           // MENU DO TOPO no computador: o robô voa até o tema (pedido do Victor, 18/11/2026) —
           // 3 s no 1º tema, 4 s no 2º, 5 s no 3º… A animação mora junto do robô, mais abaixo.
-          const navLinks = $$(".nav .nav__link");
-          const iNav = navLinks.indexOf(a);
-          if (lenis && iNav >= 0 && typeof target !== "number" && window.innerWidth > 900 && !isTouch) {
+          // vale no computador (menu do topo) e no celular (menu que abre no botão ☰) — pedido do Victor
+          const iDesk = $$(".nav .nav__link").indexOf(a);
+          const iNav = iDesk >= 0 ? iDesk : $$(".mobile-menu a").indexOf(a);
+          if (lenis && iNav >= 0 && typeof target !== "number") {
             window.dispatchEvent(new CustomEvent("mafra:voo", { detail: { alvo: target, dur: 3 + iNav } }));
             return;
           }
@@ -837,11 +838,26 @@ export default function Experience() {
         // a ROLAGEM é nossa, quadro a quadro, no mesmo relógio do robô: no computador do Victor o
         // scrollTo do Lenis pulava direto para o tema. Lenis parado = a roda do mouse não interfere.
         const y0 = window.scrollY;
-        lenis.stop();
+        // celular: rolagem nativa (o Lenis parado esconde a rolagem da página no iPhone) e o dedo fica
+        // bloqueado durante o voo; computador: Lenis parado = a roda do mouse não interfere
+        const segura = (ev: Event) => ev.preventDefault();
+        if (isTouch) {
+          window.addEventListener("touchmove", segura, { passive: false });
+          window.addEventListener("wheel", segura, { passive: false });
+        } else lenis.stop();
+        const rolar = (y: number) => {
+          if (isTouch) window.scrollTo(0, y);
+          else lenis?.scrollTo(y, { immediate: true, force: true });
+        };
         gsap.to(prog, {
           t: 1, duration: dur, ease: suave,
-          onUpdate: () => lenis?.scrollTo(y0 + (destScroll - y0) * prog.t, { immediate: true, force: true }),
-          onComplete: () => lenis?.start(),
+          onUpdate: () => rolar(y0 + (destScroll - y0) * prog.t),
+          onComplete: () => {
+            if (isTouch) {
+              window.removeEventListener("touchmove", segura);
+              window.removeEventListener("wheel", segura);
+            } else lenis?.start();
+          },
         });
         // o fim é pelo relógio, não pelo aviso do Lenis (com a seção pinada ele às vezes não avisa)
         gsap.delayedCall(dur, () => {
