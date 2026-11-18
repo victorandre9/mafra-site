@@ -114,7 +114,12 @@ export default function Experience() {
       if (track && !reduce) {
         const n = track.children.length - 1;
         const rt = gsap.timeline({ repeat: -1, delay: 3.5 });
-        for (let i = 1; i <= n; i++) rt.to(track, { yPercent: (-100 / (n + 1)) * i, duration: 0.8, ease: "expo.inOut" }, "+=1.6");
+        // "resultados" é a palavra principal (pedido do Victor): fica mais tempo nela e sempre volta para ela
+        const palavras = Array.from(track.children).map((c) => c.textContent?.trim());
+        for (let i = 1; i <= n; i++) {
+          const espera = palavras[i - 1] === "resultados" ? 3.2 : 1.4;
+          rt.to(track, { yPercent: (-100 / (n + 1)) * i, duration: 0.8, ease: "expo.inOut" }, "+=" + espera);
+        }
         rt.set(track, { yPercent: 0 });
       }
 
