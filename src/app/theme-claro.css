@@ -757,3 +757,11 @@ main, section, footer { max-width: 100vw; }
   .hero__ctas .btn { width: min(288px, calc(100vw - 140px)) !important; }
 }
 @media (max-width: 420px) { .hero__ctas .btn { font-size: .74rem !important; padding-inline: 10px !important; } }
+
+/* parte Sobre: menos espaço depois dos cases; no celular a foto fica centralizada */
+.work { padding-bottom: 70px !important; }
+@media (max-width: 860px) {
+  .work { padding-bottom: 40px !important; }
+  .about__head { justify-items: center; text-align: left; }
+  .about__badge { margin-left: auto !important; margin-right: auto !important; }
+}
