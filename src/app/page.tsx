@@ -81,7 +81,7 @@ const CASES = [
     cls: "p-verifica",
     tag: "Em uso · Bel Log Transportes e Bel Log Armazém",
     title: "Verifica — Gestão Operacional Inteligente",
-    text: "Criado para a Bel Log Transportes e a Bel Log Armazém, empresas da minha família, e usado todos os dias na operação: checklists, frota, qualidade e RH no mesmo lugar. Indicadores clicáveis levam direto ao detalhe, e a gestão monta apresentações com as telas do próprio app.",
+    text: "Criado para a Bel Log Transportes e a Bel Log Armazém e usado todos os dias na operação: checklists, frota, qualidade e RH no mesmo lugar. Indicadores clicáveis levam direto ao detalhe, e a gestão monta apresentações com as telas do próprio app.",
     bullets: ["Checklists e frota", "Ocorrências de qualidade com indicadores", "RH, férias e documentação", "Despesas, multas e premiações", "Exporta Excel e PDF"],
     gain: "Rotinas que viviam em planilhas e mensagens viraram um sistema único, com histórico pronto para auditoria.",
     icon: "✅",

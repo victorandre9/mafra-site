@@ -28,7 +28,8 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
 - **Voz do site: primeira pessoa ("eu")**. O Victor atua como profissional autônomo —
   nada de "nós", "entendemos", "desenvolvemos" (decisão de 18/11/2026).
 - **Verifica foi criado para a Bel Log Transportes e a Bel Log Armazém** (empresas da família do Victor;
-  "Bel Log" separado). Pode citar os nomes (autorizado em 18/11/2026).
+  "Bel Log" separado). Pode citar os nomes das empresas (autorizado em 18/11/2026), mas **NUNCA dizer no site
+  que são da família do Victor** — fica antiprofissional, parece app feito para si mesmo.
 - **Galato e Thermobrás são clientes em potencial: nunca citar** (nem dados derivados das propostas).
 - **Logos são sempre os arquivos originais** (`public/brand/mafra-logo.png`, `public/cases/*`).
   Nunca redesenhar/recriar logo com SVG, texto ou CSS.
