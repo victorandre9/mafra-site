@@ -708,3 +708,13 @@ main, section, footer { max-width: 100vw; }
   .drone__beam { left: 46px !important; top: 60px !important; }
   .drone__glow { left: 46px !important; }
 }
+
+/* botões do topo com a MESMA largura (pedido do Victor): o verde encolhe, o claro cresce —
+   sobra espaço à direita para a Orbe nascer */
+.hero__ctas .btn { width: 300px; justify-content: center; padding-inline: 18px; }
+.hero__ctas .btn:not(.btn--ghost) { font-size: .95rem; gap: 10px; }
+.hero__ctas .btn span { white-space: nowrap; }
+.hero__ctas .btn { height: 54px; padding-block: 0; font-size: .95rem !important; box-sizing: border-box; }
+@media (max-width: 760px) {
+  .hero__ctas .btn { width: min(288px, 100%); height: 50px; padding-inline: 14px; font-size: .8rem !important; gap: 8px; }
+}
