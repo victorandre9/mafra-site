@@ -1,26 +1,9 @@
 "use client";
 
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
 import { Environment, Lightformer } from "@react-three/drei";
 import { useEffect, useRef, useState } from "react";
-import * as THREE from "three";
-import { Orbe, Quad, ESM_CLARO, GELO } from "./robo/ModelosPerola";
-
-/** Qual mascote voa no site. "quad" = Quadricóptero Pro (em teste, pedido do Victor 18/11/2026); "orbe" volta para a Orbe. */
-const MODELO: "orbe" | "quad" = "quad";
-
-/** Quadricóptero vira levemente para o cursor/toque, como um drone de verdade. */
-function QuadVivo({ olhar }: { olhar: React.RefObject<{ x: number; y: number }> }) {
-  const g = useRef<THREE.Group>(null);
-  useFrame(({ clock }, dt) => {
-    if (!g.current) return;
-    const t = clock.elapsedTime;
-    g.current.rotation.y = THREE.MathUtils.damp(g.current.rotation.y, olhar.current.x * 0.5, 4, dt);
-    g.current.rotation.x = THREE.MathUtils.damp(g.current.rotation.x, olhar.current.y * 0.18, 4, dt);
-    g.current.position.y = Math.sin(t * 1.6) * 0.05;
-  });
-  return <group ref={g}><Quad /></group>;
-}
+import { Orbe, ESM_CLARO, GELO } from "./robo/ModelosPerola";
 
 /**
  * Orbe Sentinela: o mascote em 3D, na paleta Pérola & Esmeralda (escolha do Victor, 17/11/2026).
@@ -47,8 +30,8 @@ export default function DroneOrb() {
     return () => window.removeEventListener("pointermove", move);
   }, []);
   return (
-    <div ref={host} className={MODELO === "quad" ? "drone__orb drone__orb--quad" : "drone__orb"}>
-      <Canvas dpr={dpr} camera={MODELO === "quad" ? { position: [0, 0.8, 4.05], fov: 38 } : { position: [0, 0.25, 4.15], fov: 38 }} gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}>
+    <div ref={host} className="drone__orb">
+      <Canvas dpr={dpr} camera={{ position: [0, 0.25, 4.15], fov: 38 }} gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}>
         <ambientLight intensity={0.12} />
         <directionalLight position={[3, 4.5, 2.5]} intensity={3} />
         <pointLight position={[-2.6, 1.2, -2]} intensity={30} color={ESM_CLARO} />
@@ -59,7 +42,7 @@ export default function DroneOrb() {
           <Lightformer form="rect" intensity={0.7} position={[5, 1, 0]} rotation-y={-Math.PI / 2} scale={[3, 6, 1]} color={GELO} />
           <Lightformer form="ring" intensity={2.5} position={[0, 1, -6]} scale={3} color={ESM_CLARO} />
         </Environment>
-        {MODELO === "quad" ? <QuadVivo olhar={olhar} /> : <Orbe olhar={olhar} pose={[0.12, 0, 0]} inclinacaoOlho={-0.18} />}
+        <Orbe olhar={olhar} pose={[0.12, 0, 0]} inclinacaoOlho={-0.18} />
       </Canvas>
     </div>
   );
