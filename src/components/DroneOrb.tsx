@@ -17,7 +17,7 @@ export default function DroneOrb() {
   const host = useRef<HTMLDivElement>(null);
   const olhar = useRef({ x: 0, y: 0 });
   const [dpr, setDpr] = useState(1.5);
-  useEffect(() => { setDpr(Math.min(window.devicePixelRatio || 1, 2)); }, []);
+  useEffect(() => { setDpr(Math.min(window.devicePixelRatio || 1, 3)); /* quadro pequeno: nitidez total da tela do iPhone */ }, []);
   useEffect(() => {
     const move = (e: PointerEvent) => {
       const r = host.current?.getBoundingClientRect();
