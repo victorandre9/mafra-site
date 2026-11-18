@@ -79,11 +79,11 @@ const ABOUT = [
 const CASES = [
   {
     cls: "p-verifica",
-    tag: "Em uso · Bel Log Transportes e Bel Log Armazém",
+    tag: "Logística · Armazéns, cross-docking e transportadoras",
     title: "Verifica — Gestão Operacional Inteligente",
-    text: "Criado para a Bel Log Transportes e a Bel Log Armazém e usado todos os dias na operação: checklists, frota, qualidade e RH no mesmo lugar. Indicadores clicáveis levam direto ao detalhe, e a gestão monta apresentações com as telas do próprio app.",
-    bullets: ["Checklists e frota", "Ocorrências de qualidade com indicadores", "RH, férias e documentação", "Despesas, multas e premiações", "Exporta Excel e PDF"],
-    gain: "Rotinas que viviam em planilhas e mensagens viraram um sistema único, com histórico pronto para auditoria.",
+    text: "Sistema de gestão integrado para logística — armazéns, cross-docking e transportadoras. Checklists online ligados ao mecânico e à frota, controle de jornada e produção por colaborador: quem mais produz na separação e quais motoristas e ajudantes entregam mais, com menos horas extras e sem ocorrências. Integrado ao RH e à qualidade.",
+    bullets: ["Checklists ligados à manutenção da frota", "Controle de jornada", "Produção por colaborador", "Performance de motoristas e ajudantes", "Integração com RH e qualidade"],
+    gain: "Informação controlada num só lugar: a liderança age em cima dos números, e a performance da empresa sobe.",
     icon: "✅",
     logo: "",
     wordmark: "verifica",
