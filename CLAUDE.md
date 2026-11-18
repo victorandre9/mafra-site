@@ -41,15 +41,21 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
 
 ## Tema de cores (18/11/2026)
 
-- O site usa o **azul-marinho da logo** (`#001836`) subindo na escala, no lugar do antigo verde.
-  Verde só na própria logo e no botão do **WhatsApp** (cor da marca dele, não trocar).
-- A troca foi feita mudando o matiz de todas as cores verdes (CSS, robô 3D, malha, celular);
+- **No ar desde 18/11/2026 (tarde): tema VERDE** (o Victor testou o azul e pediu o verde de volta).
+  O azul usava o **azul-marinho da logo** (`#001836`) subindo na escala; o botão do **WhatsApp** é sempre verde (marca dele).
+- A troca para o azul foi feita mudando o matiz de todas as cores verdes (CSS, robô 3D, malha, celular);
   script de referência: só os verdes com matiz 80°–175° viram azul 213°.
 - **Os dois temas estão salvos no GitHub** (pedido do Victor), cada um com todas as melhorias até 18/11/2026:
-  branch `tema-azul` (o que está no ar) e branch `tema-verde`. A cor NÃO é trocável pelo visitante.
-  Para voltar ao verde: aplicar no `main` a diferença de cores do `tema-verde` (CSS, `Background3D.tsx`,
+  branch `tema-azul` e branch `tema-verde` (o que está no ar). A cor NÃO é trocável pelo visitante.
+  Para trocar de tema: aplicar no `main` a diferença de cores do branch do outro tema (CSS, `Background3D.tsx`,
   `Phone.tsx`, `robo/ModelosPerola.tsx`, `page.tsx` e a foto `public/sobre/`), mantendo o que mudou depois.
 - Botões: **arredondados** (cantos suaves de 8px foram testados e recusados).
+
+## Robô (Orbe) no celular
+
+- Nunca em cima do texto nem do **celular 3D** (seção "Metodologia de trabalho", a que trava a tela).
+  O esconderijo é guardado em coordenada de TELA; sem lugar 100% livre, ele vai para o ponto que menos
+  cobre texto, com o celular pesando 4x (`custo` em `Experience.tsx`).
 
 ## Pendências conhecidas
 
