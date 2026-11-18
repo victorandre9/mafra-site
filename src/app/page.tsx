@@ -228,7 +228,6 @@ export default function Home() {
               <a href="#contato" className="btn magnetic" data-cursor="Vamos"><span>Conversar sobre o diagnóstico</span><i className="btn__arrow">→</i></a>
               <a href="#metodo" className="btn btn--ghost magnetic" data-cursor="Ver"><span>Conhecer o método</span></a>
             </div>
-            <p className="hero__tagline reveal-up"><span className="hero__rule" />Da necessidade operacional à solução digital.</p>
           </div>
           <div className="hero__scroll">
             <span>role para conhecer</span>
@@ -268,7 +267,7 @@ export default function Home() {
             <div className="services__head container">
               <Eyebrow>Serviços</Eyebrow>
               <h2 className="section-title">Gestão na prática. <span className="grad">Tecnologia com propósito.</span></h2>
-            <p className="services__lead">Para empresas de comércio, indústria, logística e serviços técnicos que cresceram e ainda dependem de planilha e WhatsApp para operar.</p>
+            <p className="services__lead">Para empresas de qualquer ramo — indústria, comércio, saúde, varejo, logística e serviços — que cresceram e ainda dependem de planilha e WhatsApp para operar.</p>
               <p className="swipe-hint" aria-hidden="true">
                 <span>Deslize para ver os {SERVICES.length + 1} cards</span>
                 <i className="swipe-hint__hand">👉</i>
@@ -467,6 +466,8 @@ export default function Home() {
       <footer className="footer container">
         {/* logo grande e centralizada; os links de redes ficam só no Contato, logo acima */}
         <div className="logo footer__logo"><Logo size={170} /></div>
+        {/* assinatura: saiu do topo (3 slogans juntos competiam) e fecha a página aqui */}
+        <p className="footer__assinatura"><span className="hero__rule" />Da necessidade operacional à solução digital.<span className="hero__rule" /></p>
         <p>Entendo o negócio. Transformo processos. Desenvolvo soluções.<br />© {new Date().getFullYear()} MAFRA Consultoria &amp; Tecnologia</p>
         <div className="footer__links">
           <a href="#top" data-cursor="↑">Voltar ao topo ↑</a>

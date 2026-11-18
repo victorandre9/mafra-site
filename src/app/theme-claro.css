@@ -644,3 +644,12 @@ main, section, footer { max-width: 100vw; }
 .services__lead { margin-top: 14px; max-width: 640px; color: #4f6078; font-size: 1.05rem; line-height: 1.55; }
 /* números: só os dois prazos reais, lado a lado */
 .stats { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; max-width: 900px; margin-inline: auto; }
+
+/* assinatura no rodapé (a frase que saiu do topo) */
+.footer .footer__assinatura {
+  display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: nowrap;
+  font: italic 400 1.05rem/1.4 var(--font-body); letter-spacing: .01em; color: #3b4d66; max-width: 640px;
+}
+.footer__assinatura .hero__rule { flex: 0 0 48px; height: 2px; border-radius: 2px; background: linear-gradient(90deg, rgba(24,160,87,0), #18a057); }
+.footer__assinatura .hero__rule:last-child { background: linear-gradient(90deg, #18a057, rgba(24,160,87,0)); }
+@media (max-width: 600px) { .footer__assinatura .hero__rule { display: none; } .footer .footer__assinatura { font-size: .98rem; } }
