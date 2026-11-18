@@ -762,19 +762,39 @@ export default function Experience() {
         const lx0 = Number(gsap.getProperty(layer, "x")), ly0 = Number(gsap.getProperty(layer, "y"));
         const sx0 = Number(gsap.getProperty(drone, "x")) + lx0, sy0 = Number(gsap.getProperty(drone, "y")) + ly0;
         const maxScroll = document.documentElement.scrollHeight - H;
-        const destScroll = Math.min(maxScroll, alvo.getBoundingClientRect().top + window.scrollY);
-        // estaciona à DIREITA do título (selo + h2), na altura da 1ª linha — nunca em cima do texto
-        const sel = alvo.querySelector(".eyebrow")?.getBoundingClientRect();
-        const h2 = (alvo.querySelector("h2") ?? alvo).getBoundingClientRect();
-        const dir = Math.max(h2.right, sel?.right ?? 0);
-        const fimX = gsap.utils.clamp(120, W - 120, dir + 100);
-        const fimY = gsap.utils.clamp(150, H - 140, h2.top + window.scrollY - destScroll + 30);
+        // a página para com um respiro de 150px acima do tema: é ali que o robô estaciona, por cima
+        const destScroll = Math.max(0, Math.min(maxScroll, alvo.getBoundingClientRect().top + window.scrollY - 150));
+        // estaciona POR CIMA do tema e joga a luz em cima do título (pedido do Victor):
+        // centro na 1ª linha do título, acima do selo ("• SERVIÇOS" etc.)
+        const h2el = (alvo.querySelector("h2") ?? alvo) as HTMLElement;
+        const selo = (alvo.querySelector(".eyebrow") ?? h2el) as HTMLElement;
+        // só os TEXTOS (letras): os blocos de linha do título ocupam a largura toda e puxariam o centro
+        const textos: Text[] = [];
+        const andar = document.createTreeWalker(h2el, NodeFilter.SHOW_TEXT);
+        while (andar.nextNode()) if ((andar.currentNode.textContent ?? "").trim()) textos.push(andar.currentNode as Text);
+        const faixa = document.createRange();
+        // medido a cada quadro: as letras do título entram animadas e só ficam no lugar durante a descida
+        const medir = (): [number, number] => {
+          // o título é feito de várias peças (palavras/letras): junta todas as da 1ª linha
+          const pecas = textos.flatMap((t) => { faixa.selectNodeContents(t); return Array.from(faixa.getClientRects()); }).filter((r) => r.width > 2);
+          let esq = h2el.getBoundingClientRect().left, dirR = h2el.getBoundingClientRect().right;
+          if (pecas.length) {
+            const topo1 = Math.min(...pecas.map((r) => r.top));
+            const mesmas = pecas.filter((r) => r.top < topo1 + 20);
+            esq = Math.min(...mesmas.map((r) => r.left));
+            dirR = Math.max(...mesmas.map((r) => r.right));
+          }
+          const topoTema = selo.getBoundingClientRect().top + window.scrollY - destScroll; // onde fica com a página parada
+          return [gsap.utils.clamp(120, W - 120, (esq + dirR) / 2), gsap.utils.clamp(90, H - 140, topoTema - 72)];
+        };
         const prog = { t: 0 };
         // a cada quadro: posição desejada na tela menos onde a rota da rolagem deixou o robô
         const segue = () => {
           const t = prog.t;
-          const dx = (fimX - sx0) * t + Math.sin(t * Math.PI) * -60; // curva leve, como um voo
-          const dy = (fimY - sy0) * t + Math.sin(t * Math.PI * 2) * 18;
+          // linha reta e suave: o robô desce JUNTO com a tela (pedido do Victor: nada de rodar em volta)
+          const [fimX, fimY] = medir();
+          const dx = (fimX - sx0) * t;
+          const dy = (fimY - sy0) * t;
           gsap.set(layer, {
             x: sx0 + dx - Number(gsap.getProperty(drone, "x")),
             y: sy0 + dy - Number(gsap.getProperty(drone, "y")),
@@ -785,8 +805,15 @@ export default function Experience() {
         gsap.to(escuro, { opacity: 1, duration: 0.8, ease: "power2.out" });
         gsap.to(beam, { scaleX: 1.8, scaleY: 2.6, opacity: 1, transformOrigin: "50% 0%", duration: 1, ease: "power2.out" });
         gsap.to(glow, { scale: 2.4, opacity: 1, duration: 1, ease: "power2.out" });
-        gsap.to(prog, { t: 1, duration: dur, ease: suave });
-        lenis.scrollTo(alvo, { duration: dur, easing: suave, lock: true, force: true });
+        // a ROLAGEM é nossa, quadro a quadro, no mesmo relógio do robô: no computador do Victor o
+        // scrollTo do Lenis pulava direto para o tema. Lenis parado = a roda do mouse não interfere.
+        const y0 = window.scrollY;
+        lenis.stop();
+        gsap.to(prog, {
+          t: 1, duration: dur, ease: suave,
+          onUpdate: () => lenis?.scrollTo(y0 + (destScroll - y0) * prog.t, { immediate: true, force: true }),
+          onComplete: () => lenis?.start(),
+        });
         // o fim é pelo relógio, não pelo aviso do Lenis (com a seção pinada ele às vezes não avisa)
         gsap.delayedCall(dur, () => {
           {
@@ -794,10 +821,12 @@ export default function Experience() {
             drone.classList.remove("is-voo");
             gsap.delayedCall(0.9, () => document.body.classList.remove("em-voo"));
             gsap.to(escuro, { opacity: 0, duration: 0.9, ease: "power2.inOut", onComplete: () => { escuro.parentNode?.removeChild(escuro); } });
-            gsap.to(beam, { scaleX: 1, scaleY: 1, duration: 0.9, ease: "power2.inOut", onComplete: () => { gsap.set(beam, { clearProps: "opacity,scale,transformOrigin" }); } });
+            // estacionado: a lanterna fica em cima do título, mais fraca (pedido do Victor)
+            gsap.to(beam, { scaleX: 1.25, scaleY: 1.5, opacity: 0.85, duration: 0.9, ease: "power2.inOut" });
+            gsap.to(beam, { scaleX: 1, scaleY: 1, delay: 3.2, duration: 0.9, ease: "power2.inOut", onComplete: () => { gsap.set(beam, { clearProps: "opacity,scale,transformOrigin" }); } });
             gsap.to(glow, { scale: 1, duration: 0.9, ease: "power2.inOut", onComplete: () => { gsap.set(glow, { clearProps: "opacity,scale" }); } });
             // segura parado enquanto a rota da rolagem assenta (scrub), depois devolve ao desvio normal
-            gsap.delayedCall(1.6, () => {
+            gsap.delayedCall(4.1, () => {
               gsap.ticker.remove(segue);
               tx = Number(gsap.getProperty(layer, "x"));
               ty = Number(gsap.getProperty(layer, "y"));
