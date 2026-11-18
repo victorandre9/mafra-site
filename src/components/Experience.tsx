@@ -624,7 +624,7 @@ export default function Experience() {
       const coletar = () => { obst = Array.from(document.querySelectorAll(SEL_TEXTO)); };
       coletar();
       on(window, "resize", coletar);
-      let voando = false; // durante o voo do menu, o desvio e as falas ficam parados
+      let voando = false, naVaga = false, ladoVaga: "E" | "D" | null = null; // durante o voo do menu, o desvio e as falas ficam parados
       let tx = 0, ty = 0, escX = 0, escY = 0, apagado = false, ultimo = 0, rotaLivreDesde = 0, apertoDesde = 0;
       const inicioVoo = performance.now();
       const avoid = () => {
@@ -668,6 +668,35 @@ export default function Experience() {
         //    mesmo que a rota ande por baixo;
         // 2) só volta para a rota depois que a rota ficar livre por um tempo seguido (não a cada brecha);
         // 3) quando precisa mudar, procura perto de onde ELA está (não perto da rota), andando o mínimo.
+        // CELULAR + seção do celular 3D travada na tela: vaga FIXA na lateral do celular (pedido do Victor:
+        // "ele ainda está em frente ao celular"). Nada de procurar lugar — o espaço ali é estreito e a busca
+        // acabava passando por cima do celular. Se a brecha for menor que o Orbe, ele encolhe para caber.
+        const procEl = $(".process"), foneEl = $(".phone__frame");
+        if (isTouch && procEl && foneEl) {
+          const pr = procEl.getBoundingClientRect(), fr = foneEl.getBoundingClientRect();
+          // vale com a seção travada E enquanto o celular ainda aparece na entrada/saída dela
+          // (voltar para a rota com o celular na tela fazia o Orbe cruzar por cima dele)
+          const travada = pr.top < H * 0.5 && pr.bottom > H * 0.35 && fr.width > 40 && fr.top < H - 40 && fr.bottom > topo;
+          if (travada) {
+            const gapE = fr.left, gapD = W - fr.right;
+            // o lado é escolhido UMA vez, na entrada: o celular gira e a brecha maior troca de lado —
+            // trocar junto fazia o Orbe atravessar o celular
+            if (ladoVaga === null) ladoVaga = gapE >= gapD ? "E" : "D";
+            const ladoE = ladoVaga === "E";
+            const gap = ladoE ? gapE : gapD;
+            const caber = Math.min(1, (gap - 10) / tam);
+            const vx = ladoE ? gap / 2 : fr.right + gap / 2;
+            const vy = gsap.utils.clamp(Math.max(fr.top, topo), Math.min(fr.bottom, base), fr.top + Math.max(60, fr.height * 0.3));
+            tx = vx - x; ty = vy - y;
+            escX = vx; escY = vy;
+            avoidX(tx); avoidY(ty);
+            gsap.to(corpo, { scale: caber, opacity: 1, duration: 0.6, overwrite: "auto" });
+            naVaga = true;
+            return;
+          }
+        }
+        ladoVaga = null;
+        if (naVaga) { naVaga = false; gsap.to(corpo, { scale: 1, duration: 0.6, overwrite: "auto" }); }
         const estaEm = tx !== 0 || ty !== 0;
         // esconderijo FIXO NA TELA: guardado em coordenada de tela — antes era um deslocamento da rota,
         // e o Orbe andava junto com a rota por cima do celular 3D
