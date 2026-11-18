@@ -72,7 +72,7 @@ const ABOUT = [
   {
     n: "03",
     title: "Formação e tecnologia",
-    text: "Processos Gerenciais, MBA em Gestão Empresarial, Técnico em Informática Gerencial e desenvolvimento de aplicativos.",
+    text: "Processos Gerenciais, MBA em Gestão Empresarial, Técnico em Informática Gerencial e desenvolvimento de aplicativos com tecnologias de mercado: Next.js, Vercel, Neon e GitHub.",
   },
 ];
 

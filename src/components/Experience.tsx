@@ -479,11 +479,12 @@ export default function Experience() {
         // A posição sai dos botões de verdade (com a página no topo), não de um número fixo,
         // porque a altura de cada celular muda onde os botões caem.
         if (W <= 760) {
-          // nasce à direita do 2º botão ("Conhecer o método"), que é mais curto: ali sobra espaço vazio
-          const cta = ($(".hero__ctas .btn--ghost") ?? $(".hero__ctas .btn"))?.getBoundingClientRect();
+          // nasce na MESMA LINHA do botão verde, no espaço à direita dele (os dois botões têm a mesma
+          // largura e deixam essa faixa livre); o balão de abertura fica acima, no vão entre texto e botões
+          const cta = $(".hero__ctas .btn:not(.btn--ghost)")?.getBoundingClientRect();
           if (cta) {
             const yDoc = cta.top + window.scrollY; // posição com a página no topo
-            const livreX = Math.max(cta.right + 16, W * 0.55);
+            const livreX = Math.max(cta.right + 10, W * 0.55);
             pts[0] = { x: Math.min(W - 56, (livreX + W) / 2), y: gsap.utils.clamp(H * 0.35, H * 0.86, yDoc + cta.height / 2) };
           }
         }
