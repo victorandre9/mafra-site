@@ -190,15 +190,15 @@ export default function Home() {
         <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
           <defs>
             <linearGradient id="verde-vidro" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stopColor="#d9ffe9" />
-              <stop offset=".28" stopColor="#34d27a" />
-              <stop offset=".7" stopColor="#18a057" />
-              <stop offset="1" stopColor="#0c6b38" />
+              <stop offset="0" stopColor="#e2ebf6" />
+              <stop offset=".28" stopColor="#03336f" />
+              <stop offset=".7" stopColor="#02254f" />
+              <stop offset="1" stopColor="#011834" />
             </linearGradient>
             <linearGradient id="verde-vidro-suave" x1="0" y1="0" x2="1" y2="1">
               <stop offset="0" stopColor="#ffffff" />
-              <stop offset=".5" stopColor="#c9f0da" />
-              <stop offset="1" stopColor="#7fdcaa" />
+              <stop offset=".5" stopColor="#cadbef" />
+              <stop offset="1" stopColor="#044492" />
             </linearGradient>
           </defs>
         </svg>

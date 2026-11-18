@@ -11,7 +11,7 @@ import { useRef } from "react";
 import * as THREE from "three";
 
 export const PEROLA = "#f3f6f8", PRATA = "#d4dbe2", CROMO = "#eef2f5";
-export const ESM = "#14a85a", ESM_CLARO = "#5dffa8", GELO = "#d9ffe9", LENTE = "#03190c";
+export const ESM = "#022550", ESM_CLARO = "#044492", GELO = "#e2ebf6", LENTE = "#00070f";
 
 export function Perola(props: { color?: string }) {
   return <meshPhysicalMaterial color={props.color ?? PEROLA} metalness={0.12} roughness={0.16} clearcoat={1} clearcoatRoughness={0.03}
@@ -55,7 +55,7 @@ export function Orbe({ olhar, pose = [0.14, -0.35, 0], inclinacaoOlho = -0.42 }:
           <mesh position={[0, 0, 0.6]}><circleGeometry args={[0.205, 96]} /><meshPhysicalMaterial color={LENTE} metalness={0.3} roughness={0.1} clearcoat={1} /></mesh>
           <mesh ref={iris} position={[0, 0, 0.603]}><ringGeometry args={[0.075, 0.16, 96, 1, 0, Math.PI * 1.85]} /><Neon c={ESM} i={4.5} /></mesh>
           <mesh position={[0, 0, 0.604]}><ringGeometry args={[0.06, 0.072, 64]} /><Neon c={ESM_CLARO} i={7} /></mesh>
-          <mesh position={[0, 0, 0.605]}><circleGeometry args={[0.055, 48]} /><meshBasicMaterial color="#010805" /></mesh>
+          <mesh position={[0, 0, 0.605]}><circleGeometry args={[0.055, 48]} /><meshBasicMaterial color="#00070f" /></mesh>
           <mesh position={[0.045, 0.05, 0.62]}><circleGeometry args={[0.022, 24]} /><meshBasicMaterial color="#ffffff" toneMapped={false} /></mesh>
           {/* domo de vidro sobre a lente */}
           <mesh position={[0, 0, 0.6]} scale={[1, 1, 0.32]}>

@@ -39,6 +39,13 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   a pessoa é o **Victor**; a empresa é a **MAFRA Consultoria & Tecnologia**. Nada de "o Mafra fez", "fale com o Mafra".
 - Números no site só se forem reais (prazos e etapas da metodologia). Nada inventado.
 
+## Tema de cores (18/11/2026)
+
+- O site usa o **azul-marinho da logo** (`#001836`) subindo na escala, no lugar do antigo verde.
+  Verde só na própria logo e no botão do **WhatsApp** (cor da marca dele, não trocar).
+- A troca foi feita mudando o matiz de todas as cores verdes (CSS, robô 3D, malha, celular);
+  script de referência: só os verdes com matiz 80°–175° viram azul 213°.
+
 ## Pendências conhecidas
 
 - E-mail profissional: o Victor vai criar; quando existir, entra no Contato (e-mail como 2º canal além do WhatsApp).
