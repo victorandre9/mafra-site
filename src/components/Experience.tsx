@@ -370,9 +370,11 @@ export default function Experience() {
       const altEl = $(".js-alt");
       let bubbleTl: gsap.core.Timeline | undefined;
       let grudar: (() => void) | undefined;
+      let ultimaFala = -1e9; // hora da última fala (vale para todas, inclusive a saudação)
       cleanups.push(() => { if (grudar) gsap.ticker.remove(grudar); });
       function droneSay(text: string, hold = 4, vao?: [string, string]) {
         hold = Math.max(4, hold); // pedido do Victor: toda fala do Orbe fica pelo menos 4 s na tela
+        ultimaFala = performance.now();
         bubbleTxt.textContent = text;
         bubbleTl?.kill();
         // o balão nunca sai da tela: mede no tamanho final e empurra para dentro
@@ -658,14 +660,39 @@ export default function Experience() {
       cleanups.push(() => gsap.ticker.remove(sparks));
 
       // Falas do drone em cada seção
+      // Falas por seção, com no máximo UMA a cada 10 segundos (pedido do Victor): rolando rápido,
+      // ele não metralha frases — guarda só a da seção onde a pessoa parou e fala quando der o tempo.
       const lines: Array<[string, string]> = [
-        [".services", "Olha tudo que dá pra fazer ✨"],
-        [".process", "Esse é o método MAFRA 📱"],
-        ["#cases", "Tecnologia que já está em uso 💪"],
-        ["#sobre", "Prazer, esse é o Victor 🤝"],
-        [".contact", "Chegamos! Qual processo vamos organizar? 🚀"],
+        [".manifesto", "Sistema bom nasce da rotina real 🎯"],
+        [".services", "Do diagnóstico ao suporte, tudo em um só lugar ✨"],
+        [".process", "Conheça o Programa de Eficiência Operacional e Produtividade 📈"],
+        [".stats", "Prazos claros, do início ao acompanhamento ⏱️"],
+        ["#cases", "Soluções que já estão rodando em empresas reais 💼"],
+        ["#sobre", "Prazer, este é o Victor, à frente da MAFRA 🤝"],
+        [".contact", "Qual processo da sua empresa vamos destravar? 🚀"],
       ];
-      lines.forEach(([sel, text]) => ScrollTrigger.create({ trigger: sel, start: "top 55%", onEnter: () => droneSay(text) }));
+      const INTERVALO = 10000;
+      let pendente: string | null = null;
+      let timerFala: ReturnType<typeof setTimeout> | undefined;
+      const falarQuandoPuder = (text: string) => {
+        pendente = text;
+        clearTimeout(timerFala);
+        const espera = Math.max(0, ultimaFala + INTERVALO - performance.now());
+        timerFala = setTimeout(() => {
+          if (!pendente) return;
+          if (performance.now() - ultimaFala < INTERVALO - 50) { falarQuandoPuder(pendente); return; }
+          droneSay(pendente);
+          pendente = null;
+        }, espera);
+      };
+      cleanups.push(() => clearTimeout(timerFala));
+      const ditas = new Set<string>();
+      lines.forEach(([sel, text]) => ScrollTrigger.create({
+        trigger: sel, start: "top 55%", end: "bottom 45%",
+        onEnter: () => { if (!ditas.has(sel)) { ditas.add(sel); falarQuandoPuder(text); } },
+        onLeave: () => { if (pendente === text) pendente = null; },
+        onLeaveBack: () => { if (pendente === text) pendente = null; },
+      }));
     });
 
     return () => {
