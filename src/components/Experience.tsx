@@ -160,6 +160,36 @@ export default function Experience() {
           on(el, "pointerleave", () => cursor.classList.remove("is-hover"));
         });
 
+        // ===== LANTERNA DO MOUSE + reflexo nos cards (pedido do Victor, 18/11/2026: opção 2 + cards da 3) =====
+        // O círculo antigo saiu (CSS). No lugar: um brilho verde suave segue o mouse pelo fundo, como a
+        // lanterna do robô; e cada card/item tem um reflexo que acompanha o mouse por dentro dele.
+        const lanterna = document.createElement("div");
+        lanterna.className = "lanterna-mouse";
+        document.body.appendChild(lanterna);
+        cleanups.push(() => lanterna.parentNode?.removeChild(lanterna));
+        let lx = -999, ly = -999, pedido = 0;
+        on(window, "pointermove", (e: PointerEvent) => {
+          lx = e.clientX; ly = e.clientY;
+          lanterna.classList.add("is-on");
+          if (!pedido) pedido = requestAnimationFrame(() => {
+            pedido = 0;
+            lanterna.style.setProperty("--lx", lx + "px");
+            lanterna.style.setProperty("--ly", ly + "px");
+          });
+        });
+        on(document.documentElement, "pointerleave", () => lanterna.classList.remove("is-on"));
+        $$(".card, .project, .about__item, .stat, .faq__item").forEach((el) => {
+          const reflexo = document.createElement("span");
+          reflexo.className = "reflexo-mouse";
+          reflexo.setAttribute("aria-hidden", "true");
+          el.appendChild(reflexo);
+          on(el, "pointermove", (e: PointerEvent) => {
+            const r = el.getBoundingClientRect();
+            el.style.setProperty("--rx", e.clientX - r.left + "px");
+            el.style.setProperty("--ry", e.clientY - r.top + "px");
+          });
+        });
+
         $$(".magnetic").forEach((el) => {
           const xTo = gsap.quickTo(el, "x", { duration: 0.6, ease: "elastic.out(1,0.4)" });
           const yTo = gsap.quickTo(el, "y", { duration: 0.6, ease: "elastic.out(1,0.4)" });
