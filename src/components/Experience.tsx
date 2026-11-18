@@ -903,21 +903,40 @@ export default function Experience() {
         "Equipe produtiva, operação sob controle ✅",
         "Do diagnóstico ao suporte, eu cuido de tudo ✨",
       ];
+      // ===== QUANDO O ORBE FALA (regra do Victor, 18/11/2026) =====
+      // 1) só com a TELA PARADA: rolou, o balão some na hora e ninguém fala enquanto rola;
+      // 2) uma fala a cada 10 s (do começo de uma ao começo da outra): 1 minuto parado = 6 falas.
       const INTERVALO = 10000;
-      const DURACAO_FALA = 5000; // entrada + 4 s visível + saída
+      const PARADA = 700; // a página precisa estar parada há este tempo para contar como "parada"
+      let ultimaRolagem = -1e9, ultimoY = window.scrollY;
+      const calar = () => {
+        if (!bubbleTl?.isActive() && Number(gsap.getProperty(bubble, "opacity")) < 0.05) return;
+        bubbleTl?.kill();
+        if (grudar) gsap.ticker.remove(grudar);
+        grudar = undefined;
+        gsap.to(bubble, { opacity: 0, scale: 0.85, duration: 0.18, overwrite: true });
+      };
+      const vigiaRolagem = () => {
+        const y = window.scrollY;
+        if (Math.abs(y - ultimoY) > 1) { ultimaRolagem = performance.now(); calar(); }
+        ultimoY = y;
+      };
+      gsap.ticker.add(vigiaRolagem);
+      cleanups.push(() => gsap.ticker.remove(vigiaRolagem));
       let passo = 1; // a saudação de abertura já foi um "toque"; o próximo é benefício/incentivo
       let iToque = 0, iOutra = 0;
       const menuAberto = () => !!document.querySelector(".orbmenu.is-open");
       const timerFala = setInterval(() => {
         if (ultimaFala < 0 || document.hidden || menuAberto() || voando) return; // começa só depois da saudação de abertura
-        // 10 s de SILÊNCIO entre uma frase sumir e a próxima aparecer (cada frase fica ~5 s na tela)
-        if (performance.now() - ultimaFala < INTERVALO + DURACAO_FALA) return;
+        const agora = performance.now();
+        if (agora - ultimaRolagem < PARADA) return; // tela em movimento: não fala
+        if (agora - ultimaFala < INTERVALO) return; // a cada 10 s
         const ehToque = passo % 2 === 0;
         const texto = ehToque ? TOQUE[iToque % TOQUE.length] : OUTRAS[iOutra % OUTRAS.length];
-        if (!droneSay(texto)) return; // sem lugar livre agora: tenta de novo no próximo segundo
+        if (!droneSay(texto)) return; // sem lugar livre agora: tenta de novo daqui a pouco
         if (ehToque) iToque++; else iOutra++;
         passo++;
-      }, 1000);
+      }, 250);
       cleanups.push(() => clearInterval(timerFala));
     });
 
