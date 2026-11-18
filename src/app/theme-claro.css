@@ -772,3 +772,8 @@ main, section, footer { max-width: 100vw; }
 
 /* aviso "role para conhecer" saiu: encostava nos botões do topo */
 .hero__scroll { display: none !important; }
+
+/* título do topo (escolha do Victor): "Transformo processos em" em prata, "resultados" em marinho,
+   e o contorno de "que movem." num cinza mais escuro para ficar legível */
+.hero__title .line { color: #9aa6b6; }
+.hero__title .outline { -webkit-text-stroke-color: #4b5565 !important; }
