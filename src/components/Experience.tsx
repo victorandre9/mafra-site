@@ -675,7 +675,7 @@ export default function Experience() {
         [".process", "Conheça o Programa de Eficiência Operacional e Produtividade 📈"],
         [".stats", "Prazos claros, do início ao acompanhamento ⏱️"],
         ["#cases", "Desenvolva seus processos e veja sua empresa crescer 🚀"],
-        ["#sobre", "Prazer, este é o Victor, à frente da MAFRA 🤝"],
+        ["#sobre", "Prazer, este é o Victor, da MAFRA Consultoria & Tecnologia 🤝"],
         ["#perguntas", "Ficou com dúvida? Toque em mim e fale com o Victor 💬"],
         [".contact", "Qual processo da sua empresa vamos destravar? 🚀"],
       ];

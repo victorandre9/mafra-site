@@ -55,8 +55,9 @@ export default function OrbMenu() {
   if (!mounted) return null;
 
   const mensagem =
-    `Olá, Victor! Vim pelo site da MAFRA e fiz o diagnóstico rápido.\n\n` +
-    `• Segmento: ${seg}\n• Maior desafio: ${prob}\n• Equipe: ${equipe}\n\n` +
+    `Olá, Victor! Vim pelo site da MAFRA Consultoria & Tecnologia e fiz o diagnóstico rápido.\n\n` +
+    `*Ramo de atividade:* ${seg}\n*Maior desafio:* ${prob}\n*Tamanho da equipe:* ${equipe}\n\n` +
+    `*Nome:* \n*Empresa:* \n\n` +
     `Gostaria de conversar sobre uma solução para a minha empresa.`;
 
   const ir = (href: string) => {
@@ -69,7 +70,7 @@ export default function OrbMenu() {
   return createPortal(
     <div className={`orbmenu${open ? " is-open" : ""}`} aria-hidden={!open}>
       <div className="orbmenu__backdrop" onClick={() => setOpen(false)} />
-      <div className="orbmenu__panel" role="dialog" aria-modal="true" aria-label="Assistente MAFRA">
+      <div className="orbmenu__panel" role="dialog" aria-modal="true" aria-label="Assistente MAFRA Consultoria & Tecnologia">
         <div className="orbmenu__head">
           <span className="orbmenu__id"><i /> MAFRA-01 · Assistente</span>
           <button className="orbmenu__x" onClick={() => setOpen(false)} aria-label="Fechar">✕</button>
@@ -87,7 +88,7 @@ export default function OrbMenu() {
             <button className="orbmenu__opt orbmenu__opt--hero" onClick={() => setTela("seg")}>
               <b>⚡ Diagnóstico rápido</b><span>3 perguntas, 30 segundos — e o Victor já entende seu cenário</span>
             </button>
-            <a className="orbmenu__opt" href={wa("Olá, Victor! Vim pelo site da MAFRA e gostaria de conversar.")} target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)}>
+            <a className="orbmenu__opt" href={wa("Olá, Victor! Vim pelo site da MAFRA Consultoria & Tecnologia e gostaria de conversar.\n\n*Nome:* \n*Empresa:* \n*Ramo de atividade:* ")} target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)}>
               <b>💬 Falar com o Victor</b><span>Abre o WhatsApp direto</span>
             </a>
             <button className="orbmenu__opt" onClick={() => setTela("ir")}>
