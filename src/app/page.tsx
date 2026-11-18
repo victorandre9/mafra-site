@@ -413,7 +413,7 @@ export default function Home() {
                 <text><textPath href="#circ">GESTÃO NA PRÁTICA ✦ TECNOLOGIA COM PROPÓSITO ✦ </textPath></text>
               </svg>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/sobre/victor-mafra.jpg?v=2" alt="Victor Mafra" width={720} height={720} className="about__foto" loading="lazy" />
+              <img src="/sobre/victor-mafra.jpg?v=3" alt="Victor Mafra" width={720} height={720} className="about__foto" loading="lazy" />
             </div>
             <div>
               <Eyebrow>Quem está por trás</Eyebrow>
