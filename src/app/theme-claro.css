@@ -722,19 +722,20 @@ main, section, footer { max-width: 100vw; }
 /* card "A solução da sua empresa": no celular, só a altura do conteúdo (antes esticava e sobrava um vazio enorme) */
 @media (max-width: 760px) { .project--cta { min-height: 0 !important; height: auto !important; } }
 
-/* cards de serviço: aro inteiro no verde forte do filete do topo (pedido do Victor) */
-.services__track .card:not(.card--cta) {
-  border: 1.5px solid rgba(24, 140, 76, .55) !important;
-  box-shadow: inset 0 1px 0 #fff, 0 0 0 3px rgba(52, 210, 122, .08), 0 18px 40px -22px rgba(24, 140, 76, .45) !important;
-}
 /* aviso de deslizar com a mesma largura dos cards (82vw no celular) */
 @media (max-width: 760px) {
   .swipe-hint { width: 82vw !important; max-width: 82vw; justify-content: center !important; box-sizing: border-box; }
 }
 
-/* aro dos cards de serviço: o MESMO verde forte do filete do topo, em volta inteira */
+/* aro triplo dos cards de serviço (pedido do Victor), igual em volta toda:
+   por fora verde escuro · no meio um fio branco bem fino · por dentro verde médio quase escuro */
 .services__track .card:not(.card--cta),
 .services__track .card:not(.card--cta):hover {
-  border: 2px solid #2f9a5c !important;
-  box-shadow: inset 0 1px 0 #fff, 0 0 0 4px rgba(52, 210, 122, .1), 0 0 18px rgba(47, 154, 92, .22), 0 18px 40px -22px rgba(24, 140, 76, .45) !important;
+  border: 2px solid #2a8352 !important;
+  box-shadow:
+    0 0 0 1.5px #ffffff,
+    0 0 0 4px #0f4f2c,
+    0 18px 36px -22px rgba(13, 44, 82, .35) !important;
 }
+/* o filete de luz do topo sai: o aro precisa ser o mesmo em volta toda */
+.services__track .card:not(.card--cta)::after { display: none !important; }
