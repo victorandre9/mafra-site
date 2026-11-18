@@ -744,8 +744,11 @@ main, section, footer { max-width: 100vw; }
 .drone__bubble { white-space: normal !important; width: max-content; max-width: min(320px, calc(100vw - 28px)) !important; line-height: 1.3; }
 
 /* celular: selo verde do topo com respiro abaixo da linha do cabeçalho */
-@media (max-width: 760px) { .hero { padding-top: 135px !important; } }
+@media (max-width: 760px) { .hero { padding-top: 101px !important; align-items: flex-start !important; } }
 
 /* foto do Victor maior na parte Sobre */
 .about__badge { width: 300px !important; height: 300px !important; }
 @media (max-width: 860px) { .about__badge { width: 230px !important; height: 230px !important; margin-left: 34px !important; } }
+
+/* celular: cabeçalho fino — a faixa quase encosta na logo (a logo mantém o tamanho), sobra mais tela para o conteúdo */
+@media (max-width: 760px) { .header { padding-top: 5px !important; padding-bottom: 5px !important; } }
