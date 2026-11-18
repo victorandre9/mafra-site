@@ -58,7 +58,7 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   cobre texto, com o celular pesando 4x (`custo` em `Experience.tsx`).
   Enquanto o celular 3D está na tela, o Orbe fica numa VAGA FIXA na lateral dele (lado escolhido na entrada, não troca).
 - O Orbe NUNCA sai da tela (trava `travar`, a cada quadro).
-- Selo do topo ("Processos mais inteligentes…"): card escuro, letra clara, cantos de 12px, texto centralizado (`.hero .pill`).
+- Selo do topo ("Processos mais inteligentes…"): card com a COR DOS BALÕES do robô (vidro verde), letra branca, cantos de 12px, texto centralizado (`.hero .pill`).
 
 - **Voo do menu (computador)**: clicar em Serviços/Método/Cases/Sobre/Contato escurece a tela, a luz do
   robô cresce (brilho, largura e comprimento do facho) e ele desce até o tema em 3 s, 4 s, 5 s, 6 s, 7 s;
