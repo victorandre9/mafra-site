@@ -54,6 +54,14 @@ export default function Experience() {
           if (target === null) return;
           e.preventDefault();
           document.body.classList.remove("menu-open");
+          // MENU DO TOPO no computador: o robô voa até o tema (pedido do Victor, 18/11/2026) —
+          // 3 s no 1º tema, 4 s no 2º, 5 s no 3º… A animação mora junto do robô, mais abaixo.
+          const navLinks = $$(".nav .nav__link");
+          const iNav = navLinks.indexOf(a);
+          if (lenis && iNav >= 0 && typeof target !== "number" && window.innerWidth > 900 && !isTouch) {
+            window.dispatchEvent(new CustomEvent("mafra:voo", { detail: { alvo: target, dur: 3 + iNav } }));
+            return;
+          }
           if (lenis) lenis.scrollTo(target, { duration: 1.6 });
           else if (target === 0) window.scrollTo(0, 0);
           else if (typeof target !== "number") target.scrollIntoView();
@@ -616,10 +624,12 @@ export default function Experience() {
       const coletar = () => { obst = Array.from(document.querySelectorAll(SEL_TEXTO)); };
       coletar();
       on(window, "resize", coletar);
+      let voando = false; // durante o voo do menu, o desvio e as falas ficam parados
       let tx = 0, ty = 0, escX = 0, escY = 0, apagado = false, ultimo = 0, rotaLivreDesde = 0, apertoDesde = 0;
       const inicioVoo = performance.now();
       const avoid = () => {
         const agora = performance.now();
+        if (voando) return;
         if (agora - ultimo < 200) return; // 5x por segundo basta, não pesa e não deixa tremer
         ultimo = agora;
         const W = window.innerWidth, H = window.innerHeight;
@@ -727,6 +737,78 @@ export default function Experience() {
         layer.style.translate = `${travaX}px ${travaY}px`;
       };
       gsap.ticker.add(travar);
+
+      // ===== VOO DO MENU (computador; pedido do Victor, 18/11/2026) =====
+      // Clicou em Serviços/Método/Cases/Sobre/Contato: a tela escurece, a luz do robô cresce
+      // (intensidade, raio e distância do facho) e ele desce junto até o tema, devagar — 3 s no 1º,
+      // 4 s no 2º, 5 s no 3º… Ao estacionar ao lado do título, a luz diminui e a tela volta ao normal.
+      const suave = (t: number) => -(Math.cos(Math.PI * t) - 1) / 2;
+      on(window, "mafra:voo", (e: CustomEvent<{ alvo: HTMLElement; dur: number }>) => {
+        if (voando || !lenis) return;
+        const { alvo, dur } = e.detail;
+        voando = true;
+        const beam = $(".drone__beam"), glow = $(".drone__glow");
+        bubbleTl?.kill();
+        gsap.to(bubble, { opacity: 0, duration: 0.2, overwrite: true });
+        (avoidX as unknown as { tween?: gsap.core.Tween }).tween?.kill();
+        (avoidY as unknown as { tween?: gsap.core.Tween }).tween?.kill();
+        const escuro = document.createElement("div");
+        escuro.className = "voo-escuro";
+        document.body.appendChild(escuro);
+        drone.classList.add("is-voo");
+        document.body.classList.add("em-voo");
+        // de onde sai (na tela) e onde estaciona: ao lado do título do tema, já com a página no lugar
+        const W = window.innerWidth, H = window.innerHeight;
+        const lx0 = Number(gsap.getProperty(layer, "x")), ly0 = Number(gsap.getProperty(layer, "y"));
+        const sx0 = Number(gsap.getProperty(drone, "x")) + lx0, sy0 = Number(gsap.getProperty(drone, "y")) + ly0;
+        const maxScroll = document.documentElement.scrollHeight - H;
+        const destScroll = Math.min(maxScroll, alvo.getBoundingClientRect().top + window.scrollY);
+        // estaciona à DIREITA do título (selo + h2), na altura da 1ª linha — nunca em cima do texto
+        const sel = alvo.querySelector(".eyebrow")?.getBoundingClientRect();
+        const h2 = (alvo.querySelector("h2") ?? alvo).getBoundingClientRect();
+        const dir = Math.max(h2.right, sel?.right ?? 0);
+        const fimX = gsap.utils.clamp(120, W - 120, dir + 100);
+        const fimY = gsap.utils.clamp(150, H - 140, h2.top + window.scrollY - destScroll + 30);
+        const prog = { t: 0 };
+        // a cada quadro: posição desejada na tela menos onde a rota da rolagem deixou o robô
+        const segue = () => {
+          const t = prog.t;
+          const dx = (fimX - sx0) * t + Math.sin(t * Math.PI) * -60; // curva leve, como um voo
+          const dy = (fimY - sy0) * t + Math.sin(t * Math.PI * 2) * 18;
+          gsap.set(layer, {
+            x: sx0 + dx - Number(gsap.getProperty(drone, "x")),
+            y: sy0 + dy - Number(gsap.getProperty(drone, "y")),
+          });
+        };
+        gsap.ticker.add(segue);
+        // luz mais forte: intensidade (brilho), raio (largura) e distância (comprimento do facho)
+        gsap.to(escuro, { opacity: 1, duration: 0.8, ease: "power2.out" });
+        gsap.to(beam, { scaleX: 1.8, scaleY: 2.6, opacity: 1, transformOrigin: "50% 0%", duration: 1, ease: "power2.out" });
+        gsap.to(glow, { scale: 2.4, opacity: 1, duration: 1, ease: "power2.out" });
+        gsap.to(prog, { t: 1, duration: dur, ease: suave });
+        lenis.scrollTo(alvo, { duration: dur, easing: suave, lock: true, force: true });
+        // o fim é pelo relógio, não pelo aviso do Lenis (com a seção pinada ele às vezes não avisa)
+        gsap.delayedCall(dur, () => {
+          {
+            // estacionou: luz diminui e a tela volta ao normal
+            drone.classList.remove("is-voo");
+            gsap.delayedCall(0.9, () => document.body.classList.remove("em-voo"));
+            gsap.to(escuro, { opacity: 0, duration: 0.9, ease: "power2.inOut", onComplete: () => { escuro.parentNode?.removeChild(escuro); } });
+            gsap.to(beam, { scaleX: 1, scaleY: 1, duration: 0.9, ease: "power2.inOut", onComplete: () => { gsap.set(beam, { clearProps: "opacity,scale,transformOrigin" }); } });
+            gsap.to(glow, { scale: 1, duration: 0.9, ease: "power2.inOut", onComplete: () => { gsap.set(glow, { clearProps: "opacity,scale" }); } });
+            // segura parado enquanto a rota da rolagem assenta (scrub), depois devolve ao desvio normal
+            gsap.delayedCall(1.6, () => {
+              gsap.ticker.remove(segue);
+              tx = Number(gsap.getProperty(layer, "x"));
+              ty = Number(gsap.getProperty(layer, "y"));
+              escX = Number(gsap.getProperty(drone, "x")) + tx;
+              escY = Number(gsap.getProperty(drone, "y")) + ty;
+              ultimo = 0;
+              voando = false;
+            });
+          }
+        });
+      });
       cleanups.push(() => { gsap.ticker.remove(travar); layer.style.translate = ""; });
       cleanups.push(() => gsap.ticker.remove(avoid));
 
@@ -769,7 +851,7 @@ export default function Experience() {
       let iToque = 0, iOutra = 0;
       const menuAberto = () => !!document.querySelector(".orbmenu.is-open");
       const timerFala = setInterval(() => {
-        if (ultimaFala < 0 || document.hidden || menuAberto()) return; // começa só depois da saudação de abertura
+        if (ultimaFala < 0 || document.hidden || menuAberto() || voando) return; // começa só depois da saudação de abertura
         // 10 s de SILÊNCIO entre uma frase sumir e a próxima aparecer (cada frase fica ~5 s na tela)
         if (performance.now() - ultimaFala < INTERVALO + DURACAO_FALA) return;
         const ehToque = passo % 2 === 0;
