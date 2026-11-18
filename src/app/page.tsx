@@ -79,9 +79,9 @@ const ABOUT = [
 const CASES = [
   {
     cls: "p-verifica",
-    tag: "Solução empresarial · Gestão operacional",
+    tag: "Em uso · Bel Log Transportes e Bel Log Armazém",
     title: "Verifica — Gestão Operacional Inteligente",
-    text: "Sistema sob medida para uma transportadora: checklists, frota, qualidade e RH no mesmo lugar. Indicadores clicáveis levam direto ao detalhe, e a gestão monta apresentações com as telas do próprio app.",
+    text: "Criado para a Bel Log Transportes e a Bel Log Armazém, empresas da minha família, e usado todos os dias na operação: checklists, frota, qualidade e RH no mesmo lugar. Indicadores clicáveis levam direto ao detalhe, e a gestão monta apresentações com as telas do próprio app.",
     bullets: ["Checklists e frota", "Ocorrências de qualidade com indicadores", "RH, férias e documentação", "Despesas, multas e premiações", "Exporta Excel e PDF"],
     gain: "Rotinas que viviam em planilhas e mensagens viraram um sistema único, com histórico pronto para auditoria.",
     icon: "✅",
@@ -115,6 +115,15 @@ const CASES = [
   },
 ];
 
+const FAQ: Array<[string, string]> = [
+  ["Quanto custa?", "Cada projeto tem um valor, porque cada operação é diferente. Depois do diagnóstico eu envio uma proposta fechada, com escopo, prazo e investimento definidos — sem surpresa no meio do caminho."],
+  ["Preciso trocar o sistema que já uso?", "Não. A solução se conecta ao que você já tem, como o ERP: pedidos, crédito e faturamento continuam onde estão, e a operação ganha uma ferramenta simples que conversa com eles."],
+  ["Quanto tempo leva?", "Em média, de 30 a 60 dias para uma solução de gestão entrar em uso. O prazo exato sai do diagnóstico e vai escrito na proposta."],
+  ["E depois da entrega?", "São 30 dias de acompanhamento assistido, com a equipe já usando. Depois, cuido da hospedagem, dos backups, da manutenção e do suporte."],
+  ["Meus dados ficam seguros?", "Cada pessoa acessa só o que o perfil dela permite, os dados têm cópia de segurança automática e o tratamento de informações pessoais segue a LGPD."],
+  ["Atende o meu ramo?", "Sim. Atendo empresas de qualquer ramo — indústria, comércio, saúde, varejo, logística e serviços. O que importa é a rotina: é a partir dela que a solução é desenhada."],
+  ["Por onde começa?", "Por uma conversa sem compromisso pelo WhatsApp. Você conta como a operação funciona hoje e onde ela trava, e eu respondo com os próximos passos para o diagnóstico."],
+];
 const NAV = [
   ["#servicos", "Serviços"],
   ["#metodo", "Método"],
@@ -398,12 +407,13 @@ export default function Home() {
         {/* SOBRE */}
         <section className="about container" id="sobre">
           <div className="about__head">
-            <div className="about__badge" aria-hidden="true">
-              <svg className="about__ring" viewBox="0 0 200 200">
+            <div className="about__badge">
+              <svg className="about__ring" viewBox="0 0 200 200" aria-hidden="true">
                 <defs><path id="circ" d="M100 100m-78 0a78 78 0 1 1 156 0a78 78 0 1 1-156 0" /></defs>
                 <text><textPath href="#circ">GESTÃO NA PRÁTICA ✦ TECNOLOGIA COM PROPÓSITO ✦ </textPath></text>
               </svg>
-              <LogoImage size={180} />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/sobre/victor-mafra.jpg" alt="Victor Mafra" width={720} height={720} className="about__foto" loading="lazy" />
             </div>
             <div>
               <Eyebrow>Quem está por trás</Eyebrow>
@@ -429,6 +439,20 @@ export default function Home() {
         <section className="bigtext" aria-hidden="true">
           <div className="bigtext__row" data-dir="-1">processos ✦ gestão ✦ tecnologia ✦ processos ✦ gestão ✦ tecnologia ✦</div>
           <div className="bigtext__row outline" data-dir="1">diagnóstico ✦ tecnologia ✦ indicadores ✦ resultados ✦ diagnóstico ✦ tecnologia ✦</div>
+        </section>
+
+        {/* PERGUNTAS FREQUENTES: responde as objeções antes da conversa */}
+        <section className="faq container" id="perguntas">
+          <Eyebrow>Perguntas frequentes</Eyebrow>
+          <h2 className="section-title">Antes de <span className="grad">conversar</span></h2>
+          <div className="faq__list">
+            {FAQ.map(([q, r], i) => (
+              <details key={q} className="faq__item" open={i === 0}>
+                <summary><span>{q}</span><i aria-hidden="true">+</i></summary>
+                <p>{r}</p>
+              </details>
+            ))}
+          </div>
         </section>
 
         {/* CONTATO */}
