@@ -16,7 +16,7 @@ body::after { opacity: .02 !important; }
 
 /* topo */
 .hero__glow--a { background: #c6ecd6 !important; opacity: .75 !important; }
-.hero__glow--b { background: #d4e6f8 !important; opacity: .8 !important; }
+.hero__glow--b { display: none !important; } /* era um brilho azul-claro no canto (Victor pediu para remover, 18/11/2026) */
 .chev--big { color: #e2f2e8 !important; opacity: 1 !important; }
 .chev--mid { color: #c9eadb !important; opacity: .7 !important; }
 .chev--small { color: #22b562 !important; }
@@ -74,8 +74,8 @@ body::after { opacity: .02 !important; }
 .about__n { color: #1b8f52 !important; }
 
 /* faixas gigantes */
-.bigtext__row { color: #0d2c52; }
-.bigtext__row.outline { -webkit-text-stroke: 1.5px rgba(13, 44, 82, .25) !important; color: transparent; }
+.bigtext__row { color: #0c6b38; } /* faixa GESTÃO ✦ TECNOLOGIA: verde escuro da marca (era o marinho do texto) */
+.bigtext__row.outline { -webkit-text-stroke: 1.5px rgba(24, 160, 87, .45) !important; color: transparent; }
 
 /* contato em painel verde suave */
 .contact { background: linear-gradient(160deg, #eaf7ef, #f3f6f9 60%) !important; border-top: 1px solid rgba(13, 44, 82, .06) !important; }
@@ -104,7 +104,6 @@ body::before {
   content: ""; position: fixed; inset: -10%; z-index: -1; pointer-events: none;
   background:
     radial-gradient(40% 35% at 85% 10%, rgba(61, 220, 132, .16), transparent 70%),
-    radial-gradient(35% 30% at 10% 60%, rgba(79, 155, 220, .14), transparent 70%),
     radial-gradient(30% 30% at 70% 85%, rgba(31, 157, 90, .12), transparent 70%);
   filter: blur(20px);
 }
