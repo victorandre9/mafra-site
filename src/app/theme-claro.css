@@ -653,3 +653,37 @@ main, section, footer { max-width: 100vw; }
 .footer__assinatura .hero__rule { flex: 0 0 48px; height: 2px; border-radius: 2px; background: linear-gradient(90deg, rgba(24,160,87,0), #18a057); }
 .footer__assinatura .hero__rule:last-child { background: linear-gradient(90deg, #18a057, rgba(24,160,87,0)); }
 @media (max-width: 600px) { .footer__assinatura .hero__rule { display: none; } .footer .footer__assinatura { font-size: .98rem; } }
+
+/* ================= PERGUNTAS FREQUENTES ================= */
+.faq { padding-block: 40px 100px; max-width: 900px; margin-inline: auto; }
+.faq .section-title { margin-bottom: 28px; }
+.faq__list { display: flex; flex-direction: column; gap: 12px; }
+.faq__item {
+  border-radius: 20px; padding: 0 22px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .92), rgba(246, 251, 248, .88));
+  border: 1px solid rgba(13, 44, 82, .08);
+  box-shadow: inset 0 1px 0 #fff, 0 10px 26px -18px rgba(13, 44, 82, .3);
+  transition: border-color .3s, box-shadow .3s;
+}
+.faq__item[open] { border-color: rgba(52, 210, 122, .4); box-shadow: inset 0 1px 0 #fff, 0 0 0 4px rgba(52, 210, 122, .06), 0 14px 30px -18px rgba(24, 160, 87, .35); }
+.faq__item summary {
+  list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 20px 0; font: 700 1.12rem/1.3 var(--font-display); color: #0b1a2e;
+}
+.faq__item summary::-webkit-details-marker { display: none; }
+.faq__item summary i {
+  flex-shrink: 0; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center;
+  font: 600 1.2rem/1 var(--font-body); font-style: normal; color: var(--g-deep);
+  background: linear-gradient(180deg, #f1fcf5, #dcf5e7); box-shadow: inset 0 1px 0 #fff, inset 0 0 0 1px rgba(52, 210, 122, .35);
+  transition: transform .35s cubic-bezier(.22, 1, .36, 1);
+}
+.faq__item[open] summary i { transform: rotate(45deg); }
+.faq__item p { padding: 0 0 20px; color: #3b4d66; line-height: 1.65; max-width: 720px; }
+@media (max-width: 760px) { .faq { padding-block: 20px 70px; } .faq__item summary { font-size: 1.02rem; } }
+
+/* foto do Victor na parte Sobre (fundo gelo), dentro do anel de texto que gira */
+.about__foto {
+  width: 100%; height: 100%; border-radius: 50%; object-fit: cover; object-position: 50% 30%;
+  border: 4px solid #fff;
+  box-shadow: 0 0 0 2px rgba(52, 210, 122, .55), 0 24px 50px -18px rgba(13, 44, 82, .45), 0 0 40px rgba(52, 210, 122, .18);
+}

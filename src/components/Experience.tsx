@@ -665,15 +665,16 @@ export default function Experience() {
       cleanups.push(() => gsap.ticker.remove(sparks));
 
       // Falas do drone em cada seção
-      // Falas por seção, com no máximo UMA a cada 10 segundos (pedido do Victor): rolando rápido,
+      // Falas por seção (o robô só INCENTIVA a contratar; nunca comenta os cases), com no máximo UMA a cada 10 segundos (pedido do Victor): rolando rápido,
       // ele não metralha frases — guarda só a da seção onde a pessoa parou e fala quando der o tempo.
       const lines: Array<[string, string]> = [
-        [".manifesto", "Sistema bom nasce da rotina real 🎯"],
-        [".services", "Do diagnóstico ao suporte, tudo em um só lugar ✨"],
+        [".manifesto", "Sua operação pode render muito mais 🎯"],
+        [".services", "Escolha por onde começar — eu cuido do resto ✨"],
         [".process", "Conheça o Programa de Eficiência Operacional e Produtividade 📈"],
         [".stats", "Prazos claros, do início ao acompanhamento ⏱️"],
-        ["#cases", "Soluções que já estão rodando em empresas reais 💼"],
+        ["#cases", "Desenvolva seus processos e veja sua empresa crescer 🚀"],
         ["#sobre", "Prazer, este é o Victor, à frente da MAFRA 🤝"],
+        ["#perguntas", "Ficou com dúvida? Toque em mim e fale com o Victor 💬"],
         [".contact", "Qual processo da sua empresa vamos destravar? 🚀"],
       ];
       const INTERVALO = 10000;
