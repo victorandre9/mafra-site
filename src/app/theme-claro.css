@@ -731,3 +731,10 @@ main, section, footer { max-width: 100vw; }
 @media (max-width: 760px) {
   .swipe-hint { width: 82vw !important; max-width: 82vw; justify-content: center !important; box-sizing: border-box; }
 }
+
+/* aro dos cards de serviço: o MESMO verde forte do filete do topo, em volta inteira */
+.services__track .card:not(.card--cta),
+.services__track .card:not(.card--cta):hover {
+  border: 2px solid #2f9a5c !important;
+  box-shadow: inset 0 1px 0 #fff, 0 0 0 4px rgba(52, 210, 122, .1), 0 0 18px rgba(47, 154, 92, .22), 0 18px 40px -22px rgba(24, 140, 76, .45) !important;
+}
