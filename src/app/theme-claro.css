@@ -718,3 +718,16 @@ main, section, footer { max-width: 100vw; }
 @media (max-width: 760px) {
   .hero__ctas .btn { width: min(288px, 100%); height: 50px; padding-inline: 14px; font-size: .8rem !important; gap: 8px; }
 }
+
+/* card "A solução da sua empresa": no celular, só a altura do conteúdo (antes esticava e sobrava um vazio enorme) */
+@media (max-width: 760px) { .project--cta { min-height: 0 !important; height: auto !important; } }
+
+/* cards de serviço: aro inteiro no verde forte do filete do topo (pedido do Victor) */
+.services__track .card:not(.card--cta) {
+  border: 1.5px solid rgba(24, 140, 76, .55) !important;
+  box-shadow: inset 0 1px 0 #fff, 0 0 0 3px rgba(52, 210, 122, .08), 0 18px 40px -22px rgba(24, 140, 76, .45) !important;
+}
+/* aviso de deslizar com a mesma largura dos cards (82vw no celular) */
+@media (max-width: 760px) {
+  .swipe-hint { width: 82vw !important; max-width: 82vw; justify-content: center !important; box-sizing: border-box; }
+}
