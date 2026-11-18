@@ -479,11 +479,12 @@ export default function Experience() {
         // A posição sai dos botões de verdade (com a página no topo), não de um número fixo,
         // porque a altura de cada celular muda onde os botões caem.
         if (W <= 760) {
-          const cta = $(".hero__ctas .btn")?.getBoundingClientRect();
+          // nasce à direita do 2º botão ("Conhecer o método"), que é mais curto: ali sobra espaço vazio
+          const cta = ($(".hero__ctas .btn--ghost") ?? $(".hero__ctas .btn"))?.getBoundingClientRect();
           if (cta) {
             const yDoc = cta.top + window.scrollY; // posição com a página no topo
-            const livreX = Math.max(cta.right + 20, W * 0.62);
-            pts[0] = { x: Math.min(W - 60, (livreX + W) / 2), y: gsap.utils.clamp(H * 0.35, H * 0.9, yDoc + cta.height / 2) };
+            const livreX = Math.max(cta.right + 16, W * 0.55);
+            pts[0] = { x: Math.min(W - 56, (livreX + W) / 2), y: gsap.utils.clamp(H * 0.35, H * 0.86, yDoc + cta.height / 2) };
           }
         }
         return pts;
@@ -587,6 +588,7 @@ export default function Experience() {
       coletar();
       on(window, "resize", coletar);
       let tx = 0, ty = 0, apagado = false, ultimo = 0, rotaLivreDesde = 0, apertoDesde = 0;
+      const inicioVoo = performance.now();
       const avoid = () => {
         const agora = performance.now();
         if (agora - ultimo < 200) return; // 5x por segundo basta, não pesa e não deixa tremer
@@ -600,12 +602,11 @@ export default function Experience() {
         const topo = ($(".header")?.getBoundingClientRect().bottom ?? 80) + hh + 30;
         const base = H - hh - 18, esq = hw + 8, dir = W - hw - 8;
         const rs = obst.map((e) => e.getBoundingClientRect()).filter((r) => r.width > 0 && r.bottom > 0 && r.top < H && r.right > 0 && r.left < W);
-        const bg = (window as Window & { __mafraBg?: { x: number; y: number; s: number } }).__mafraBg;
-        const bcx = bg ? bg.x * W : -9999, bcy = bg ? bg.y * H : -9999, br = bg ? bg.s * H * 0.85 : 0;
+        // (malha do fundo não entra mais no desvio)
         const livre = (ox: number, oy: number) => {
           const px = x + ox, py = y + oy;
           if (px < esq || px > dir || py < topo || py > base) return false;
-          if (bg && Math.hypot(px - bcx, py - bcy) < br) return false;
+          // (a malha do fundo ficou bem suave: não precisa mais desviar dela — só do texto)
           return !rs.some((r) => px + hw > r.left - 8 && px - hw < r.right + 8 && py + hh > r.top - 8 && py - hh < r.bottom + 8);
         };
         // CALMA (pedido do Victor: "ele fica rodando procurando área vazia"):
@@ -639,10 +640,10 @@ export default function Experience() {
         avoidX(tx); avoidY(ty);
         // só fica translúcida se o aperto durar (evita piscar)
         if (semSaida) { if (!apertoDesde) apertoDesde = agora; } else apertoDesde = 0;
-        const deveApagar = semSaida && agora - apertoDesde > (isTouch ? 0 : 180); // celular: translúcida na hora
+        const deveApagar = !isTouch && semSaida && agora > inicioVoo + 7000 && agora - apertoDesde > 450; // celular: sempre visível (pedido do Victor); computador: só se o aperto durar
         if (deveApagar !== apagado) {
           apagado = deveApagar;
-          gsap.to(corpo, { opacity: deveApagar ? 0.38 : 1, duration: deveApagar ? 0.3 : 0.6, overwrite: "auto" });
+          gsap.to(corpo, { opacity: deveApagar ? 0.55 : 1, duration: deveApagar ? 0.3 : 0.6, overwrite: "auto" });
         }
       };
       gsap.ticker.add(avoid);
