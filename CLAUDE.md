@@ -32,6 +32,7 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
 - **Galato e Thermobrás são clientes em potencial: nunca citar** (nem dados derivados das propostas).
 - **Logos são sempre os arquivos originais** (`public/brand/mafra-logo.png`, `public/cases/*`).
   Nunca redesenhar/recriar logo com SVG, texto ou CSS.
+- **Formação do Victor: MBA em Gestão Empresarial CONCLUÍDO (julho/2026).** Nunca escrever "em curso".
 - Números no site só se forem reais (prazos e etapas da metodologia). Nada inventado.
 
 ## Pendências conhecidas
