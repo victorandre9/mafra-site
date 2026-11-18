@@ -825,7 +825,7 @@ body.em-voo .drone-layer { z-index: 95; } /* durante o voo, o robô fica acima d
   .card, .project, .about__item, .stat, .faq__item { position: relative; isolation: isolate; transition: translate .35s cubic-bezier(.2,.8,.2,1), scale .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease !important; }
   .card:hover, .project:hover, .about__item:hover, .stat:hover {
     translate: 0 -6px !important; scale: 1.025 !important;
-    box-shadow: 0 0 0 2px rgba(52, 210, 122, .85), 0 0 38px rgba(52, 210, 122, .38), 0 30px 60px -22px rgba(6, 64, 34, .45) !important;
+    box-shadow: 0 0 0 2px rgba(52, 210, 122, .85), 0 0 60px 6px rgba(52, 210, 122, .5), 0 30px 60px -22px rgba(6, 64, 34, .45) !important;
   }
   .faq__item:hover { scale: 1.012 !important; box-shadow: 0 0 0 2px rgba(52, 210, 122, .7), 0 0 26px rgba(52, 210, 122, .28) !important; }
   .reflexo-mouse {
@@ -838,10 +838,15 @@ body.em-voo .drone-layer { z-index: 95; } /* durante o voo, o robô fica acima d
 
   /* zoom nos demais elementos */
   .btn { transition: scale .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s ease, filter .3s ease; }
-  .btn:hover { scale: 1.05 !important; filter: brightness(1.06); }
+  /* zoom + LUZ VERDE ATRÁS do botão (pedido do Victor) — nada de mudar a cor do botão */
+  .btn:hover { scale: 1.05 !important; filter: brightness(1.04) drop-shadow(0 0 14px rgba(52, 210, 122, .75)) drop-shadow(0 10px 26px rgba(24, 160, 87, .5)); }
   .nav__link { display: inline-block; transition: scale .25s ease, color .25s ease; }
   .nav__link:hover { scale: 1.1 !important; color: var(--g-deep, #0c6b38) !important; }
   .about__foto { transition: scale .5s cubic-bezier(.2,.8,.2,1); }
   .about__badge:hover .about__foto { scale: 1.04 !important; }
 }
 @media (prefers-reduced-motion: reduce) { .lanterna-mouse { display: none !important; } }
+
+/* a "cortina" escura do tema escuro antigo subia por dentro do botão no hover (o claro ficava azul-marinho
+   e o texto sumia): desligada — o hover agora é só zoom + luz verde atrás */
+.btn::before { display: none !important; }
