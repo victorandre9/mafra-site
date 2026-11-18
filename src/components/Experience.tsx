@@ -190,16 +190,7 @@ export default function Experience() {
           });
         });
 
-        $$(".magnetic").forEach((el) => {
-          const xTo = gsap.quickTo(el, "x", { duration: 0.6, ease: "elastic.out(1,0.4)" });
-          const yTo = gsap.quickTo(el, "y", { duration: 0.6, ease: "elastic.out(1,0.4)" });
-          on(el, "pointermove", (e: PointerEvent) => {
-            const r = el.getBoundingClientRect();
-            xTo((e.clientX - r.left - r.width / 2) * 0.35);
-            yTo((e.clientY - r.top - r.height / 2) * 0.35);
-          });
-          on(el, "pointerleave", () => { xTo(0); yTo(0); });
-        });
+        // ímã dos botões desligado a pedido do Victor: o botão fica parado e só faz zoom no hover (CSS)
 
         $$(".tilt").forEach((el) => {
           const rx = gsap.quickTo(el, "rotationX", { duration: 0.6, ease: "power3" });
