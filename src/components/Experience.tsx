@@ -426,26 +426,31 @@ export default function Experience() {
           }
         }
         gsap.set(bubble, { x: shift, y: dy, scale: 0.6 });
-        // o balão é filho do Orbe e anda com ele: com vão pedido, ele "gruda" no vão enquanto aparece
+        // o balão é filho do Orbe e anda com ele: enquanto aparece, ele é mantido SEMPRE dentro da tela
+        // (margem de segurança de 14px nas laterais, abaixo do cabeçalho e acima do rodapé) — antes ele
+        // era posicionado só no instante em que surgia e, se o Orbe andasse, a frase saía pela borda.
+        // Com vão pedido (abertura), ele também fica centralizado no vão entre o texto e os botões.
         if (grudar) gsap.ticker.remove(grudar);
-        grudar = undefined;
-        if (vao) {
-          grudar = () => {
+        const MARGEM = 14;
+        grudar = () => {
+          const atual = bubble.getBoundingClientRect();
+          const xAtual = Number(gsap.getProperty(bubble, "x")), yAtual = Number(gsap.getProperty(bubble, "y"));
+          const esc = Number(gsap.getProperty(bubble, "scale")) || 1;
+          const larg = atual.width / esc, alt = atual.height / esc;
+          // posição "natural" (sem os ajustes) do centro do balão
+          const cxN = (atual.left + atual.right) / 2 - xAtual, cyN = (atual.top + atual.bottom) / 2 - yAtual;
+          const W2 = window.innerWidth, H2 = window.innerHeight;
+          const topo = ($(".header")?.getBoundingClientRect().bottom ?? 60) + 8;
+          let y = yAtual;
+          if (vao) {
             const a = $(vao[0])?.getBoundingClientRect(), b = $(vao[1])?.getBoundingClientRect();
-            if (!a || !b) return;
-            const atual = bubble.getBoundingClientRect();
-            const yAtual = Number(gsap.getProperty(bubble, "y"));
-            const altura = atual.height / (Number(gsap.getProperty(bubble, "scale")) || 1);
-            if (b.top - a.bottom < altura + 6) return; // não cabe: fica onde a busca colocou
-            const centroSemY = (atual.top + atual.bottom) / 2 - yAtual;
-            const alvo = (a.bottom + b.top) / 2 - centroSemY;
-            const xAtual = Number(gsap.getProperty(bubble, "x"));
-            const esqSemX = atual.left - xAtual, dirSemX = atual.right - xAtual, W2 = window.innerWidth;
-            const x = esqSemX < 10 ? 10 - esqSemX : dirSemX > W2 - 10 ? W2 - 10 - dirSemX : 0;
-            gsap.set(bubble, { y: alvo, x });
-          };
-          gsap.ticker.add(grudar);
-        }
+            if (a && b && b.top - a.bottom >= alt + 6) y = (a.bottom + b.top) / 2 - cyN;
+          }
+          const cx = gsap.utils.clamp(MARGEM + larg / 2, W2 - MARGEM - larg / 2, cxN);
+          const cy = gsap.utils.clamp(topo + alt / 2, H2 - MARGEM - alt / 2, cyN + y);
+          gsap.set(bubble, { x: cx - cxN, y: cy - cyN });
+        };
+        gsap.ticker.add(grudar);
         const soltar = () => { if (grudar) gsap.ticker.remove(grudar); grudar = undefined; };
         bubbleTl = gsap
           .timeline({ onComplete: soltar, onInterrupt: soltar })
