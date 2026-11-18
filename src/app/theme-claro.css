@@ -800,3 +800,9 @@ body.em-voo .drone-layer { z-index: 95; } /* durante o voo, o robô fica acima d
 }
 .hero .pill::before, .hero .pill::after { display: none !important; }
 @media (max-width: 760px) { .hero .pill { font-size: .86rem !important; padding: 12px 18px !important; } }
+
+/* anel de texto da foto POR FORA da borda (pedido do Victor: as letras caíam em cima do aro da foto) —
+   círculo do texto maior (raio 86 no SVG), colado por fora da borda (o Victor achou afastado demais) */
+.about__ring { inset: -35px !important; width: calc(100% + 70px) !important; height: calc(100% + 70px) !important; }
+@media (max-width: 860px) { .about__ring { inset: -29px !important; width: calc(100% + 58px) !important; height: calc(100% + 58px) !important; } }
+@media (max-width: 860px) { .about__badge { margin-top: 24px !important; margin-bottom: 34px !important; } }
