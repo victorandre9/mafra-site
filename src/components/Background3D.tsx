@@ -97,7 +97,7 @@ function Stars({ count }: { count: number }) {
  * e preferiu esta, com a transparência suave da seção de números em todo o trajeto (ver STAGES).
  * window.__mafraFundo sobrescreve (só para testar outras cores, sem publicar).
  */
-const MALHA_PEROLA = { a: "#3ddc84", b: "#4f9bdc", anel: "#3ddc84", opMul: 0.5 }; // estilo original (Victor: "deixa do jeito que está")
+const MALHA_PEROLA = { a: "#033777", b: "#4f9bdc", anel: "#033777", opMul: 0.5 }; // estilo original (Victor: "deixa do jeito que está")
 type TemaMalha = { a: string; b: string; anel: string; perola?: number; bead?: number; opMul?: number; tam?: number; normal?: boolean; dentro?: string; fora?: string };
 function temaMalha(): TemaMalha {
   const t = typeof window !== "undefined" ? (window as unknown as { __mafraFundo?: TemaMalha }).__mafraFundo : undefined;
@@ -145,7 +145,7 @@ function PointSphere({ mobile, energy }: { mobile: boolean; energy: React.RefObj
     const n = mobile ? 1400 : 2600, R = 1.6;
     const positions = new Float32Array(n * 3), colors = new Float32Array(n * 3);
     const tm = temaMalha();
-    const ca = new THREE.Color(tm?.a ?? "#3ddc84"), cb = new THREE.Color(tm?.b ?? "#4f9bdc"), c = new THREE.Color();
+    const ca = new THREE.Color(tm?.a ?? "#033777"), cb = new THREE.Color(tm?.b ?? "#4f9bdc"), c = new THREE.Color();
     const golden = Math.PI * (3 - Math.sqrt(5));
     for (let i = 0; i < n; i++) {
       const y = 1 - (i / (n - 1)) * 2, r = Math.sqrt(1 - y * y), th = golden * i;
@@ -260,11 +260,11 @@ function Orb({ mobile, wrap }: { mobile: boolean; wrap: React.RefObject<HTMLDivE
         {/* malha fina de ligação por trás dos pontos */}
         <lineSegments>
           <wireframeGeometry args={[new THREE.IcosahedronGeometry(1.6, 3)]} />
-          <lineBasicMaterial color={temaMalha()?.anel ?? "#3ddc84"} transparent opacity={0.1} />
+          <lineBasicMaterial color={temaMalha()?.anel ?? "#033777"} transparent opacity={0.1} />
         </lineSegments>
         <mesh ref={ring}>
           <torusGeometry args={[2.25, 0.006, 6, 200]} />
-          <meshBasicMaterial color={temaMalha()?.anel ?? "#3ddc84"} transparent opacity={0.5} />
+          <meshBasicMaterial color={temaMalha()?.anel ?? "#033777"} transparent opacity={0.5} />
         </mesh>
       </group>
     </group>
@@ -295,7 +295,7 @@ export default function Background3D() {
         <PerformanceMonitor onDecline={() => setDpr(1)} />
         <ambientLight intensity={0.55} />
         <directionalLight position={[4, 5, 5]} intensity={1.8} />
-        <pointLight position={[-4, -2, 3]} intensity={34} color="#3ddc84" />
+        <pointLight position={[-4, -2, 3]} intensity={34} color="#033777" />
         <pointLight position={[3, -3, 2]} intensity={28} color="#4f9bdc" />
         <pointLight position={[0, 4, -2]} intensity={18} color="#ffffff" />
         <Stars count={mobile ? 260 : 750} />
