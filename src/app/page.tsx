@@ -21,14 +21,14 @@ const SERVICES = [
     icon: <><circle cx="21" cy="21" r="13" /><path d="M31 31l11 11" /><path d="M15 21h12M21 15v12" /></>,
   },
   {
-    title: "Aplicativos de gestão sob medida",
+    title: "Software de gestão sob medida",
     text: "Sistemas no celular e no computador, desenhados para a rotina real da sua equipe — com acesso por perfil e a informação certa para cada função.",
     tags: ["Web + mobile", "Perfis de acesso", "Uso em campo"],
     icon: <><rect x="14" y="4" width="20" height="40" rx="5" /><path d="M21 38h6M19 14h10M19 20h10M19 26h6" /></>,
   },
   {
     title: "Integração com ERP & sistemas",
-    text: "O app complementa o que você já usa. Pedidos, crédito e faturamento continuam no ERP; a operação ganha um app simples que conversa com ele — sem digitar duas vezes.",
+    text: "A solução complementa o que você já usa. Pedidos, crédito e faturamento continuam no ERP; a operação ganha uma ferramenta simples que conversa com ele — sem digitar duas vezes.",
     tags: ["Conexão segura", "Usa o ERP que você já tem", "Dados centralizados"],
     icon: <><rect x="4" y="16" width="14" height="16" rx="3" /><rect x="30" y="16" width="14" height="16" rx="3" /><path d="M18 24h12M24 20l4 4-4 4" /></>,
   },
@@ -49,12 +49,12 @@ const SERVICES = [
 const STEPS = [
   ["Diagnóstico das rotinas", "Entendo atividades, dificuldades, gargalos e as informações que faltam ao gestor."],
   ["Organização dos processos", "Defino fluxos, padrões, responsabilidades e oportunidades de melhoria."],
-  ["Indicadores e controles digitais", "Crio registros, alertas, painéis e a informação na hora certa — no app."],
+  ["Indicadores e controles digitais", "Crio registros, alertas, painéis e a informação na hora certa — no sistema."],
   ["Gestão de desempenho", "Acompanho equipes, produtividade, qualidade e a evolução dos resultados."],
 ];
 
 const STATS = [
-  { to: 30, suffix: "–60", unit: "dias", label: "prazo típico de implantação de um app de gestão" },
+  { to: 30, suffix: "–60", unit: "dias", label: "prazo típico de implantação de uma solução de gestão" },
   { to: 30, suffix: "", unit: "dias", label: "de acompanhamento assistido após a entrada em uso" },
 ];
 
@@ -214,14 +214,14 @@ export default function Home() {
               <span className="line">
                 <span className="rotator">
                   <span className="rotator__track">
-                    <span>aplicativos</span><span>indicadores</span><span>resultados</span><span>aplicativos</span>
+                    <span>resultados</span><span>soluções</span><span>resultados</span><span>decisões</span><span>resultados</span><span>ganhos</span><span>resultados</span>
                   </span>
                 </span>
               </span>
               <span className="line"><SplitChars text="que movem." className="outline" /></span>
             </h1>
             <p className="hero__sub reveal-up">
-              Entendo a rotina da sua empresa, organizo os processos e desenvolvo o aplicativo de gestão que a sua
+              Entendo a rotina da sua empresa, organizo os processos e desenvolvo o software de gestão que a sua
               equipe usa de verdade — no celular e no computador, integrado ao que você já tem.
             </p>
             <div className="hero__ctas reveal-up">
@@ -388,7 +388,7 @@ export default function Home() {
             <a className="project project--cta tilt" href="#contato" data-cursor="Vamos">
               <div className="project__info">
                 <span className="project__tag">Próximo case</span>
-                <h3>O app da sua empresa</h3>
+                <h3>A solução da sua empresa</h3>
                 <p>Ordens de serviço, vendas em campo, checklists, estoque, financeiro: se a sua operação tem um gargalo, ele pode virar o próximo case.</p>
                 <span className="btn btn--small"><span>Quero conversar</span></span>
               </div>
@@ -429,7 +429,7 @@ export default function Home() {
         {/* TEXTO GIGANTE */}
         <section className="bigtext" aria-hidden="true">
           <div className="bigtext__row" data-dir="-1">processos ✦ gestão ✦ tecnologia ✦ processos ✦ gestão ✦ tecnologia ✦</div>
-          <div className="bigtext__row outline" data-dir="1">diagnóstico ✦ apps ✦ indicadores ✦ resultados ✦ diagnóstico ✦ apps ✦</div>
+          <div className="bigtext__row outline" data-dir="1">diagnóstico ✦ tecnologia ✦ indicadores ✦ resultados ✦ diagnóstico ✦ tecnologia ✦</div>
         </section>
 
         {/* CONTATO */}

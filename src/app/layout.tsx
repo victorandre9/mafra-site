@@ -11,7 +11,7 @@ import "./theme-claro.css";
 export const metadata: Metadata = {
   title: "MAFRA Consultoria & Tecnologia — Eficiência operacional com tecnologia",
   description:
-    "Consultoria em processos e aplicativos de gestão sob medida para empresas: menos retrabalho, informação certa para quem decide e equipes mais produtivas.",
+    "Consultoria em processos e software de gestão sob medida para empresas: menos retrabalho, informação certa para quem decide e equipes mais produtivas.",
   openGraph: {
     title: "MAFRA Consultoria & Tecnologia",
     description: "Processos mais inteligentes. Equipes mais produtivas. Empresa mais lucrativa.",
