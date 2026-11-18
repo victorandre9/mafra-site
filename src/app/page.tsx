@@ -409,8 +409,8 @@ export default function Home() {
           <div className="about__head">
             <div className="about__badge">
               <svg className="about__ring" viewBox="0 0 200 200" aria-hidden="true">
-                <defs><path id="circ" d="M100 100m-78 0a78 78 0 1 1 156 0a78 78 0 1 1-156 0" /></defs>
-                <text><textPath href="#circ">GESTÃO NA PRÁTICA ✦ TECNOLOGIA COM PROPÓSITO ✦ </textPath></text>
+                <defs><path id="circ" d="M100 100m-86 0a86 86 0 1 1 172 0a86 86 0 1 1-172 0" /></defs>
+                <text><textPath href="#circ" textLength="536" lengthAdjust="spacing">GESTÃO NA PRÁTICA ✦ TECNOLOGIA COM PROPÓSITO ✦ </textPath></text>
               </svg>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/sobre/victor-mafra.jpg?v=4" alt="Victor Mafra" width={720} height={720} className="about__foto" loading="lazy" />
