@@ -616,7 +616,7 @@ export default function Experience() {
       const coletar = () => { obst = Array.from(document.querySelectorAll(SEL_TEXTO)); };
       coletar();
       on(window, "resize", coletar);
-      let tx = 0, ty = 0, apagado = false, ultimo = 0, rotaLivreDesde = 0, apertoDesde = 0;
+      let tx = 0, ty = 0, escX = 0, escY = 0, apagado = false, ultimo = 0, rotaLivreDesde = 0, apertoDesde = 0;
       const inicioVoo = performance.now();
       const avoid = () => {
         const agora = performance.now();
@@ -626,17 +626,32 @@ export default function Experience() {
         const x = Number(gsap.getProperty(drone, "x")), y = Number(gsap.getProperty(drone, "y"));
         const orbEl = corpo.querySelector(".drone__orb") as HTMLElement | null;
         const tam = Math.max(orbEl?.offsetWidth ?? 0, drone.offsetWidth);
-        const hw = tam / 2 + 14, hh = Math.max(orbEl?.offsetHeight ?? 0, drone.offsetHeight) / 2 + 18; // folga para o balanço
+        // celular: folga mínima — as brechas ao lado do celular 3D têm pouco mais que a largura do Orbe
+        const folga = isTouch ? 4 : 14, pad = isTouch ? 2 : 8;
+        const hw = tam / 2 + folga, hh = Math.max(orbEl?.offsetHeight ?? 0, drone.offsetHeight) / 2 + (isTouch ? 4 : 18); // folga para o balanço
         // limites: nunca embaixo do cabeçalho (com espaço para o HUD) nem colado nas bordas
         const topo = ($(".header")?.getBoundingClientRect().bottom ?? 80) + hh + 30;
         const base = H - hh - 18, esq = hw + 8, dir = W - hw - 8;
-        const rs = obst.map((e) => e.getBoundingClientRect()).filter((r) => r.width > 0 && r.bottom > 0 && r.top < H && r.right > 0 && r.left < W);
+        const vis = obst.map((e) => ({ r: e.getBoundingClientRect(), peso: e.classList.contains("phone__frame") ? 4 : 1 }))
+          .filter(({ r }) => r.width > 0 && r.bottom > 0 && r.top < H && r.right > 0 && r.left < W);
+        const rs = vis.map((v) => v.r);
+        // custo de ficar num ponto: área coberta de texto, e o CELULAR pesa 4x (pedido do Victor:
+        // "nem no celular, nem em cima do texto")
+        const custo = (ox: number, oy: number) => {
+          const px = x + ox, py = y + oy;
+          let c = 0;
+          for (const { r, peso } of vis) {
+            const w = Math.min(px + hw, r.right) - Math.max(px - hw, r.left), h = Math.min(py + hh, r.bottom) - Math.max(py - hh, r.top);
+            if (w > 0 && h > 0) c += w * h * peso;
+          }
+          return c;
+        };
         // (malha do fundo não entra mais no desvio)
         const livre = (ox: number, oy: number) => {
           const px = x + ox, py = y + oy;
           if (px < esq || px > dir || py < topo || py > base) return false;
           // (a malha do fundo ficou bem suave: não precisa mais desviar dela — só do texto)
-          return !rs.some((r) => px + hw > r.left - 8 && px - hw < r.right + 8 && py + hh > r.top - 8 && py - hh < r.bottom + 8);
+          return !rs.some((r) => px + hw > r.left - pad && px - hw < r.right + pad && py + hh > r.top - pad && py - hh < r.bottom + pad);
         };
         // CALMA (pedido do Victor: "ele fica rodando procurando área vazia"):
         // 1) o esconderijo é um lugar FIXO na tela — enquanto continuar livre, ela fica parada nele,
@@ -644,7 +659,9 @@ export default function Experience() {
         // 2) só volta para a rota depois que a rota ficar livre por um tempo seguido (não a cada brecha);
         // 3) quando precisa mudar, procura perto de onde ELA está (não perto da rota), andando o mínimo.
         const estaEm = tx !== 0 || ty !== 0;
-        const hx = x + tx, hy = y + ty; // onde a Orbe está agora (ou indo)
+        // esconderijo FIXO NA TELA: guardado em coordenada de tela — antes era um deslocamento da rota,
+        // e o Orbe andava junto com a rota por cima do celular 3D
+        const hx = estaEm ? escX : x, hy = estaEm ? escY : y; // onde a Orbe está agora (ou indo)
         const rotaLivre = livre(0, 0);
         if (rotaLivre) { if (!rotaLivreDesde) rotaLivreDesde = agora; } else rotaLivreDesde = 0;
         let alvo: [number, number] | null = null;
@@ -662,10 +679,24 @@ export default function Experience() {
           }
         }
         const semSaida = !alvo;
-        if (!alvo) alvo = [hx - x, hy - y]; // sem espaço livre: não sai correndo, fica onde está
+        if (!alvo) {
+          // sem espaço 100% livre: vai para o ponto da tela que MENOS cobre texto/celular
+          // (antes ficava parado — e no celular, na parte do celular 3D, ficava em cima dele)
+          const ax = hx - x, ay = hy - y, atual = custo(ax, ay);
+          let melhor = atual, best: [number, number] = [ax, ay];
+          for (let gy = topo; gy <= base; gy += 20) {
+            for (let gx = esq; gx <= dir; gx += 16) {
+              const c = custo(gx - x, gy - y);
+              if (c < melhor) { melhor = c; best = [gx - x, gy - y]; }
+            }
+          }
+          // calma: só troca de lugar se o ganho for de verdade
+          alvo = melhor < atual * 0.7 - 200 ? best : [ax, ay];
+        }
         // mesmo sem espaço livre, a Orbe respeita as bordas e o cabeçalho
         tx = gsap.utils.clamp(esq - x, dir - x, alvo[0]);
         ty = gsap.utils.clamp(topo - y, base - y, alvo[1]);
+        escX = x + tx; escY = y + ty;
         avoidX(tx); avoidY(ty);
         // só fica translúcida se o aperto durar (evita piscar)
         if (semSaida) { if (!apertoDesde) apertoDesde = agora; } else apertoDesde = 0;
