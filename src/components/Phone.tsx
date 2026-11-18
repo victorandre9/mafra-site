@@ -96,8 +96,8 @@ export function Phone() {
               <svg viewBox="0 0 220 90" className="area">
                 <defs>
                   <linearGradient id="ar-fill" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0" stopColor="#3ddc84" stopOpacity=".5" />
-                    <stop offset="1" stopColor="#3ddc84" stopOpacity="0" />
+                    <stop offset="0" stopColor="#033777" stopOpacity=".5" />
+                    <stop offset="1" stopColor="#033777" stopOpacity="0" />
                   </linearGradient>
                 </defs>
                 <path className="area__fill" d="M0 72 C25 70 35 58 55 60 S90 40 110 44 S150 22 170 26 S205 10 220 8 V90 H0 Z" fill="url(#ar-fill)" />
