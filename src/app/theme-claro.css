@@ -766,9 +766,8 @@ main, section, footer { max-width: 100vw; }
   .about__badge { margin-left: auto !important; margin-right: auto !important; }
 }
 
-/* cantos "suaves" (escolha do Victor, opção B): tudo que era pílula passa a ter cantos levemente arredondados */
-.btn, .btn::before, .btn::after, .pill, .swipe-hint, .card li, .project__info li, .card__num,
-.orbmenu__chip, .orbmenu__opt, .orbmenu__send, .services__dots i.is-on { border-radius: 8px !important; }
+/* botões arredondados (o Victor testou cantos suaves e voltou para o arredondado em 18/11/2026) */
+
 
 /* aviso "role para conhecer" saiu: encostava nos botões do topo */
 .hero__scroll { display: none !important; }
