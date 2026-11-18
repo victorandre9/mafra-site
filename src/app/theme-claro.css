@@ -739,3 +739,6 @@ main, section, footer { max-width: 100vw; }
 }
 /* o filete de luz do topo sai: o aro precisa ser o mesmo em volta toda */
 .services__track .card:not(.card--cta)::after { display: none !important; }
+
+/* balão do Orbe: nunca mais largo que a tela (com margem); frase longa quebra em 2 linhas em vez de ser cortada */
+.drone__bubble { white-space: normal !important; width: max-content; max-width: min(320px, calc(100vw - 28px)) !important; line-height: 1.3; }
