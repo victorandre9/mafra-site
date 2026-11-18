@@ -464,7 +464,23 @@ export default function Experience() {
         [0.18, 0.5], [0.2, 0.16], [0.5, 0.12], [0.8, 0.2], [0.82, 0.6],
         [0.8, 0.86], [0.2, 0.86], [0.18, 0.22], [0.8, 0.16],
       ];
-      const toPx = () => (window.innerWidth <= 760 ? routeMobile : route).map(([x, y]) => ({ x: x * window.innerWidth, y: y * window.innerHeight }));
+      const toPx = () => {
+        const W = window.innerWidth, H = window.innerHeight;
+        const pts = (W <= 760 ? routeMobile : route).map(([x, y]) => ({ x: x * W, y: y * H }));
+        // Celular: o Orbe NASCE à direita do botão "Agendar diagnóstico" (espaço vazio), logo abaixo
+        // do vão entre o parágrafo e os botões — onde fica o balão de abertura (pedido do Victor).
+        // A posição sai dos botões de verdade (com a página no topo), não de um número fixo,
+        // porque a altura de cada celular muda onde os botões caem.
+        if (W <= 760) {
+          const cta = $(".hero__ctas .btn")?.getBoundingClientRect();
+          if (cta) {
+            const yDoc = cta.top + window.scrollY; // posição com a página no topo
+            const livreX = Math.max(cta.right + 20, W * 0.62);
+            pts[0] = { x: Math.min(W - 60, (livreX + W) / 2), y: gsap.utils.clamp(H * 0.35, H * 0.9, yDoc + cta.height / 2) };
+          }
+        }
+        return pts;
+      };
       let lastX = 0;
       let flyTween: gsap.core.Tween | undefined;
       const buildFlight = () => {
