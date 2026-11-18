@@ -148,12 +148,12 @@ export default function Experience() {
       /* ---------- Cursor, botões magnéticos e tilt (só com mouse) ---------- */
       if (!isTouch) {
         const cursor = $(".cursor"), dot = $(".cursor__dot"), ring = $(".cursor__ring"), label = $(".cursor__label");
-        const xDot = gsap.quickTo(dot, "x", { duration: 0.1 }), yDot = gsap.quickTo(dot, "y", { duration: 0.1 });
-        const xRing = gsap.quickTo(ring, "x", { duration: 0.45, ease: "power3" });
-        const yRing = gsap.quickTo(ring, "y", { duration: 0.45, ease: "power3" });
+        // o círculo acompanha o mouse 100%, sem atraso (pedido do Victor: o "correr atrás" de 0,45 s
+        // parecia travado) — posição aplicada direto no evento, sem animação no meio
+        const mover = (el: HTMLElement, x: number, y: number) => { el.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`; };
         on(window, "pointermove", (e: PointerEvent) => {
           cursor.classList.add("is-on");
-          xDot(e.clientX); yDot(e.clientY); xRing(e.clientX); yRing(e.clientY);
+          mover(dot, e.clientX, e.clientY); mover(ring, e.clientX, e.clientY);
         });
         $$("[data-cursor]").forEach((el) => {
           on(el, "pointerenter", () => { label.textContent = el.dataset.cursor || ""; cursor.classList.add("is-hover"); });
