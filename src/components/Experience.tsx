@@ -555,18 +555,18 @@ export default function Experience() {
       // da malha de pontos do fundo e do cabeçalho. Se o ponto da rota estiver ocupado, ela flutua até o
       // espaço vazio mais próximo; se não houver nenhum (comum no celular, onde o texto ocupa a largura
       // toda), ela fica onde está e fica translúcida enquanto o texto passa por baixo.
-      const avoidX = gsap.quickTo(layer, "x", { duration: 1.1, ease: "power3" });
-      const avoidY = gsap.quickTo(layer, "y", { duration: 1.1, ease: "power3" });
+      const avoidX = gsap.quickTo(layer, "x", { duration: 1.3, ease: "sine.inOut" });
+      const avoidY = gsap.quickTo(layer, "y", { duration: 1.3, ease: "sine.inOut" });
       const corpo = $(".drone__dodge");
       const SEL_TEXTO = "main h1, main h2, main h3, main p, main li, main .btn, main .pill, main .eyebrow, main .step.is-active, main .stat, main .holo.is-on, main .card__icon, main .project__media, main .phone__frame, main .about__badge, .footer .logo, .footer p, .footer__links";
       let obst: Element[] = [];
       const coletar = () => { obst = Array.from(document.querySelectorAll(SEL_TEXTO)); };
       coletar();
       on(window, "resize", coletar);
-      let tx = 0, ty = 0, apagado = false, ultimo = 0;
+      let tx = 0, ty = 0, apagado = false, ultimo = 0, rotaLivreDesde = 0, apertoDesde = 0;
       const avoid = () => {
         const agora = performance.now();
-        if (agora - ultimo < 120) return; // 8x por segundo basta e não pesa
+        if (agora - ultimo < 200) return; // 5x por segundo basta, não pesa e não deixa tremer
         ultimo = agora;
         const W = window.innerWidth, H = window.innerHeight;
         const x = Number(gsap.getProperty(drone, "x")), y = Number(gsap.getProperty(drone, "y"));
@@ -585,27 +585,41 @@ export default function Experience() {
           if (bg && Math.hypot(px - bcx, py - bcy) < br) return false;
           return !rs.some((r) => px + hw > r.left - 8 && px - hw < r.right + 8 && py + hh > r.top - 8 && py - hh < r.bottom + 8);
         };
+        // CALMA (pedido do Victor: "ele fica rodando procurando área vazia"):
+        // 1) o esconderijo é um lugar FIXO na tela — enquanto continuar livre, ela fica parada nele,
+        //    mesmo que a rota ande por baixo;
+        // 2) só volta para a rota depois que a rota ficar livre por um tempo seguido (não a cada brecha);
+        // 3) quando precisa mudar, procura perto de onde ELA está (não perto da rota), andando o mínimo.
+        const estaEm = tx !== 0 || ty !== 0;
+        const hx = x + tx, hy = y + ty; // onde a Orbe está agora (ou indo)
+        const rotaLivre = livre(0, 0);
+        if (rotaLivre) { if (!rotaLivreDesde) rotaLivreDesde = agora; } else rotaLivreDesde = 0;
         let alvo: [number, number] | null = null;
-        if (livre(0, 0)) alvo = [0, 0]; // a rota está livre: segue a rota
-        else if (livre(tx, ty) && Math.hypot(tx, ty) < 520) alvo = [tx, ty]; // continua no esconderijo (sem tremer)
+        if (!estaEm && rotaLivre) alvo = [0, 0]; // já está na rota e ela segue livre
+        else if (estaEm && rotaLivre && agora - rotaLivreDesde > 900) alvo = [0, 0]; // rota livre há quase 1 s: volta
+        else if (estaEm && livre(hx - x, hy - y) && Math.hypot(hx - x, hy - y) < 560) alvo = [hx - x, hy - y]; // fica onde está
+        else if (!estaEm && rotaLivre) alvo = [0, 0];
         else {
-          busca: for (let raio = 60; raio <= 520; raio += 40) {
-            for (let k = 0; k < 20; k++) {
-              const a = (k / 20) * Math.PI * 2;
-              const ox = Math.cos(a) * raio, oy = Math.sin(a) * raio * 0.8;
-              if (livre(ox, oy)) { alvo = [ox, oy]; break busca; }
+          busca: for (let raio = 0; raio <= 520; raio += 36) {
+            for (let k = 0; k < (raio ? 18 : 1); k++) {
+              const a = (k / 18) * Math.PI * 2;
+              const ox = hx - x + Math.cos(a) * raio, oy = hy - y + Math.sin(a) * raio * 0.8;
+              if (Math.hypot(ox, oy) < 560 && livre(ox, oy)) { alvo = [ox, oy]; break busca; }
             }
           }
         }
         const semSaida = !alvo;
-        if (!alvo) alvo = [0, 0];
+        if (!alvo) alvo = [hx - x, hy - y]; // sem espaço livre: não sai correndo, fica onde está
         // mesmo sem espaço livre, a Orbe respeita as bordas e o cabeçalho
         tx = gsap.utils.clamp(esq - x, dir - x, alvo[0]);
         ty = gsap.utils.clamp(topo - y, base - y, alvo[1]);
         avoidX(tx); avoidY(ty);
-        if (semSaida !== apagado) {
-          apagado = semSaida;
-          gsap.to(corpo, { opacity: semSaida ? 0.38 : 1, duration: 0.5, overwrite: "auto" });
+        // só fica translúcida se o aperto durar (evita piscar)
+        if (semSaida) { if (!apertoDesde) apertoDesde = agora; } else apertoDesde = 0;
+        const deveApagar = semSaida && agora - apertoDesde > (isTouch ? 0 : 180); // celular: translúcida na hora
+        if (deveApagar !== apagado) {
+          apagado = deveApagar;
+          gsap.to(corpo, { opacity: deveApagar ? 0.38 : 1, duration: deveApagar ? 0.3 : 0.6, overwrite: "auto" });
         }
       };
       gsap.ticker.add(avoid);
