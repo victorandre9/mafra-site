@@ -68,6 +68,7 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   linha reta e estaciona POR CIMA do título, com a lanterna em cima dele; a tela volta ao normal (`mafra:voo`).
 - **Falas do Orbe**: só com a tela PARADA (rolou → o balão some na hora) e uma a cada 10 s, de começo a começo
   (1 minuto parado = 6 falas). Continua valendo a regra de ouro: só fala se houver lugar sem cobrir texto.
+- Círculo do mouse (computador): acompanha 100%, sem atraso (posição direta no evento, sem animação).
 - Botões verdes: flash claro passando da esquerda para a direita a cada 3 s (`verde-varre`).
 
 ## Pendências conhecidas
