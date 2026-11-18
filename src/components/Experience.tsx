@@ -382,74 +382,70 @@ export default function Experience() {
         ultimaFala = performance.now();
         bubbleTxt.textContent = text;
         bubbleTl?.kill();
-        // o balão nunca sai da tela: mede no tamanho final e empurra para dentro
-        gsap.set(bubble, { x: 0, y: 0, scale: 1 });
-        const r = bubble.getBoundingClientRect();
-        const pad = 10, W = window.innerWidth;
-        const shift = r.left < pad ? pad - r.left : r.right > W - pad ? W - pad - r.right : 0;
-        // o balão escolhe onde fica: acima do Orbe (padrão), um pouco mais alto/baixo, ou embaixo dele —
-        // o lugar que cobre MENOS texto e botão (pedido do Victor: no celular ele cobria o botão)
-        const orbR = (droneBody.querySelector(".drone__orb") as HTMLElement | null)?.getBoundingClientRect();
-        const abaixo = orbR ? orbR.bottom + 8 - r.top : 160;
-        const rs = $$("main h1, main h2, main h3, main p, main li, main .btn, main .pill").map((e) => e.getBoundingClientRect());
-        if (orbR) rs.push(orbR); // nunca em cima do próprio Orbe
-        const topoLivre = ($(".header")?.getBoundingClientRect().bottom ?? 70) + 8; // nem atrás do cabeçalho
-        const foraDaTela = (dy: number) => r.top + dy < topoLivre || r.bottom + dy > window.innerHeight - 10;
-        const cobre = (dy: number) => rs.reduce((t, q) => {
-          const w = Math.min(r.right + shift, q.right) - Math.max(r.left + shift, q.left);
-          const h = Math.min(r.bottom + dy, q.bottom) - Math.max(r.top + dy, q.top);
-          return t + (w > 0 && h > 0 ? w * h : 0);
-        }, foraDaTela(dy) ? 1000000000 : 0);
-        // folga até o texto mais próximo (acima e abaixo) na faixa horizontal do balão
-        const folga = (dy: number) => {
-          let cima = 9999, baixo = 9999;
-          for (const q of rs) {
-            if (Math.min(r.right + shift, q.right) - Math.max(r.left + shift, q.left) <= 0) continue;
-            if (q.bottom <= r.top + dy) cima = Math.min(cima, r.top + dy - q.bottom);
-            if (q.top >= r.bottom + dy) baixo = Math.min(baixo, q.top - (r.bottom + dy));
-          }
-          return Math.min(cima, baixo, 60);
-        };
-        // procura, perto do Orbe, a posição sem sobreposição e CENTRALIZADA no vão entre textos
-        // (ex.: no meio do espaço entre o parágrafo e o botão)
-        let dy = 0, melhor = Infinity;
-        for (let c = -240; c <= Math.max(240, abaixo); c += 4) {
-          const v = cobre(c) * 1000 - folga(c) * 10 + Math.abs(c) * 0.15;
-          if (v < melhor) { melhor = v; dy = c; }
-        }
-        // vão pedido (ex.: entre o parágrafo e os botões do topo): se couber, o balão fica no MEIO dele
-        if (vao) {
-          const a = $(vao[0])?.getBoundingClientRect(), b = $(vao[1])?.getBoundingClientRect();
-          if (a && b && b.top - a.bottom >= r.height + 6) {
-            const c = (a.bottom + b.top) / 2 - (r.top + r.bottom) / 2;
-            if (!foraDaTela(c)) dy = c;
-          }
-        }
-        gsap.set(bubble, { x: shift, y: dy, scale: 0.6 });
-        // o balão é filho do Orbe e anda com ele: enquanto aparece, ele é mantido SEMPRE dentro da tela
-        // (margem de segurança de 14px nas laterais, abaixo do cabeçalho e acima do rodapé) — antes ele
-        // era posicionado só no instante em que surgia e, se o Orbe andasse, a frase saía pela borda.
-        // Com vão pedido (abertura), ele também fica centralizado no vão entre o texto e os botões.
-        if (grudar) gsap.ticker.remove(grudar);
+        // ===== POSIÇÃO DO BALÃO: 360° em volta do Orbe (pedido do Victor) =====
+        // Testa 12 direções (em cima, embaixo, esquerda, direita e diagonais), sempre COLADO no Orbe,
+        // e fica com a que cabe inteira na tela e cobre menos texto. A direção escolhida vale enquanto a
+        // frase aparece; a cada quadro o balão acompanha o Orbe e é travado dentro da tela (margem 14px).
         const MARGEM = 14;
+        gsap.set(bubble, { x: 0, y: 0, scale: 1 });
+        const orbEl = droneBody.querySelector(".drone__orb") as HTMLElement | null;
+        const W0 = window.innerWidth, H0 = window.innerHeight;
+        const topo0 = ($(".header")?.getBoundingClientRect().bottom ?? 60) + 8;
+        const bw = bubble.offsetWidth, bh = bubble.offsetHeight;
+        const textos = $$("main h1, main h2, main h3, main p, main li, main .btn, main .pill").map((e) => e.getBoundingClientRect());
+        const centroOrbe = () => {
+          const o = (orbEl ?? droneBody).getBoundingClientRect();
+          return { x: o.left + o.width / 2, y: o.top + o.height / 2, rx: o.width * 0.42, ry: o.height * 0.42 };
+        };
+        const oc0 = centroOrbe();
+        const GAP = 6;
+        const offsetDe = (ang: number) => {
+          const c = Math.cos(ang), sn = Math.sin(ang);
+          return { x: c * (oc0.rx + GAP + bw / 2), y: sn * (oc0.ry + GAP + bh / 2) };
+        };
+        const custo = (ox: number, oy: number) => {
+          const cx = oc0.x + ox, cy = oc0.y + oy;
+          const l = cx - bw / 2, r2 = cx + bw / 2, t = cy - bh / 2, btm = cy + bh / 2;
+          const fora = Math.max(0, MARGEM - l) + Math.max(0, r2 - (W0 - MARGEM)) + Math.max(0, topo0 - t) + Math.max(0, btm - (H0 - MARGEM));
+          let c = fora * 5000;
+          for (const q of textos) {
+            const w = Math.min(r2, q.right) - Math.max(l, q.left), h = Math.min(btm, q.bottom) - Math.max(t, q.top);
+            if (w > 0 && h > 0) c += w * h;
+          }
+          return c;
+        };
+        // ordem de preferência em empate: em cima, lados, embaixo
+        const angulos = [-90, -60, -120, 0, 180, -30, -150, 30, 150, 60, 120, 90].map((g) => (g * Math.PI) / 180);
+        let off = offsetDe(angulos[0]), melhor = Infinity;
+        angulos.forEach((ang, i) => {
+          const o = offsetDe(ang);
+          const v = custo(o.x, o.y) + i * 2;
+          if (v < melhor) { melhor = v; off = o; }
+        });
+        // abertura (vão pedido): com a página no topo, centraliza o balão no vão entre o texto e os botões
+        const alvoVao = () => {
+          if (!vao || window.scrollY > 30) return null;
+          const va = $(vao[0])?.getBoundingClientRect(), vb = $(vao[1])?.getBoundingClientRect();
+          if (!va || !vb || vb.top - va.bottom < bh + 6) return null;
+          return (va.bottom + vb.top) / 2;
+        };
+        if (grudar) gsap.ticker.remove(grudar);
         grudar = () => {
-          const atual = bubble.getBoundingClientRect();
-          const xAtual = Number(gsap.getProperty(bubble, "x")), yAtual = Number(gsap.getProperty(bubble, "y"));
-          const esc = Number(gsap.getProperty(bubble, "scale")) || 1;
-          const larg = atual.width / esc, alt = atual.height / esc;
-          // posição "natural" (sem os ajustes) do centro do balão
-          const cxN = (atual.left + atual.right) / 2 - xAtual, cyN = (atual.top + atual.bottom) / 2 - yAtual;
+          const oc = centroOrbe();
           const W2 = window.innerWidth, H2 = window.innerHeight;
           const topo = ($(".header")?.getBoundingClientRect().bottom ?? 60) + 8;
-          let y = yAtual;
-          if (vao) {
-            const a = $(vao[0])?.getBoundingClientRect(), b = $(vao[1])?.getBoundingClientRect();
-            if (a && b && b.top - a.bottom >= alt + 6) y = (a.bottom + b.top) / 2 - cyN;
-          }
-          const cx = gsap.utils.clamp(MARGEM + larg / 2, W2 - MARGEM - larg / 2, cxN);
-          const cy = gsap.utils.clamp(topo + alt / 2, H2 - MARGEM - alt / 2, cyN + y);
-          gsap.set(bubble, { x: cx - cxN, y: cy - cyN });
+          // canto natural do balão (sem transform): posição do .drone + posição do balão dentro dele
+          const d = drone.getBoundingClientRect();
+          const natL = d.left + bubble.offsetLeft, natT = d.top + bubble.offsetTop;
+          let cx = oc.x + off.x, cy = oc.y + off.y;
+          const yv = alvoVao();
+          if (yv !== null) cy = yv;
+          cx = gsap.utils.clamp(MARGEM + bw / 2, W2 - MARGEM - bw / 2, cx);
+          cy = gsap.utils.clamp(topo + bh / 2, H2 - MARGEM - bh / 2, cy);
+          gsap.set(bubble, { x: cx - (natL + bw / 2), y: cy - (natT + bh / 2) });
         };
+        grudar();
+        gsap.set(bubble, { scale: 0.6, transformOrigin: "50% 50%" });
         gsap.ticker.add(grudar);
         const soltar = () => { if (grudar) gsap.ticker.remove(grudar); grudar = undefined; };
         bubbleTl = gsap
@@ -653,6 +649,27 @@ export default function Experience() {
         }
       };
       gsap.ticker.add(avoid);
+      // ===== TRAVA FINAL: o Orbe NUNCA sai da tela (pedido do Victor, já tinha voltado a acontecer) =====
+      // O voo e o desvio são animações suaves e, numa rolagem rápida, a rota chega à borda antes do
+      // desvio alcançar — o Orbe saía metade para fora. Esta trava mede o Orbe a CADA quadro e empurra
+      // a camada de volta para dentro (margem 8px), usando a propriedade CSS `translate`, que soma com
+      // as animações do GSAP sem brigar com elas. Não suaviza: na borda, ela segura na hora.
+      const orbTrava = $(".drone__orb") as HTMLElement | null;
+      let travaX = 0, travaY = 0;
+      const travar = () => {
+        const alvo = (orbTrava && orbTrava.isConnected ? orbTrava : ($(".drone__orb") as HTMLElement | null)) ?? droneBody;
+        const r = alvo.getBoundingClientRect();
+        if (!r.width) return;
+        const W = window.innerWidth, H = window.innerHeight, m = 8;
+        const topoMin = 4;
+        // posição sem a trava
+        const l = r.left - travaX, rt = r.right - travaX, t = r.top - travaY, b = r.bottom - travaY;
+        travaX = l < m ? m - l : rt > W - m ? W - m - rt : 0;
+        travaY = t < topoMin ? topoMin - t : b > H - m ? H - m - b : 0;
+        layer.style.translate = `${travaX}px ${travaY}px`;
+      };
+      gsap.ticker.add(travar);
+      cleanups.push(() => { gsap.ticker.remove(travar); layer.style.translate = ""; });
       cleanups.push(() => gsap.ticker.remove(avoid));
 
       const sparks = () => {
@@ -689,12 +706,14 @@ export default function Experience() {
         "Do diagnóstico ao suporte, eu cuido de tudo ✨",
       ];
       const INTERVALO = 10000;
+      const DURACAO_FALA = 5000; // entrada + 4 s visível + saída
       let passo = 1; // a saudação de abertura já foi um "toque"; o próximo é benefício/incentivo
       let iToque = 0, iOutra = 0;
       const menuAberto = () => !!document.querySelector(".orbmenu.is-open");
       const timerFala = setInterval(() => {
         if (ultimaFala < 0 || document.hidden || menuAberto()) return; // começa só depois da saudação de abertura
-        if (performance.now() - ultimaFala < INTERVALO - 300) return; // outra fala acabou de sair
+        // 10 s de SILÊNCIO entre uma frase sumir e a próxima aparecer (cada frase fica ~5 s na tela)
+        if (performance.now() - ultimaFala < INTERVALO + DURACAO_FALA) return;
         const texto = passo % 2 === 0 ? TOQUE[iToque++ % TOQUE.length] : OUTRAS[iOutra++ % OUTRAS.length];
         passo++;
         droneSay(texto);
