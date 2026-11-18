@@ -687,3 +687,12 @@ main, section, footer { max-width: 100vw; }
   border: 4px solid #fff;
   box-shadow: 0 0 0 2px rgba(52, 210, 122, .55), 0 24px 50px -18px rgba(13, 44, 82, .45), 0 0 40px rgba(52, 210, 122, .18);
 }
+
+/* feixe de luz da Orbe (como o olhar dela): mais longo, abre mais para baixo e esmaece devagar */
+.drone__beam {
+  top: 86% !important; width: 190px !important; height: 300px !important;
+  background: linear-gradient(180deg, rgba(52, 210, 122, .34), rgba(52, 210, 122, .14) 45%, rgba(52, 210, 122, 0)) !important;
+  clip-path: polygon(44% 0, 56% 0, 100% 100%, 0 100%) !important;
+  filter: blur(1.5px);
+}
+@media (max-width: 760px) { .drone__beam { display: block !important; width: 120px !important; height: 190px !important; } }
