@@ -1,6 +1,6 @@
 # Site MAFRA Consultoria & Tecnologia — notas para o Claude
 
-Site institucional da MAFRA (Victor Mafra). Next.js 15 + TypeScript + Tailwind,
+Site institucional da **MAFRA Consultoria & Tecnologia**, empresa do **Victor** (Victor Mafra). Next.js 15 + TypeScript + Tailwind,
 GSAP/ScrollTrigger + Lenis, React Three Fiber. Textos em pt-BR.
 
 O Victor não é desenvolvedor: fale em português simples, sem jargão de git.
@@ -33,6 +33,10 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
 - **Logos são sempre os arquivos originais** (`public/brand/mafra-logo.png`, `public/cases/*`).
   Nunca redesenhar/recriar logo com SVG, texto ou CSS.
 - **Formação do Victor: MBA em Gestão Empresarial CONCLUÍDO (julho/2026).** Nunca escrever "em curso".
+- **Nome da empresa por extenso: "MAFRA Consultoria & Tecnologia"** (com "&") em mensagens e textos formais —
+  nunca só "MAFRA" sozinho (ex.: "Vim pelo site da MAFRA Consultoria & Tecnologia").
+- **"Mafra" é o sobrenome do Victor e o nome da EMPRESA — nunca uma pessoa.** Na conversa e nos textos:
+  a pessoa é o **Victor**; a empresa é a **MAFRA Consultoria & Tecnologia**. Nada de "o Mafra fez", "fale com o Mafra".
 - Números no site só se forem reais (prazos e etapas da metodologia). Nada inventado.
 
 ## Pendências conhecidas
