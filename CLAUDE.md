@@ -62,7 +62,7 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
 - O Orbe NUNCA sai da tela (trava `travar`, a cada quadro).
 - Selo do topo ("Processos mais inteligentes…"): card com a COR DOS BALÕES do robô (vidro verde), letra branca, cantos de 12px, texto centralizado (`.hero .pill`).
 
-- **Voo do menu (computador)**: clicar em Serviços/Método/Cases/Sobre/Contato escurece a tela, a luz do
+- **Voo do menu (computador E celular — no celular pelo menu ☰)**: clicar em Serviços/Método/Cases/Sobre/Contato escurece a tela, a luz do
   robô cresce (brilho, largura e comprimento do facho) e ele desce até o tema em 3 s, 4 s, 5 s, 6 s, 7 s;
   a rolagem é nossa, quadro a quadro (o scrollTo do Lenis pulava direto no PC do Victor); o robô desce em
   linha reta e estaciona POR CIMA do título, com a lanterna em cima dele; a tela volta ao normal (`mafra:voo`).
