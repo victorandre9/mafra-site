@@ -667,40 +667,34 @@ export default function Experience() {
       cleanups.push(() => gsap.ticker.remove(sparks));
 
       // Falas do drone em cada seção
-      // Falas por seção (o robô só INCENTIVA a contratar; nunca comenta os cases), com no máximo UMA a cada 10 segundos (pedido do Victor): rolando rápido,
-      // ele não metralha frases — guarda só a da seção onde a pessoa parou e fala quando der o tempo.
-      const lines: Array<[string, string]> = [
-        [".manifesto", "Sua operação pode render muito mais 🎯"],
-        [".services", "Escolha por onde começar — eu cuido do resto ✨"],
-        [".process", "Conheça o Programa de Eficiência Operacional e Produtividade 📈"],
-        [".stats", "Prazos claros, do início ao acompanhamento ⏱️"],
-        ["#cases", "Desenvolva seus processos e veja sua empresa crescer 🚀"],
-        ["#sobre", "Prazer, este é o Victor, da MAFRA Consultoria & Tecnologia 🤝"],
-        ["#perguntas", "Ficou com dúvida? Toque em mim e fale com o Victor 💬"],
-        [".contact", "Qual processo da sua empresa vamos destravar? 🚀"],
+      // Falas em CICLO (pedido do Victor): alterna o convite para tocar na Orbe com uma frase de
+      // benefício ou de incentivo — toque → benefício → toque → incentivo → … — uma a cada 10 s.
+      // O robô só incentiva a contratar; nunca comenta os cases. Pausa com o menu aberto ou a aba escondida.
+      const TOQUE = [
+        "Toque em mim e faça um diagnóstico rápido 👋",
+        "3 perguntas, 30 segundos: toque em mim 👆",
+        "Quer saber onde sua operação trava? Toque em mim 👋",
+      ];
+      const OUTRAS = [
+        "Menos retrabalho, mais tempo para o que importa 🎯",
+        "Sua operação pode render muito mais 🚀",
+        "Informação certa na mão de quem decide 📊",
+        "Qual processo da sua empresa vamos destravar? 💡",
+        "Equipe produtiva, operação sob controle ✅",
+        "Do diagnóstico ao suporte, eu cuido de tudo ✨",
       ];
       const INTERVALO = 10000;
-      let pendente: string | null = null;
-      let timerFala: ReturnType<typeof setTimeout> | undefined;
-      const falarQuandoPuder = (text: string) => {
-        pendente = text;
-        clearTimeout(timerFala);
-        const espera = Math.max(0, ultimaFala + INTERVALO - performance.now());
-        timerFala = setTimeout(() => {
-          if (!pendente) return;
-          if (performance.now() - ultimaFala < INTERVALO - 50) { falarQuandoPuder(pendente); return; }
-          droneSay(pendente);
-          pendente = null;
-        }, espera);
-      };
-      cleanups.push(() => clearTimeout(timerFala));
-      const ditas = new Set<string>();
-      lines.forEach(([sel, text]) => ScrollTrigger.create({
-        trigger: sel, start: "top 55%", end: "bottom 45%",
-        onEnter: () => { if (!ditas.has(sel)) { ditas.add(sel); falarQuandoPuder(text); } },
-        onLeave: () => { if (pendente === text) pendente = null; },
-        onLeaveBack: () => { if (pendente === text) pendente = null; },
-      }));
+      let passo = 1; // a saudação de abertura já foi um "toque"; o próximo é benefício/incentivo
+      let iToque = 0, iOutra = 0;
+      const menuAberto = () => !!document.querySelector(".orbmenu.is-open");
+      const timerFala = setInterval(() => {
+        if (ultimaFala < 0 || document.hidden || menuAberto()) return; // começa só depois da saudação de abertura
+        if (performance.now() - ultimaFala < INTERVALO - 300) return; // outra fala acabou de sair
+        const texto = passo % 2 === 0 ? TOQUE[iToque++ % TOQUE.length] : OUTRAS[iOutra++ % OUTRAS.length];
+        passo++;
+        droneSay(texto);
+      }, 1000);
+      cleanups.push(() => clearInterval(timerFala));
     });
 
     return () => {
