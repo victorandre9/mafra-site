@@ -882,14 +882,14 @@ body.em-voo .drone-layer { z-index: 95; } /* durante o voo, o robô fica acima d
 /* ===== Cases em dois grupos (19/11/2026): Soluções empresariais e Aplicativos e produtos digitais ===== */
 .work__grupo { margin-top: 64px; }
 .work__grupo:first-of-type { margin-top: 44px; }
-.work__grupo-head { display: grid; gap: 8px; max-width: 760px; padding-left: 16px; border-left: 3px solid #011834; }
+.work__grupo-head { display: grid; gap: 8px; max-width: 760px; padding-left: 16px; border-left: 3px solid #0c6b38; }
 .work__grupo-titulo { font: 700 clamp(1.35rem, 2.4vw, 1.8rem)/1.2 var(--font-display); color: #0b1a2e; letter-spacing: -.01em; }
 .work__grupo-texto { color: #4f6078; font-size: 1rem; line-height: 1.55; }
 .work__grupo .work__grid { margin-top: 24px; }
 @media (max-width: 760px) { .work__grupo { margin-top: 48px; } .work__grupo:first-of-type { margin-top: 32px; } }
 
 .work__grupo-titulo { display: flex; align-items: center; gap: 10px; }
-.work__grupo-icone { width: 26px; height: 26px; flex: none; fill: none; stroke: #011834; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.work__grupo-icone { width: 26px; height: 26px; flex: none; fill: none; stroke: #0c6b38; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 /* Soluções empresariais: 3 lado a lado no computador; Aplicativos: 2. Tablet 2, celular 1 */
 .work__grupo--b2b .work__grid { grid-template-columns: repeat(3, 1fr) !important; }
 .work__grupo--b2c .work__grid { grid-template-columns: repeat(2, 1fr) !important; }
@@ -912,21 +912,21 @@ body.em-voo .drone-layer { z-index: 95; } /* durante o voo, o robô fica acima d
 .screen--2 .pnode b { color: #0b1a2e !important; }
 .screen--2 .pnode span { color: #4f6078 !important; }
 .screen--2 .pnode--wait i { background: rgba(13, 44, 82, .08) !important; color: #4f6078 !important; }
-.screen--2 .pnode--run i { background: rgba(31, 95, 168, .14) !important; color: #1f5fa8 !important; }
+.screen--2 .pnode--run i { background: rgba(24, 160, 87, .14) !important; color: #18a057 !important; }
 /* etapa 4: painel do gestor */
 .screen--4 .kpi, .screen--4 .chartcard, .screen--4 .donutrow {
   background: #fff !important; border: 1px solid rgba(13, 44, 82, .12) !important; box-shadow: 0 8px 20px -10px rgba(13, 44, 82, .25);
 }
 .screen--4 .kpi span, .screen--4 .chartcard__head, .screen--4 .donutrow span { color: #4f6078 !important; }
 .screen--4 .kpi b, .screen--4 .donutrow b { color: #0b1a2e !important; }
-.screen--4 .kpi small.down { color: #1f5fa8 !important; }
+.screen--4 .kpi small.down { color: #18a057 !important; }
 .screen--4 .donut__bg { stroke: rgba(13, 44, 82, .12) !important; }
 /* telas ESCURAS (etapas 1 e 3): o azul-marinho do tema sumia no fundo escuro — vira azul-claro legível */
-.screen--1 .ui-head__sub, .screen--3 .ui-head__sub { color: #8ec5ff !important; }
-.screen--3 .build__label { color: #8ec5ff !important; }
-.screen--3 .build__bar span { background: #4f9bdc !important; box-shadow: 0 0 12px rgba(79, 155, 220, .8) !important; }
-.screen--3 .note--ok i { background: rgba(79, 155, 220, .2) !important; color: #8ec5ff !important; }
-.screen--1 .ui-dot { background: #4f9bdc !important; }
+.screen--1 .ui-head__sub, .screen--3 .ui-head__sub { color: #7fe3ad !important; }
+.screen--3 .build__label { color: #7fe3ad !important; }
+.screen--3 .build__bar span { background: #34d27a !important; box-shadow: 0 0 12px rgba(52, 210, 122, .8) !important; }
+.screen--3 .note--ok i { background: rgba(52, 210, 122, .2) !important; color: #7fe3ad !important; }
+.screen--1 .ui-dot { background: #34d27a !important; }
 
 .project__placa { position: relative; z-index: 1; width: 84%; max-width: 460px; height: auto; border-radius: 3.5% / 13%;
   box-shadow: 0 0 0 1px rgba(59, 130, 246, .25), 0 20px 50px rgba(0, 0, 0, .4); transition: transform .7s var(--ease); }
