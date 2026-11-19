@@ -939,3 +939,25 @@ body.em-voo .drone-layer { z-index: 95; } /* durante o voo, o robô fica acima d
 .vf-mark__icon { width: auto !important; height: 72% !important; max-height: 64px; }
 .vf-mark__name { font-size: clamp(1.4rem, 2.6vw, 2rem) !important; }
 .project__placa, .vf-mark { max-width: 320px !important; } /* mesmo teto para as três: nenhuma placa maior que a outra, nem no card largo do tablet */
+
+/* ===== Faixas diagonais animadas no fundo da página inteira (19/11/2026) =====
+   Ficam ATRÁS do conteúdo (o <main> está acima) e bem suaves, para nunca disputar com o texto. */
+.faixas-fundo { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; opacity: 0; }
+.faixa { position: absolute; will-change: transform; }
+.faixa__pulso, .faixa__forma { width: 100%; height: 100%; display: block; }
+.faixa__forma path { fill: url(#verde-vidro-suave); }
+.faixa--1 { width: 34vw; height: 80vh; right: -6vw; top: 6vh; opacity: .16; }
+.faixa--2 { width: 14vw; height: 36vh; left: 4vw; top: 52vh; opacity: .22; }
+.faixa--2 .faixa__forma path, .faixa--5 .faixa__forma path { fill: url(#verde-vidro); }
+.faixa--3 { width: 22vw; height: 54vh; right: 26vw; top: 40vh; opacity: .1; }
+.faixa--4 { width: 9vw; height: 24vh; right: 8vw; top: 66vh; opacity: .2; }
+.faixa--5 { width: 7vw; height: 18vh; left: 30vw; top: 12vh; opacity: .14; }
+.faixa--6 { width: 26vw; height: 62vh; left: -8vw; top: 20vh; opacity: .12; }
+@media (max-width: 760px) {
+  .faixa--1 { width: 70vw; height: 60vh; right: -30vw; }
+  .faixa--2 { width: 26vw; height: 26vh; }
+  .faixa--3, .faixa--5 { display: none; }
+  .faixa--4 { width: 18vw; height: 18vh; }
+  .faixa--6 { width: 50vw; height: 50vh; left: -28vw; }
+}
+@media (prefers-reduced-motion: reduce) { .faixas-fundo { opacity: .6 !important; } }
