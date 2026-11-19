@@ -282,12 +282,13 @@ export default function Experience() {
             },
           },
         })
-        .fromTo(".phone", { rotationY: -28, rotationX: 10, rotationZ: -4 }, { rotationY: 22, rotationX: -6, rotationZ: 3, ease: "none", duration: 1 })
+        // celular RETO durante toda a rolagem (pedido do Victor, 19/11/2026: o giro atrapalhava ver as telas)
+        .set(".phone", { rotationY: 0, rotationX: 0, rotationZ: 0 }, 0)
         .fromTo(".orbit--1", { scale: 0.85 }, { scale: 1.1, ease: "none", duration: 1 }, 0)
         .fromTo(".holo", { y: 30 }, { y: -40, ease: "none", duration: 1 }, 0);
 
       // Celular inclina com o mouse (camada separada da rotação da rolagem)
-      if (!isTouch) {
+      if (false) { // inclinação com o mouse desligada: o celular fica reto (pedido do Victor)
         const frame = $(".phone__frame");
         const stage = $(".process__stage");
         const fx = gsap.quickTo(frame, "rotationY", { duration: 0.8, ease: "power3" });

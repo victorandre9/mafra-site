@@ -897,3 +897,32 @@ body.em-voo .drone-layer { z-index: 95; } /* durante o voo, o robô fica acima d
 .work__fecho { display: grid; margin-top: 40px; }
 /* tablet: com 2 colunas, o 3º card de Soluções empresariais ocupa a fileira inteira (sem buraco ao lado) */
 @media (min-width: 761px) and (max-width: 1100px) { .work__grupo--b2b .project:nth-child(3) { grid-column: 1 / -1; } }
+
+/* ===== Celular da Metodologia: telas ALTERNAM escura / clara (pedido do Victor, 19/11/2026) =====
+   etapa 1 escura · etapa 2 CLARA · etapa 3 escura · etapa 4 CLARA — quem rola percebe que a tela mudou */
+.phone__screen .screen.screen--2, .phone__screen .screen.screen--4 {
+  background: linear-gradient(180deg, #f8fafd 0%, #eaf0f7 100%) !important; color: #0b1a2e !important;
+}
+.screen--2 .ui-top, .screen--4 .ui-top { color: #0b1a2e !important; }
+.screen--2 .ui-top__icons i, .screen--4 .ui-top__icons i { background: #0b1a2e !important; }
+.screen--2 .ui-head__title, .screen--4 .ui-head__title { color: #0b1a2e !important; }
+/* etapa 2: fluxo do processo */
+.screen--2 .pnode { background: #fff !important; border-color: rgba(13, 44, 82, .14) !important; box-shadow: 0 8px 20px -8px rgba(13, 44, 82, .25) !important; }
+.screen--2 .pnode b { color: #0b1a2e !important; }
+.screen--2 .pnode span { color: #4f6078 !important; }
+.screen--2 .pnode--wait i { background: rgba(13, 44, 82, .08) !important; color: #4f6078 !important; }
+.screen--2 .pnode--run i { background: rgba(31, 95, 168, .14) !important; color: #1f5fa8 !important; }
+/* etapa 4: painel do gestor */
+.screen--4 .kpi, .screen--4 .chartcard, .screen--4 .donutrow {
+  background: #fff !important; border: 1px solid rgba(13, 44, 82, .12) !important; box-shadow: 0 8px 20px -10px rgba(13, 44, 82, .25);
+}
+.screen--4 .kpi span, .screen--4 .chartcard__head, .screen--4 .donutrow span { color: #4f6078 !important; }
+.screen--4 .kpi b, .screen--4 .donutrow b { color: #0b1a2e !important; }
+.screen--4 .kpi small.down { color: #1f5fa8 !important; }
+.screen--4 .donut__bg { stroke: rgba(13, 44, 82, .12) !important; }
+/* telas ESCURAS (etapas 1 e 3): o azul-marinho do tema sumia no fundo escuro — vira azul-claro legível */
+.screen--1 .ui-head__sub, .screen--3 .ui-head__sub { color: #8ec5ff !important; }
+.screen--3 .build__label { color: #8ec5ff !important; }
+.screen--3 .build__bar span { background: #4f9bdc !important; box-shadow: 0 0 12px rgba(79, 155, 220, .8) !important; }
+.screen--3 .note--ok i { background: rgba(79, 155, 220, .2) !important; color: #8ec5ff !important; }
+.screen--1 .ui-dot { background: #4f9bdc !important; }
