@@ -73,8 +73,12 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   Botões: SEM ímã (não seguem o mouse), só zoom + luz verde atrás; nunca mudam de cor no hover.
 - Metodologia (computador): abaixo das etapas, o EXEMPLO da equipe de manutenção (no lugar de "Dois resultados…");
   só a etapa ativa mostra a descrição, para tudo caber na tela travada. No celular o exemplo fica oculto (sem espaço).
-- Cases: Verifica, Vo$, **Polar OS** (foto `public/cases/polar-os-card.webp`, depois do Vo$) e iFluxo; card final "A solução da sua
-  empresa" ocupa a largura toda no computador.
+- **Cases em DOIS GRUPOS** (19/11/2026, `GRUPOS_CASES` em `page.tsx`):
+  **Soluções empresariais** (3 lado a lado no computador): Verifica, **Vetra Sales** (`public/cases/vetra-sales-card.webp`),
+  **Polar OS** (`public/cases/polar-os-card.webp`); **Aplicativos e produtos digitais** (2): Vo$ e iFluxo.
+  Card final "A solução da sua empresa" fica fora dos grupos, em largura total. Tablet: 2 colunas (o 3º card empresarial
+  ocupa a fileira); celular: 1. Vetra Sales é o nome de divulgação de um protótipo de vendas externas:
+  NUNCA ligá-lo a cliente nenhum no site; sem "Na sua empresa" até o Victor mandar o texto (não inventar).
 - Botões verdes: flash claro passando da esquerda para a direita a cada 3 s (`verde-varre`).
 
 ## Pendências conhecidas

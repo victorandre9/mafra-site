@@ -79,6 +79,7 @@ const ABOUT = [
 const CASES = [
   {
     cls: "p-verifica",
+    grupo: "b2b",
     tag: "Logística · Armazéns, cross-docking e transportadoras",
     title: "Verifica — Gestão Operacional Inteligente",
     text: "Sistema de gestão integrado para logística — armazéns, cross-docking e transportadoras. Checklists online ligados ao mecânico e à frota, controle de jornada e produção por colaborador: quem mais produz na separação e quais motoristas e ajudantes entregam mais, com menos horas extras e sem ocorrências. Integrado ao RH e à qualidade.",
@@ -90,19 +91,21 @@ const CASES = [
     badge: "",
   },
   {
-    cls: "p-vos",
-    tag: "Projeto autoral · Finanças com inteligência artificial",
-    title: "Vo$ — o seu dinheiro sob controle",
-    text: "Controle financeiro com inteligência artificial: gastos organizados sozinhos, orçamento do mês sempre à vista e metas que viram plano — do carro novo à viagem dos sonhos.",
-    bullets: ["Gastos organizados por categoria", "Orçamento do mês", "Metas para realizar sonhos", "Relatórios claros", "Finanças da família no mesmo app"],
-    gain: "A mesma tecnologia pode registrar uma visita, uma ocorrência ou uma despesa da equipe em campo — sem digitar.",
-    icon: "🎙️",
-    logo: "/cases/vos-logo.webp",
-    wordmark: "",
-    badge: "Vo$",
+    cls: "p-vetra",
+    grupo: "b2b",
+    tag: "Solução empresarial · Vendas externas",
+    title: "Vetra Sales — Inteligência em Vendas Externas",
+    text: "Plataforma de gestão de equipes comerciais externas, com controle de visitas, carteiras de clientes, produtividade dos vendedores, conversão de visitas em pedidos, histórico comercial e indicadores gerenciais.",
+    bullets: ["Gestão de visitas", "Carteiras", "Conversão", "Indicadores"],
+    gain: "",
+    icon: "",
+    logo: "/cases/vetra-sales-card.webp",
+    wordmark: "foto",
+    badge: "Vetra Sales",
   },
   {
     cls: "p-polar",
+    grupo: "b2b",
     tag: "Ar-condicionado · Manutenção e instalação com equipe em campo",
     title: "Polar OS — Gestão de Campo para Climatização",
     text: "Sistema de gestão integrado para empresas de ar-condicionado: do pedido fechado à O.S., do técnico certo na rua ao recebimento. Agenda e produtividade por técnico, checklist diário do veículo, materiais e ferramentas com responsável, despesas e diárias da equipe e financeiro no mesmo lugar.",
@@ -114,7 +117,21 @@ const CASES = [
     badge: "Polar OS",
   },
   {
+    cls: "p-vos",
+    grupo: "b2c",
+    tag: "Projeto autoral · Finanças com inteligência artificial",
+    title: "Vo$ — o seu dinheiro sob controle",
+    text: "Controle financeiro com inteligência artificial: gastos organizados sozinhos, orçamento do mês sempre à vista e metas que viram plano — do carro novo à viagem dos sonhos.",
+    bullets: ["Gastos organizados por categoria", "Orçamento do mês", "Metas para realizar sonhos", "Relatórios claros", "Finanças da família no mesmo app"],
+    gain: "A mesma tecnologia pode registrar uma visita, uma ocorrência ou uma despesa da equipe em campo — sem digitar.",
+    icon: "🎙️",
+    logo: "/cases/vos-logo.webp",
+    wordmark: "",
+    badge: "Vo$",
+  },
+  {
     cls: "p-ifluxo",
+    grupo: "b2c",
     tag: "Projeto autoral · Dados de movimento",
     title: "iFluxo — confira o movimento antes de sair",
     text: "Consulta do nível de lotação de bares, restaurantes, academias e outros estabelecimentos para escolher o melhor momento da visita.",
@@ -124,6 +141,20 @@ const CASES = [
     logo: "/cases/ifluxo.webp",
     wordmark: "arte",
     badge: "iFluxo",
+  },
+];
+
+// Portfólio em dois grupos (pedido do Victor, 19/11/2026): soluções para empresas e apps para pessoas
+const GRUPOS_CASES = [
+  {
+    id: "b2b",
+    titulo: "Soluções empresariais",
+    texto: "Ferramentas que ajudam empresas a reduzir desperdícios, melhorar processos, acompanhar equipes e criar oportunidades de crescimento.",
+  },
+  {
+    id: "b2c",
+    titulo: "Aplicativos e produtos digitais",
+    texto: "Soluções tecnológicas que facilitam atividades e decisões do dia a dia das pessoas.",
   },
 ];
 
@@ -363,9 +394,24 @@ export default function Home() {
         <section className="work container" id="cases">
           <Eyebrow>Cases</Eyebrow>
           <h2 className="section-title">Tecnologia que <span className="grad">já está em uso</span></h2>
-          <p className="work__lead">Meu trabalho é resolver problemas de empresas. Estes projetos mostram, na prática, o nível de solução que levo para a sua operação.</p>
-          <div className="work__grid">
-            {CASES.map((c) => (
+          <p className="work__lead">Tecnologia que desenvolvo para empresas e para pessoas: soluções que organizam a operação e aplicativos que facilitam o dia a dia.</p>
+          {GRUPOS_CASES.map((g) => (
+            <div key={g.id} className={`work__grupo work__grupo--${g.id}`}>
+              <div className="work__grupo-head">
+                <h3 className="work__grupo-titulo">
+                  <svg className="work__grupo-icone" viewBox="0 0 24 24" aria-hidden="true">
+                    {g.id === "b2b" ? (
+                      <><path d="M4 21V5l8-3v19" /><path d="M12 9l8 3v9" /><path d="M2 21h20" /><path d="M8 8v.01M8 12v.01M8 16v.01M16 15v.01M16 18v.01" /></>
+                    ) : (
+                      <><rect x="7" y="2" width="10" height="20" rx="2.5" /><path d="M11 18h2" /></>
+                    )}
+                  </svg>
+                  {g.titulo}
+                </h3>
+                <p className="work__grupo-texto">{g.texto}</p>
+              </div>
+              <div className="work__grid">
+            {CASES.filter((c) => c.grupo === g.id).map((c) => (
               <article key={c.title} className="project tilt" data-cursor="✦">
                 <div className={`project__media ${c.cls}`}>
                   <Chevron className="project__chev" />
@@ -405,10 +451,14 @@ export default function Home() {
                   <h3>{c.title}</h3>
                   <p>{c.text}</p>
                   <ul>{c.bullets.map((b) => <li key={b}>{b}</li>)}</ul>
-                  <p className="project__gain"><strong>Na sua empresa:</strong> {c.gain}</p>
+                  {c.gain && <p className="project__gain"><strong>Na sua empresa:</strong> {c.gain}</p>}
                 </div>
               </article>
             ))}
+              </div>
+            </div>
+          ))}
+          <div className="work__fecho">
             <a className="project project--cta tilt" href="#contato" data-cursor="Vamos">
               <div className="project__info">
                 <span className="project__tag">Próximo case</span>

@@ -871,9 +871,29 @@ body.em-voo .drone-layer { z-index: 95; } /* durante o voo, o robô fica acima d
 }
 
 /* case Polar OS: a imagem do card é a própria foto (preenche a área inteira) */
-.p-polar { background: #0b2a55 !important; }
-.p-polar .project__chev { display: none; }
+.p-polar, .p-vetra { background: #0b2a55 !important; }
+.p-polar .project__chev, .p-vetra .project__chev { display: none; }
 .project__foto { object-fit: cover !important; }
 /* com 4 cases (Polar OS entrou), o card final ocupa a largura toda da grade no computador — sem buraco ao lado */
-@media (min-width: 761px) { .project--cta { grid-column: 1 / -1; } }
+/* o card final fica fora dos grupos, em largura total (.work__fecho) */
 .project--cta .btn, .project--cta .btn span { color: #fff !important; } /* "Quero conversar": letra escura sobre o botão escuro ficava ilegível */
+
+/* ===== Cases em dois grupos (19/11/2026): Soluções empresariais e Aplicativos e produtos digitais ===== */
+.work__grupo { margin-top: 64px; }
+.work__grupo:first-of-type { margin-top: 44px; }
+.work__grupo-head { display: grid; gap: 8px; max-width: 760px; padding-left: 16px; border-left: 3px solid #011834; }
+.work__grupo-titulo { font: 700 clamp(1.35rem, 2.4vw, 1.8rem)/1.2 var(--font-display); color: #0b1a2e; letter-spacing: -.01em; }
+.work__grupo-texto { color: #4f6078; font-size: 1rem; line-height: 1.55; }
+.work__grupo .work__grid { margin-top: 24px; }
+@media (max-width: 760px) { .work__grupo { margin-top: 48px; } .work__grupo:first-of-type { margin-top: 32px; } }
+
+.work__grupo-titulo { display: flex; align-items: center; gap: 10px; }
+.work__grupo-icone { width: 26px; height: 26px; flex: none; fill: none; stroke: #011834; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+/* Soluções empresariais: 3 lado a lado no computador; Aplicativos: 2. Tablet 2, celular 1 */
+.work__grupo--b2b .work__grid { grid-template-columns: repeat(3, 1fr) !important; }
+.work__grupo--b2c .work__grid { grid-template-columns: repeat(2, 1fr) !important; }
+@media (max-width: 1100px) { .work__grupo--b2b .work__grid { grid-template-columns: repeat(2, 1fr) !important; } }
+@media (max-width: 760px) { .work__grupo--b2b .work__grid, .work__grupo--b2c .work__grid { grid-template-columns: 1fr !important; } }
+.work__fecho { display: grid; margin-top: 40px; }
+/* tablet: com 2 colunas, o 3º card de Soluções empresariais ocupa a fileira inteira (sem buraco ao lado) */
+@media (min-width: 761px) and (max-width: 1100px) { .work__grupo--b2b .project:nth-child(3) { grid-column: 1 / -1; } }
