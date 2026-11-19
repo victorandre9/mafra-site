@@ -102,6 +102,18 @@ const CASES = [
     badge: "Vo$",
   },
   {
+    cls: "p-polar",
+    tag: "Ar-condicionado · Manutenção e instalação com equipe em campo",
+    title: "Polar OS — Gestão de Campo para Climatização",
+    text: "Sistema de gestão integrado para empresas de ar-condicionado: do pedido fechado à O.S., do técnico certo na rua ao recebimento. Agenda e produtividade por técnico, checklist diário do veículo, materiais e ferramentas com responsável, despesas e diárias da equipe e financeiro no mesmo lugar.",
+    bullets: ["Do pedido à O.S.", "Agenda e produtividade por técnico", "Checklist diário do veículo", "Materiais e ferramentas com responsável", "Financeiro integrado"],
+    gain: "o técnico gasta só o material necessário, cada ferramenta tem dono e a agenda fica sob controle — menos perdas, menos retrabalho e menos reclamação de cliente.",
+    icon: "",
+    logo: "/cases/polar-os-card.webp",
+    wordmark: "foto",
+    badge: "Polar OS",
+  },
+  {
     cls: "p-ifluxo",
     tag: "Projeto autoral · Dados de movimento",
     title: "iFluxo — confira o movimento antes de sair",
@@ -376,11 +388,11 @@ export default function Home() {
                   ) : c.logo ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
-                      className={c.wordmark === "arte" ? "project__art" : "project__logo"}
+                      className={c.wordmark === "arte" ? "project__art" : c.wordmark === "foto" ? "project__art project__foto" : "project__logo"}
                       src={c.logo}
                       alt={`Logo ${c.badge}`}
-                      width={c.wordmark === "arte" ? 900 : 180}
-                      height={c.wordmark === "arte" ? 751 : 180}
+                      width={c.wordmark === "arte" ? 900 : c.wordmark === "foto" ? 1600 : 180}
+                      height={c.wordmark === "arte" ? 751 : c.wordmark === "foto" ? 1000 : 180}
                       loading="lazy"
                     />
                   ) : (
