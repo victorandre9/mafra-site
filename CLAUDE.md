@@ -79,6 +79,8 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   Card final "A solução da sua empresa" fica fora dos grupos, em largura total. Tablet: 2 colunas (o 3º card empresarial
   ocupa a fileira); celular: 1. Vetra Sales é o nome de divulgação de um protótipo de vendas externas:
   NUNCA ligá-lo a cliente nenhum no site; "Na sua empresa" aprovado pelo Victor em 19/11/2026.
+- Cases empresariais: as TRÊS placas de logo (Verifica em código; Vetra/Polar recortadas das imagens originais em
+  `public/cases/*-placa.webp`) com o MESMO tamanho e proporção 3,7:1, teto 320px, no mesmo fundo azul-escuro do Verifica.
 - Celular 3D da Metodologia: RETO o tempo todo (sem giro na rolagem nem com o mouse); telas alternam
   escura (etapas 1 e 3) e CLARA (etapas 2 e 4) para o visitante perceber a troca. Balões em volta (`.holo`)
   posicionados pelo próprio celular (`posHolos`): A fora à esquerda sem invadir o texto, B fora à direita.
