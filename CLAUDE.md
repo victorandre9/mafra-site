@@ -74,6 +74,8 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
 - Mouse no computador: o círculo SAIU. Lanterna verde suave segue o mouse (`.lanterna-mouse`); cards, cases,
   formação, números e perguntas sobem/crescem com borda verde e reflexo que segue o mouse; botões, menu e foto têm zoom.
   Botões: SEM ímã (não seguem o mouse), só zoom + luz verde atrás; nunca mudam de cor no hover.
+- Metodologia (computador): abaixo das etapas, o EXEMPLO da equipe de manutenção (no lugar de "Dois resultados…");
+  só a etapa ativa mostra a descrição, para tudo caber na tela travada. No celular o exemplo fica oculto (sem espaço).
 - Botões verdes: flash claro passando da esquerda para a direita a cada 3 s (`verde-varre`).
 
 ## Pendências conhecidas
