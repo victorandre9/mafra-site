@@ -80,7 +80,8 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   ocupa a fileira); celular: 1. Vetra Sales é o nome de divulgação de um protótipo de vendas externas:
   NUNCA ligá-lo a cliente nenhum no site; "Na sua empresa" aprovado pelo Victor em 19/11/2026.
 - Celular 3D da Metodologia: RETO o tempo todo (sem giro na rolagem nem com o mouse); telas alternam
-  escura (etapas 1 e 3) e CLARA (etapas 2 e 4) para o visitante perceber a troca.
+  escura (etapas 1 e 3) e CLARA (etapas 2 e 4) para o visitante perceber a troca. Balões em volta (`.holo`)
+  posicionados pelo próprio celular (`posHolos`): A fora à esquerda sem invadir o texto, B fora à direita.
 - Botões verdes: flash claro passando da esquerda para a direita a cada 3 s (`verde-varre`).
 
 ## Pendências conhecidas
