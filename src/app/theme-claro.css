@@ -869,3 +869,11 @@ body.em-voo .drone-layer { z-index: 95; } /* durante o voo, o robô fica acima d
   .process__text .section-title { font-size: clamp(2.2rem, 4.2vw, 3.2rem) !important; }
   .process__note { font-size: .84rem; padding: 10px 14px; }
 }
+
+/* case Polar OS: a imagem do card é a própria foto (preenche a área inteira) */
+.p-polar { background: #0b2a55 !important; }
+.p-polar .project__chev { display: none; }
+.project__foto { object-fit: cover !important; }
+/* com 4 cases (Polar OS entrou), o card final ocupa a largura toda da grade no computador — sem buraco ao lado */
+@media (min-width: 761px) { .project--cta { grid-column: 1 / -1; } }
+.project--cta .btn, .project--cta .btn span { color: #fff !important; } /* "Quero conversar": letra escura sobre o botão escuro ficava ilegível */
