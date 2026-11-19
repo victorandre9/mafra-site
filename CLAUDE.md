@@ -73,6 +73,8 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   Botões: SEM ímã (não seguem o mouse), só zoom + luz verde atrás; nunca mudam de cor no hover.
 - Metodologia (computador): abaixo das etapas, o EXEMPLO da equipe de manutenção (no lugar de "Dois resultados…");
   só a etapa ativa mostra a descrição, para tudo caber na tela travada. No celular o exemplo fica oculto (sem espaço).
+- Cases: Verifica, Vo$, **Polar OS** (foto `public/cases/polar-os-card.webp`, depois do Vo$) e iFluxo; card final "A solução da sua
+  empresa" ocupa a largura toda no computador.
 - Botões verdes: flash claro passando da esquerda para a direita a cada 3 s (`verde-varre`).
 
 ## Pendências conhecidas
