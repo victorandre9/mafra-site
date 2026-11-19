@@ -54,6 +54,9 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   branch `tema-azul` (o que está no ar) e branch `tema-verde`, ambas atualizadas com TUDO até a noite de 18/11/2026. A cor NÃO é trocável pelo visitante.
   Para trocar de tema: aplicar no `main` a diferença de cores do branch do outro tema (CSS, `Background3D.tsx`,
   `Phone.tsx`, `robo/ModelosPerola.tsx`, `page.tsx` e a foto `public/sobre/`), mantendo o que mudou depois.
+- **REGRA (pedido do Victor, 19/11/2026): toda atualização vai também para o `tema-verde`.** Depois de cada merge:
+  cherry-pick dos commits novos no `tema-verde` e trocar só os ACENTOS azuis que entraram no commit pelos verdes
+  (`#011834`→`#0c6b38`, `#1f5fa8`→`#18a057`, `#4f9bdc`→`#34d27a`, `#8ec5ff`→`#7fe3ad`); textos/navy neutros ficam.
 - Botões: **arredondados** (cantos suaves de 8px foram testados e recusados).
 
 ## Robô (Orbe) no celular
