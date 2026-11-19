@@ -99,9 +99,9 @@ const CASES = [
     bullets: ["Gestão de visitas", "Carteiras", "Conversão", "Indicadores"],
     gain: "acompanhe a produtividade dos vendedores, identifique clientes sem comprar, monitore a conversão das visitas em pedidos e descubra oportunidades para aumentar suas vendas.",
     icon: "",
-    logo: "/cases/vetra-sales-card.webp",
-    wordmark: "foto",
-    badge: "Vetra Sales",
+    logo: "/cases/vetra-sales-placa.webp",
+    wordmark: "placa",
+    badge: "",
   },
   {
     cls: "p-polar",
@@ -112,9 +112,9 @@ const CASES = [
     bullets: ["Do pedido à O.S.", "Agenda e produtividade por técnico", "Checklist diário do veículo", "Materiais e ferramentas com responsável", "Financeiro integrado"],
     gain: "o técnico gasta só o material necessário, cada ferramenta tem dono e a agenda fica sob controle — menos perdas, menos retrabalho e menos reclamação de cliente.",
     icon: "",
-    logo: "/cases/polar-os-card.webp",
-    wordmark: "foto",
-    badge: "Polar OS",
+    logo: "/cases/polar-os-placa.webp",
+    wordmark: "placa",
+    badge: "",
   },
   {
     cls: "p-vos",
@@ -434,11 +434,11 @@ export default function Home() {
                   ) : c.logo ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
-                      className={c.wordmark === "arte" ? "project__art" : c.wordmark === "foto" ? "project__art project__foto" : "project__logo"}
+                      className={c.wordmark === "arte" ? "project__art" : c.wordmark === "foto" ? "project__art project__foto" : c.wordmark === "placa" ? "project__placa" : "project__logo"}
                       src={c.logo}
-                      alt={`Logo ${c.badge}`}
-                      width={c.wordmark === "arte" ? 900 : c.wordmark === "foto" ? 1600 : 180}
-                      height={c.wordmark === "arte" ? 751 : c.wordmark === "foto" ? 1000 : 180}
+                      alt={`Logo ${c.badge || c.title.split(" — ")[0]}`}
+                      width={c.wordmark === "arte" ? 900 : c.wordmark === "foto" ? 1600 : c.wordmark === "placa" ? 1184 : 180}
+                      height={c.wordmark === "arte" ? 751 : c.wordmark === "foto" ? 1000 : c.wordmark === "placa" ? 320 : 180}
                       loading="lazy"
                     />
                   ) : (
