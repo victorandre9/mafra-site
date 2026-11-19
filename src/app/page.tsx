@@ -253,12 +253,12 @@ export default function Home() {
       </div>
       {/* Faixas diagonais da marca, animadas, no fundo da página inteira (pedido do Victor, 19/11/2026) */}
       <div className="faixas-fundo" aria-hidden="true">
-        <div className="faixa faixa--1"><div className="faixa__pulso"><Chevron className="faixa__forma" /></div></div>
-        <div className="faixa faixa--2"><div className="faixa__pulso"><Chevron className="faixa__forma" /></div></div>
-        <div className="faixa faixa--3"><div className="faixa__pulso"><Chevron className="faixa__forma" /></div></div>
-        <div className="faixa faixa--4"><div className="faixa__pulso"><Chevron className="faixa__forma" /></div></div>
-        <div className="faixa faixa--5"><div className="faixa__pulso"><Chevron className="faixa__forma" /></div></div>
-        <div className="faixa faixa--6"><div className="faixa__pulso"><Chevron className="faixa__forma" /></div></div>
+        <div className="faixa faixa--1 faixa--dir"><div className="faixa__pulso"><svg className="faixa__forma" viewBox="0 0 60 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path d="M28 0h32L22 50l38 50H28L-10 50z" /></svg></div></div>
+        <div className="faixa faixa--2"><div className="faixa__pulso"><svg className="faixa__forma" viewBox="0 0 60 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path d="M28 0h32L22 50l38 50H28L-10 50z" /></svg></div></div>
+        <div className="faixa faixa--3 faixa--dir"><div className="faixa__pulso"><svg className="faixa__forma" viewBox="0 0 60 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path d="M28 0h32L22 50l38 50H28L-10 50z" /></svg></div></div>
+        <div className="faixa faixa--4"><div className="faixa__pulso"><svg className="faixa__forma" viewBox="0 0 60 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path d="M28 0h32L22 50l38 50H28L-10 50z" /></svg></div></div>
+        <div className="faixa faixa--5 faixa--dir"><div className="faixa__pulso"><svg className="faixa__forma" viewBox="0 0 60 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path d="M28 0h32L22 50l38 50H28L-10 50z" /></svg></div></div>
+        <div className="faixa faixa--6"><div className="faixa__pulso"><svg className="faixa__forma" viewBox="0 0 60 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path d="M28 0h32L22 50l38 50H28L-10 50z" /></svg></div></div>
       </div>
       <Hero3DLazy />
 

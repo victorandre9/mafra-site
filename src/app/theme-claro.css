@@ -946,18 +946,17 @@ body.em-voo .drone-layer { z-index: 95; } /* durante o voo, o robô fica acima d
 .faixa { position: absolute; will-change: transform; }
 .faixa__pulso, .faixa__forma { width: 100%; height: 100%; display: block; }
 .faixa__forma path { fill: url(#verde-vidro-suave); }
-.faixa--1 { width: 34vw; height: 80vh; right: -6vw; top: 6vh; opacity: .16; }
-.faixa--2 { width: 14vw; height: 36vh; left: 4vw; top: 52vh; opacity: .22; }
-.faixa--2 .faixa__forma path, .faixa--5 .faixa__forma path { fill: url(#verde-vidro); }
-.faixa--3 { width: 22vw; height: 54vh; right: 26vw; top: 40vh; opacity: .1; }
-.faixa--4 { width: 9vw; height: 24vh; right: 8vw; top: 66vh; opacity: .2; }
-.faixa--5 { width: 7vw; height: 18vh; left: 30vw; top: 12vh; opacity: .14; }
-.faixa--6 { width: 26vw; height: 62vh; left: -8vw; top: 20vh; opacity: .12; }
+/* proporção FIXA (0,6 : 1) em vmin: a seta não estica nem afina conforme o formato da tela */
+.faixa { aspect-ratio: 3 / 5; height: auto; }
+.faixa--1 { width: 30vmin; right: -2vmin; top: 8vh; opacity: 0.32; }
+.faixa--2 { width: 22vmin; left: 1vmin; top: 46vh; opacity: 0.36; }
+.faixa--3 { width: 18vmin; right: 12vw; top: 58vh; opacity: 0.24; }
+.faixa--4 { width: 26vmin; left: 14vw; top: 10vh; opacity: 0.22; }
+.faixa--5 { width: 20vmin; right: 2vmin; top: 64vh; opacity: 0.34; }
+.faixa--6 { width: 34vmin; left: -4vmin; top: 70vh; opacity: 0.26; }
+.faixa__forma { overflow: visible; }
 @media (max-width: 760px) {
-  .faixa--1 { width: 70vw; height: 60vh; right: -30vw; }
-  .faixa--2 { width: 26vw; height: 26vh; }
-  .faixa--3, .faixa--5 { display: none; }
-  .faixa--4 { width: 18vw; height: 18vh; }
-  .faixa--6 { width: 50vw; height: 50vh; left: -28vw; }
+  .faixa--1 { width: 40vmin; } .faixa--2 { width: 30vmin; } .faixa--3 { width: 26vmin; right: -4vw; }
+  .faixa--4 { width: 32vmin; left: -6vw; top: 26vh; } .faixa--5 { width: 30vmin; } .faixa--6 { width: 44vmin; }
 }
 @media (prefers-reduced-motion: reduce) { .faixas-fundo { opacity: .6 !important; } }

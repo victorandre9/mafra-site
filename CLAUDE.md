@@ -91,8 +91,8 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   escura (etapas 1 e 3) e CLARA (etapas 2 e 4) para o visitante perceber a troca. Balões em volta (`.holo`)
   posicionados pelo próprio celular (`posHolos`): A fora à esquerda sem invadir o texto, B fora à direita.
 - **Fundo animado** (modelo 1, 19/11/2026): 6 faixas diagonais da marca (`.faixas-fundo`, mesma forma do
-  `Chevron` do topo), fixas atrás do conteúdo; entram/atravessam/saem com a rolagem, flutuam sozinhas e dão um
-  "tranco" a cada seção nova. Aparecem só depois do topo. Bem suaves (opacidade 0,1–0,22) para não brigar com o texto.
+  `Chevron` do topo), fixas atrás do conteúdo. Refinadas: seta própria mais LARGA, proporção fixa (vmin), SEM giro; cada uma
+  entra pela lateral, flutua e sai (ciclo de 6 s, uma entrando a cada ~1 s); a rolagem só desliza na vertical. Aparecem só depois do topo. Bem suaves (opacidade 0,1–0,22) para não brigar com o texto.
 - Botões verdes: flash claro passando da esquerda para a direita a cada 3 s (`verde-varre`).
 
 ## Pendências conhecidas
