@@ -97,7 +97,7 @@ const CASES = [
     title: "Vetra Sales — Inteligência em Vendas Externas",
     text: "Plataforma de gestão de equipes comerciais externas, com controle de visitas, carteiras de clientes, produtividade dos vendedores, conversão de visitas em pedidos, histórico comercial e indicadores gerenciais.",
     bullets: ["Gestão de visitas", "Carteiras", "Conversão", "Indicadores"],
-    gain: "",
+    gain: "a gestão enxerga cada visita, a carteira de cada vendedor e quais visitas viraram pedido — e direciona a equipe para onde a venda está.",
     icon: "",
     logo: "/cases/vetra-sales-card.webp",
     wordmark: "foto",
