@@ -252,6 +252,7 @@ export default function Experience() {
 
       /* ---------- Processo: celular 3D pinado, telas trocam ---------- */
       const steps = $$(".step"), screens = $$(".screen");
+      let posHolosRef = () => {}; // vira posHolos logo abaixo (os balões se reposicionam enquanto rola)
       const buildEl = $(".js-build"), buildBar = $(".build__bar span");
       let current = 0;
       const setStep = (i: number) => {
@@ -278,6 +279,7 @@ export default function Experience() {
             trigger: ".process", pin: ".process__pin", start: "top top", end: () => (window.innerWidth <= 900 ? "+=160%" : "+=240%"), scrub: 1,
             onUpdate: (self) => {
               setStep(Math.min(3, Math.floor(self.progress * 4)));
+              posHolosRef();
               gsap.set(".process__bar span", { scaleX: self.progress });
             },
           },
@@ -286,6 +288,30 @@ export default function Experience() {
         .set(".phone", { rotationY: 0, rotationX: 0, rotationZ: 0 }, 0)
         .fromTo(".orbit--1", { scale: 0.85 }, { scale: 1.1, ease: "none", duration: 1 }, 0)
         .fromTo(".holo", { y: 30 }, { y: -40, ease: "none", duration: 1 }, 0);
+
+      // ===== Balões em volta do celular ("Rotinas mapeadas", "3 gargalos"…) SEMPRE FORA dele =====
+      // (pedido do Victor, 19/11/2026: com o celular reto eles caíam em cima da tela). A posição sai do
+      // próprio celular: o balão A encosta do lado de fora à ESQUERDA, sem invadir a coluna de texto;
+      // o B do lado de fora à DIREITA. Largura encolhe se faltar espaço.
+      const posHolos = () => {
+        if (window.innerWidth <= 760) return; // no celular os balões ficam ocultos (CSS)
+        const st = $(".process__stage"), fr = $(".phone__frame"), tx = $(".process__text");
+        if (!st || !fr) return;
+        const s = st.getBoundingClientRect(), f = fr.getBoundingClientRect(), t = tx?.getBoundingClientRect();
+        const folga = 14;
+        const espE = f.left - (t ? t.right + 20 : s.left) - folga;
+        const espD = document.documentElement.clientWidth - f.right - folga - 16;
+        // o balão é levemente ampliado pelo 3D (translateZ + perspectiva): ~10% de margem na largura
+        const wE = Math.max(130, Math.min(210, espE * 0.9)), wD = Math.max(130, Math.min(210, espD * 0.9));
+        $$<HTMLElement>(".holo.hc-a").forEach((h) => { h.style.left = "auto"; h.style.right = `${s.right - f.left + folga}px`; h.style.width = `${wE}px`; });
+        $$<HTMLElement>(".holo.hc-b").forEach((h) => { h.style.right = "auto"; h.style.left = `${f.right - s.left + folga}px`; h.style.width = `${wD}px`; });
+      };
+      posHolosRef = posHolos;
+      posHolos();
+      setTimeout(posHolos, 600);
+      on(window, "resize", () => setTimeout(posHolos, 300));
+      ScrollTrigger.addEventListener("refresh", posHolos);
+      cleanups.push(() => ScrollTrigger.removeEventListener("refresh", posHolos));
 
       // Celular inclina com o mouse (camada separada da rotação da rolagem)
       if (false) { // inclinação com o mouse desligada: o celular fica reto (pedido do Victor)
