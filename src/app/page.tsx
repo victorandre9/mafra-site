@@ -33,9 +33,9 @@ const SERVICES = [
     icon: <><rect x="4" y="16" width="14" height="16" rx="3" /><rect x="30" y="16" width="14" height="16" rx="3" /><path d="M18 24h12M24 20l4 4-4 4" /></>,
   },
   {
-    title: "Indicadores & dashboards",
-    text: "Registros, alertas e painéis na hora certa. Sócios e gestores acompanham equipes, pendências, recebíveis e resultados sem depender de mensagens.",
-    tags: ["Painéis por perfil", "Alertas", "Relatórios"],
+    title: "Indicadores & Gestão de Desempenho",
+    text: "Acompanhe a produtividade das equipes, o cumprimento das rotinas, as horas extras, o tempo médio das atividades e os indicadores de desempenho. Transforme dados operacionais em decisões para melhorar resultados.",
+    tags: ["Produtividade por colaborador", "Indicadores e dashboards", "Metas e melhoria contínua"],
     icon: <><path d="M6 42V6M6 42h36" /><path d="M14 32l8-9 7 6 11-14" /></>,
   },
   {
