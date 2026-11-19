@@ -317,7 +317,11 @@ export default function Home() {
                   ))}
                 </div>
                 <div className="process__bar"><span /></div>
-                <p className="process__note">Dois resultados: <strong>reduzir desperdícios</strong> e <strong>criar condições para crescer</strong>.</p>
+                <div className="process__note">
+                  <p className="process__note-q"><strong>Uma equipe de manutenção consegue atender mais clientes com a mesma estrutura?</strong></p>
+                  <p>Ao medir tempo de visita, deslocamentos, retrabalhos e produtividade por técnico, o gestor consegue identificar gargalos e reorganizar a agenda.</p>
+                  <p>Com uma operação mais eficiente, pode reduzir a necessidade de horas extras e criar capacidade para prospectar novos contratos.</p>
+                </div>
               </div>
               <div className="process__stage">
                 <div className="orbit orbit--1"><span /></div>

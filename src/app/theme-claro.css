@@ -850,3 +850,22 @@ body.em-voo .drone-layer { z-index: 95; } /* durante o voo, o robô fica acima d
 /* a "cortina" escura do tema escuro antigo subia por dentro do botão no hover (o claro ficava azul-marinho
    e o texto sumia): desligada — o hover agora é só zoom + luz verde atrás */
 .btn::before { display: none !important; }
+
+/* exemplo prático abaixo das etapas da Metodologia (substituiu "Dois resultados…", 19/11/2026) */
+.process__note { margin-top: 18px; padding: 14px 18px; border-left: 3px solid var(--g-mid, #18a057); border-radius: 0 12px 12px 0;
+  background: rgba(255, 255, 255, .6); font-size: .9rem; line-height: 1.5; color: #4f6078; }
+.process__note p + p { margin-top: 6px; }
+.process__note-q strong { color: #0b1a2e; font-size: .98rem; }
+/* computador: a seção travada precisa caber na tela com o exemplo embaixo das etapas —
+   etapas mais compactas e só a etapa ATIVA mostra a descrição (as outras ficam só com o título) */
+@media (min-width: 901px) {
+  .process__pin { padding: 84px 0 24px !important; }
+  .steps { margin-top: 22px !important; gap: 2px !important; }
+  .step { padding: 11px 18px !important; }
+  .step h3 { font-size: 1.18rem !important; }
+  .step:not(.is-active) p { display: none; }
+}
+@media (min-width: 901px) and (max-height: 820px) {
+  .process__text .section-title { font-size: clamp(2.2rem, 4.2vw, 3.2rem) !important; }
+  .process__note { font-size: .84rem; padding: 10px 14px; }
+}
