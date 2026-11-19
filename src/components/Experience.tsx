@@ -132,6 +132,50 @@ export default function Experience() {
         rt.set(track, { yPercent: 0 });
       }
 
+      /* ---------- FAIXAS ANIMADAS NO FUNDO (modelo 1, pedido do Victor, 19/11/2026) ----------
+         Três camadas por faixa, cada uma com um movimento, para não brigarem entre si:
+         .faixa (a rolagem: entra, atravessa, sai e troca de lugar ao longo da página inteira),
+         .faixa__pulso (o "tranco" quando uma seção nova chega) e .faixa__forma (a flutuação contínua). */
+      if (!reduce) {
+        const faixas = $$<HTMLElement>(".faixa");
+        const cel = window.innerWidth <= 760;
+        const k = cel ? 0.6 : 1; // no celular o percurso é menor
+        // aparece só depois do topo (lá já existem as setas originais)
+        gsap.fromTo(".faixas-fundo", { opacity: 0 }, { opacity: 1, ease: "none", scrollTrigger: { trigger: ".hero", start: "40% top", end: "bottom top", scrub: true } });
+        // percurso de cada faixa ao longo da página inteira: [x inicial, x final, y inicial, y final, giro, escala inicial, escala final]
+        const rotas: Array<[number, number, number, number, number, number, number]> = [
+          [70, -90, 10, -30, -8, 0.8, 1.3],
+          [-80, 60, 40, 0, 10, 1.2, 0.8],
+          [50, -40, -20, 40, 14, 1, 1.4],
+          [-60, 90, 20, -40, -12, 0.9, 1.2],
+          [90, -70, -30, 20, 6, 1.3, 0.9],
+          [-40, 50, 0, 30, -16, 0.8, 1.1],
+        ];
+        faixas.forEach((f, i) => {
+          const [x0, x1, y0, y1, rot, s0, s1] = rotas[i % rotas.length];
+          gsap.fromTo(f, { xPercent: x0 * k, yPercent: y0 * k, rotation: 0, scale: s0 },
+            { xPercent: x1 * k, yPercent: y1 * k, rotation: rot, scale: s1, ease: "none",
+              scrollTrigger: { trigger: document.body, start: "top top", end: "bottom bottom", scrub: 1.5 + i * 0.4 } });
+          // flutuação contínua, cada uma no seu ritmo
+          gsap.to(f.querySelector(".faixa__forma"), { yPercent: gsap.utils.random(-14, 14), xPercent: gsap.utils.random(-10, 10), rotation: gsap.utils.random(-5, 5),
+            duration: gsap.utils.random(4, 7), repeat: -1, yoyo: true, ease: "sine.inOut", delay: i * 0.3 });
+        });
+        // seção nova chegando: as faixas dão um tranco e trocam de lugar (o "doido" da animação)
+        const tranco = (dir: number) => {
+          faixas.forEach((f, i) => {
+            const pulso = f.querySelector(".faixa__pulso");
+            gsap.fromTo(pulso, { xPercent: 0, skewX: 0, scale: 1 },
+              { keyframes: [{ xPercent: (i % 2 ? 1 : -1) * dir * 35 * k, skewX: (i % 2 ? -8 : 8) * dir, scale: 1.12, duration: 0.45, ease: "power3.out" },
+                { xPercent: 0, skewX: 0, scale: 1, duration: 1.1, ease: "elastic.out(1, 0.5)" }],
+                delay: i * 0.05, overwrite: true });
+          });
+        };
+        $$("main > section").forEach((sec, i) => {
+          if (i === 0) return;
+          ScrollTrigger.create({ trigger: sec, start: "top 60%", onEnter: () => tranco(1), onEnterBack: () => tranco(-1) });
+        });
+      }
+
       /* ---------- Parallax do hero + chevrons da marca ---------- */
       if (!reduce) {
         gsap.from(".hero .chev", { x: 260, opacity: 0, duration: 1.6, ease: "expo.out", stagger: 0.12, delay: 2.6 });

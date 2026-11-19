@@ -251,6 +251,15 @@ export default function Home() {
           <Chevron className="chev chev--small" />
         </div>
       </div>
+      {/* Faixas diagonais da marca, animadas, no fundo da página inteira (pedido do Victor, 19/11/2026) */}
+      <div className="faixas-fundo" aria-hidden="true">
+        <div className="faixa faixa--1"><div className="faixa__pulso"><Chevron className="faixa__forma" /></div></div>
+        <div className="faixa faixa--2"><div className="faixa__pulso"><Chevron className="faixa__forma" /></div></div>
+        <div className="faixa faixa--3"><div className="faixa__pulso"><Chevron className="faixa__forma" /></div></div>
+        <div className="faixa faixa--4"><div className="faixa__pulso"><Chevron className="faixa__forma" /></div></div>
+        <div className="faixa faixa--5"><div className="faixa__pulso"><Chevron className="faixa__forma" /></div></div>
+        <div className="faixa faixa--6"><div className="faixa__pulso"><Chevron className="faixa__forma" /></div></div>
+      </div>
       <Hero3DLazy />
 
       <main id="top">
