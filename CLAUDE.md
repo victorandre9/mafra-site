@@ -81,7 +81,7 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   **Polar OS** (`public/cases/polar-os-card.webp`); **Aplicativos e produtos digitais** (2): Vo$ e iFluxo.
   Card final "A solução da sua empresa" fica fora dos grupos, em largura total. Tablet: 2 colunas (o 3º card empresarial
   ocupa a fileira); celular: 1. Vetra Sales é o nome de divulgação de um protótipo de vendas externas:
-  NUNCA ligá-lo a cliente nenhum no site; sem "Na sua empresa" até o Victor mandar o texto (não inventar).
+  NUNCA ligá-lo a cliente nenhum no site; "Na sua empresa" aprovado pelo Victor em 19/11/2026.
 - Botões verdes: flash claro passando da esquerda para a direita a cada 3 s (`verde-varre`).
 
 ## Pendências conhecidas
