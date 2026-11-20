@@ -265,6 +265,10 @@ export default function Home() {
       <main id="top">
         {/* HERO */}
         <section className="hero">
+          {/* ESBOÇO: vídeo do Runway em loop atrás do topo (rola junto com a seção, sem sumir de repente) */}
+          <div className="video-topo" aria-hidden="true">
+            <video src="/video/topo.mp4" poster="/video/topo-poster.jpg" autoPlay loop muted playsInline preload="auto" />
+          </div>
           <div className="container hero__content">
             <p className="pill reveal-up">Processos mais inteligentes. Equipes mais produtivas. Empresa mais lucrativa.</p>
             <h1 className="hero__title">
@@ -285,11 +289,29 @@ export default function Home() {
               Entendo a rotina da sua empresa, organizo os processos e desenvolvo o software de gestão que a sua
               equipe usa de verdade — no celular e no computador, integrado ao que você já tem.
             </p>
+            {/* botões e cartão "Fale com o Victor" na MESMA linha, centralizados entre si (pedido do Victor) */}
+            <div className="hero__linha">
             <div className="hero__ctas reveal-up">
-              <a href="#contato" className="btn magnetic" data-cursor="Vamos"><span>Conversar sobre o diagnóstico</span><i className="btn__arrow">→</i></a>
-              <a href="#metodo" className="btn btn--ghost magnetic" data-cursor="Ver"><span>Conhecer o método</span></a>
+                <a href="#contato" className="btn magnetic" data-cursor="Vamos"><span>Conversar sobre o diagnóstico</span><i className="btn__arrow">→</i></a>
+                <a href="#metodo" className="btn btn--ghost magnetic" data-cursor="Ver"><span>Conhecer o método</span></a>
+              </div>
+              <a className="io-card" href={LINK_WHATSAPP} target="_blank" rel="noopener noreferrer">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/sobre/victor-mafra.jpg?v=5" alt="Victor Mafra" width={80} height={96} />
+            <span className="io-card__txt">
+              <b>Fale com o Victor</b>
+              <small>MAFRA Consultoria &amp; Tecnologia</small>
+              <span className="io-card__btn">Agendar 15 min de conversa ›</span>
+            </span>
+          </a>
             </div>
           </div>
+          {/* esboço: lista de serviços (estilo mono com barra) e cartão de vidro "Fale com o Victor" */}
+          <ul className="io-servicos" aria-label="Serviços">
+            <li>/ Diagnóstico &amp; processos</li>
+            <li>/ Software de gestão sob medida</li>
+            <li>/ Integração com ERP</li>
+          </ul>
           <div className="hero__scroll">
             <span>role para conhecer</span>
             <div className="hero__mouse"><span /></div>
@@ -531,31 +553,32 @@ export default function Home() {
         </section>
 
         {/* CONTATO */}
-        <section className="contact" id="contato">
-          <div className="contact__glow" />
-          <Chevron className="chev chev--contact" />
-          <div className="container contact__inner">
-            <Eyebrow>Contato</Eyebrow>
-            <h2 className="contact__title">
-              <span className="line"><SplitChars text="Sua operação," /></span>
-              <span className="line"><SplitChars text="no próximo nível." charClassName="grad" /></span>
-            </h2>
-            <p className="contact__sub">Um toque e a conversa abre no WhatsApp, com a mensagem pronta. Conte como funciona sua rotina hoje e onde ela trava — respondo com os próximos passos para um diagnóstico.</p>
-            <div className="contact__actions">
-              <a href={LINK_WHATSAPP} target="_blank" rel="noopener noreferrer" className="btn btn--big btn--wa magnetic js-whatsapp" data-cursor="Abrir">
+        <section className="contact cta-vidro" id="contato">
+          <div className="cta-vidro__fundo" aria-hidden="true">
+            <Chevron className="cta-vidro__seta cta-vidro__seta--a" />
+            <Chevron className="cta-vidro__seta cta-vidro__seta--b" />
+            <Chevron className="cta-vidro__seta cta-vidro__seta--c" />
+          </div>
+          <div className="cta-vidro__fade cta-vidro__fade--top" aria-hidden="true" />
+          <div className="cta-vidro__fade cta-vidro__fade--bot" aria-hidden="true" />
+          <div className="container cta-vidro__inner">
+            <span className="io-badge">Contato</span>
+            <h2 className="cta-vidro__titulo">Sua operação,<br /><em>no próximo nível.</em></h2>
+            <p className="cta-vidro__sub">Um toque e a conversa abre no WhatsApp, com a mensagem pronta. Conte como funciona sua rotina hoje e onde ela trava — respondo com os próximos passos para um diagnóstico.</p>
+            {/* três botões no mesmo formato, um abaixo do outro: WhatsApp (verde), Instagram e LinkedIn com as cores de antes */}
+            <div className="cta-vidro__botoes cta-vidro__botoes--coluna">
+              <a href={LINK_WHATSAPP} target="_blank" rel="noopener noreferrer" className="btn btn--big btn--wa js-whatsapp">
                 <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4a.5.5 0 0 0 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.2c0-.1-.2-.2-.4-.3Z" /></svg>
-                <span>Conversar no WhatsApp</span><i className="btn__arrow">→</i>
+                <span>Conversar no WhatsApp</span><i className="btn__arrow">↗</i>
               </a>
-              <div className="contact__social">
-                <a href={LINK_INSTAGRAM} target="_blank" rel="noopener noreferrer" className="btn btn--ig magnetic" data-cursor="↗">
-                  <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M12 7.3A4.7 4.7 0 1 0 16.7 12 4.7 4.7 0 0 0 12 7.3Zm0 7.7a3 3 0 1 1 3-3 3 3 0 0 1-3 3Zm6-7.9a1.1 1.1 0 1 1-1.1-1.1A1.1 1.1 0 0 1 18 7.1ZM21.1 8.2a5.4 5.4 0 0 0-1.5-3.8 5.4 5.4 0 0 0-3.8-1.5C14.3 2.8 9.7 2.8 8.2 2.9a5.4 5.4 0 0 0-3.8 1.5 5.4 5.4 0 0 0-1.5 3.8c-.1 1.5-.1 6.1 0 7.6a5.4 5.4 0 0 0 1.5 3.8 5.4 5.4 0 0 0 3.8 1.5c1.5.1 6.1.1 7.6 0a5.4 5.4 0 0 0 3.8-1.5 5.4 5.4 0 0 0 1.5-3.8c.1-1.5.1-6.1 0-7.6Zm-2 9.3a3 3 0 0 1-1.7 1.7c-1.2.5-4 .4-5.4.4s-4.2.1-5.4-.4a3 3 0 0 1-1.7-1.7c-.5-1.2-.4-4-.4-5.4s-.1-4.2.4-5.4a3 3 0 0 1 1.7-1.7c1.2-.5 4-.4 5.4-.4s4.2-.1 5.4.4a3 3 0 0 1 1.7 1.7c.5 1.2.4 4 .4 5.4s.1 4.2-.4 5.4Z" /></svg>
-                  <span>Instagram</span>
-                </a>
-                <a href={LINK_LINKEDIN} target="_blank" rel="noopener noreferrer" className="btn btn--in magnetic" data-cursor="↗">
-                  <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M20.4 2H3.6A1.6 1.6 0 0 0 2 3.6v16.8A1.6 1.6 0 0 0 3.6 22h16.8a1.6 1.6 0 0 0 1.6-1.6V3.6A1.6 1.6 0 0 0 20.4 2ZM8 19H5V9.5h3Zm-1.5-10.8a1.7 1.7 0 1 1 1.7-1.7 1.7 1.7 0 0 1-1.7 1.7ZM19 19h-3v-4.6c0-1.1 0-2.5-1.5-2.5S12.8 13 12.8 14.3V19h-3V9.5h2.8v1.3a3.1 3.1 0 0 1 2.8-1.5c3 0 3.6 2 3.6 4.6Z" /></svg>
-                  <span>LinkedIn</span>
-                </a>
-              </div>
+              <a href={LINK_INSTAGRAM} target="_blank" rel="noopener noreferrer" className="btn btn--big btn--ig">
+                <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M12 7.3A4.7 4.7 0 1 0 16.7 12 4.7 4.7 0 0 0 12 7.3Zm0 7.7a3 3 0 1 1 3-3 3 3 0 0 1-3 3Zm6-7.9a1.1 1.1 0 1 1-1.1-1.1A1.1 1.1 0 0 1 18 7.1ZM21.1 8.2a5.4 5.4 0 0 0-1.5-3.8 5.4 5.4 0 0 0-3.8-1.5C14.3 2.8 9.7 2.8 8.2 2.9a5.4 5.4 0 0 0-3.8 1.5 5.4 5.4 0 0 0-1.5 3.8c-.1 1.5-.1 6.1 0 7.6a5.4 5.4 0 0 0 1.5 3.8 5.4 5.4 0 0 0 3.8 1.5c1.5.1 6.1.1 7.6 0a5.4 5.4 0 0 0 3.8-1.5 5.4 5.4 0 0 0 1.5-3.8c.1-1.5.1-6.1 0-7.6Zm-2 9.3a3 3 0 0 1-1.7 1.7c-1.2.5-4 .4-5.4.4s-4.2.1-5.4-.4a3 3 0 0 1-1.7-1.7c-.5-1.2-.4-4-.4-5.4s-.1-4.2.4-5.4a3 3 0 0 1 1.7-1.7c1.2-.5 4-.4 5.4-.4s4.2-.1 5.4.4a3 3 0 0 1 1.7 1.7c.5 1.2.4 4 .4 5.4s.1 4.2-.4 5.4Z" /></svg>
+                <span>Instagram</span><i className="btn__arrow">↗</i>
+              </a>
+              <a href={LINK_LINKEDIN} target="_blank" rel="noopener noreferrer" className="btn btn--big btn--in">
+                <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M20.4 2H3.6A1.6 1.6 0 0 0 2 3.6v16.8A1.6 1.6 0 0 0 3.6 22h16.8a1.6 1.6 0 0 0 1.6-1.6V3.6A1.6 1.6 0 0 0 20.4 2ZM8 19H5V9.5h3Zm-1.5-10.8a1.7 1.7 0 1 1 1.7-1.7 1.7 1.7 0 0 1-1.7 1.7ZM19 19h-3v-4.6c0-1.1 0-2.5-1.5-2.5S12.8 13 12.8 14.3V19h-3V9.5h2.8v1.3a3.1 3.1 0 0 1 2.8-1.5c3 0 3.6 2 3.6 4.6Z" /></svg>
+                <span>LinkedIn</span><i className="btn__arrow">↗</i>
+              </a>
             </div>
           </div>
         </section>
