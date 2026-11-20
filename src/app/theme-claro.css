@@ -484,7 +484,7 @@ body::before {
 .contact__social { display: grid !important; grid-template-columns: 1fr 1fr; gap: 14px !important; }
 .contact__social .btn { justify-content: center; width: 100%; }
 @media (max-width: 760px) { .contact__actions { display: grid !important; width: 100%; } }
-.contact__social .btn.btn--ig {
+.contact__social .btn.btn--ig, .cta-vidro__botoes .btn.btn--ig {
   background:
     radial-gradient(120% 70% at 50% -25%, rgba(255, 255, 255, .42), rgba(255, 255, 255, 0) 58%),
     linear-gradient(115deg, rgba(254, 218, 117, .62), rgba(250, 126, 30, .62) 25%, rgba(214, 41, 118, .7) 55%, rgba(150, 47, 191, .72) 80%, rgba(79, 91, 213, .72)) !important;
@@ -493,7 +493,7 @@ body::before {
   box-shadow: inset 0 1px 0 rgba(255, 236, 246, .95), inset 0 0 0 1px rgba(255, 160, 210, .5), inset 0 -2px 0 rgba(110, 20, 80, .55),
     inset 0 10px 18px -10px rgba(255, 255, 255, .5), 0 0 0 1px rgba(150, 40, 110, .3), 0 14px 30px -12px rgba(190, 40, 120, .45) !important;
 }
-.contact__social .btn.btn--in {
+.contact__social .btn.btn--in, .cta-vidro__botoes .btn.btn--in {
   background:
     radial-gradient(120% 70% at 50% -25%, rgba(255, 255, 255, .42), rgba(255, 255, 255, 0) 58%),
     linear-gradient(180deg, rgba(56, 145, 230, .58), rgba(10, 102, 194, .7) 50%, rgba(6, 64, 130, .82)) !important;
@@ -959,11 +959,109 @@ body.em-voo .drone-layer { z-index: 95; } /* durante o voo, o robô fica acima d
 /* tela travada do celular 3D (Metodologia): só duas setas, longe do celular e do texto */
 body.na-metodologia .faixa:not(.faixa--1):not(.faixa--6) { opacity: 0 !important; }
 @media (prefers-reduced-motion: reduce) { .faixas-fundo { opacity: .6 !important; } }
-/* Metodologia (tela travada com o celular 3D): as 2 setas ficam na coluna livre à direita, fora do celular,
-   do texto e dos balões (pedido do Victor: "atrás do celular fica confuso"). No celular (aparelho) não sobra espaço: somem. */
-@media (min-width: 761px) {
-  /* coluna livre à direita do celular, acima do balão de baixo (embaixo não cabe em monitor menor) */
-  body.na-metodologia .faixa--1 { top: 13vh; right: 1vw; height: 17vh; }
-  body.na-metodologia .faixa--6 { top: 35vh; bottom: auto; left: auto; right: 1vw; height: 17vh; }
+
+/* ===================== Topo com vídeo + Contato escuro (prompts Intelligent Operations + Liquid Glass CTA, 20/11/2026) ===================== */
+/* lista de serviços: mono, maiúscula, barra na frente */
+.io-servicos { position: absolute; top: 150px; right: var(--gutter); z-index: 3; list-style: none; text-align: right;
+  display: grid; gap: 8px; font: 500 .72rem/1 var(--font-mono); letter-spacing: .15em; text-transform: uppercase; color: #0b1a2e; }
+/* cartão de vidro "Fale com o Victor" */
+.io-card { position: absolute; right: var(--gutter); bottom: 64px; z-index: 3; display: flex; align-items: center; gap: 14px;
+  padding: 10px 16px 10px 10px; border-radius: 16px; text-decoration: none; color: #0b1a2e;
+  background: rgba(255, 255, 255, .45); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, .7); box-shadow: 0 18px 40px -18px rgba(1, 24, 52, .45), inset 0 1px 0 #fff; transition: scale .3s ease; }
+.io-card:hover { scale: 1.03; }
+.io-card img { width: 80px; height: 96px; border-radius: 10px; object-fit: cover; object-position: 50% 25%; }
+.io-card__txt { display: grid; gap: 5px; }
+.io-card__txt b { font: 600 .95rem var(--font-display); }
+.io-card__txt small { font: 500 .62rem var(--font-mono); letter-spacing: .14em; text-transform: uppercase; color: #4f6078; }
+.io-card__btn { margin-top: 4px; justify-self: start; padding: 7px 14px; border-radius: 999px; background: #011834; color: #fff; font: 600 .72rem var(--font-body); }
+@media (max-width: 900px) { .io-servicos { display: none; } .io-card { position: relative; right: auto; bottom: auto; margin: 22px auto 0; } .hero { flex-direction: column; justify-content: center; } }
+
+/* selo com barra à esquerda (left-accent badge) */
+.io-badge { display: inline-block; padding: 6px 12px; border-left: 2px solid #fff; background: rgba(255, 255, 255, .14);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); font: 500 .7rem var(--font-mono); letter-spacing: .15em; text-transform: uppercase; color: #fff; }
+
+/* CONTATO em versão cinema: azul-marinho escuro, setas da marca se mexendo, emendas suaves no claro */
+.contact.cta-vidro { position: relative; overflow: hidden; background: radial-gradient(120% 90% at 50% 30%, #0b2a55, #011228 70%) !important;
+  padding: 170px 0 40px !important; text-align: center; color: #fff; }
+.cta-vidro__fundo { position: absolute; inset: 0; pointer-events: none; }
+.cta-vidro__seta { position: absolute; color: #1f5fa8; opacity: .35; animation: cta-flutua 9s ease-in-out infinite; }
+.cta-vidro__seta path { fill: currentColor; }
+.cta-vidro__seta--a { width: 26vw; height: 70%; right: -6vw; top: 10%; }
+.cta-vidro__seta--b { width: 12vw; height: 34%; left: 6vw; top: 18%; opacity: .25; animation-delay: -3s; }
+.cta-vidro__seta--c { width: 18vw; height: 50%; left: -5vw; bottom: 0; opacity: .2; animation-delay: -6s; }
+@keyframes cta-flutua { 50% { transform: translate(-14px, -18px); } }
+.cta-vidro__fade { position: absolute; left: 0; right: 0; height: 160px; pointer-events: none; z-index: 1; }
+.cta-vidro__fade--top { top: 0; background: linear-gradient(to bottom, #f3f6f9, rgba(243, 246, 249, 0)); }
+.cta-vidro__fade--bot { bottom: 0; height: 0; }
+.cta-vidro__inner { position: relative; z-index: 2; }
+.cta-vidro__titulo { margin: 22px auto 16px; max-width: 900px; font: 700 clamp(2.6rem, 6vw, 5rem)/1 var(--font-display); letter-spacing: -.03em; color: #fff; }
+.cta-vidro__titulo em { font-style: normal; background: linear-gradient(90deg, #8ec5ff, #ffffff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.cta-vidro__sub { max-width: 600px; margin: 0 auto 34px; color: rgba(255, 255, 255, .72); font-size: 1.02rem; line-height: 1.6; }
+.cta-vidro__botoes { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; align-items: center; }
+/* botão de vidro forte com contorno de luz (o "liquid glass" do prompt) */
+.vidro-forte { position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: 8px; padding: 16px 28px; border-radius: 999px;
+  color: #fff; text-decoration: none; font: 600 1rem var(--font-display); background: rgba(255, 255, 255, .04);
+  backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); box-shadow: 4px 4px 4px rgba(0, 0, 0, .05), inset 0 1px 1px rgba(255, 255, 255, .2);
+  transition: background .3s, scale .3s; }
+.vidro-forte::before { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.4px; pointer-events: none;
+  background: linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.2) 20%, transparent 40%, transparent 60%, rgba(255,255,255,.2) 80%, rgba(255,255,255,.55));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+.vidro-forte:hover { background: rgba(255, 255, 255, .1); scale: 1.05; }
+.cta-vidro__rodape { margin-top: 120px; padding-top: 24px; border-top: 1px solid rgba(255, 255, 255, .12);
+  display: flex; flex-wrap: wrap; gap: 14px; justify-content: space-between; align-items: center; font-size: .78rem; color: rgba(255, 255, 255, .45); }
+.cta-vidro__rodape nav { display: flex; gap: 22px; }
+.cta-vidro__rodape a { color: rgba(255, 255, 255, .45); text-decoration: none; } .cta-vidro__rodape a:hover { color: #fff; }
+@media (max-width: 760px) { .contact.cta-vidro { padding-top: 130px !important; } .cta-vidro__rodape { justify-content: center; text-align: center; } }
+
+/* ESBOÇO: vídeo em loop atrás do topo; véu claro à esquerda para o texto continuar legível */
+.video-topo { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.video-topo video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.video-topo::after { content: ""; position: absolute; inset: 0;
+  background: linear-gradient(90deg, rgba(243, 246, 249, .92) 0%, rgba(243, 246, 249, .7) 40%, rgba(243, 246, 249, 0) 72%),
+              linear-gradient(to bottom, rgba(243, 246, 249, 0) 70%, #f3f6f9 100%); }
+/* CELULAR: o vídeo vira uma faixa NÍTIDA no alto (sem véu por cima) e o texto desce para baixo dela */
+@media (max-width: 760px) {
+  .video-topo { inset: 0 0 auto 0; height: 48svh; }
+  .video-topo video { object-position: 55% 50%; }
+  .video-topo::after { background: linear-gradient(to bottom, rgba(243,246,249,0) 62%, #f3f6f9 100%); }
+  .hero { padding-top: calc(48svh - 40px) !important; }
 }
-@media (max-width: 760px) { body.na-metodologia .faixa { opacity: 0 !important; } }
+.hero .hero__content, .hero .io-servicos, .hero .io-card { position: relative; z-index: 2; }
+.hero .io-servicos, .hero .io-card { position: absolute; }
+@media (max-width: 900px) { .hero .io-card { position: relative; } }
+/* com o vídeo na tela, a malha de pontos 3D e as setas do fundo somem (conflitavam com o vídeo) */
+.bg3d, .faixas-fundo { transition: visibility 0s, opacity .5s ease; }
+body.com-video .bg3d { visibility: hidden; }
+body.com-video .faixas-fundo { opacity: 0 !important; }
+/* no esboço, as setas e o brilho do topo saem para o vídeo aparecer */
+.hero-bg .hero__chevrons, .hero__glow { opacity: 0 !important; }
+/* puxar a tela além do topo (iPhone): sem "elástico" que deixava aparecer o fundo vazio acima do vídeo */
+html, body { overscroll-behavior-y: none; }
+/* iPhone: esconde o botão de play nativo (aparece quando o aparelho segura o play automático, ex. Modo de Pouca Energia);
+   o vídeo começa no primeiro toque e, até lá, fica a imagem do primeiro quadro */
+.video-topo video::-webkit-media-controls, .video-topo video::-webkit-media-controls-start-playback-button,
+.video-topo video::-webkit-media-controls-overlay-play-button, .video-topo video::-webkit-media-controls-panel { display: none !important; -webkit-appearance: none; opacity: 0 !important; }
+
+/* botões do topo + cartão "Fale com o Victor" numa linha, alinhados pelo centro (computador) e centralizados no celular */
+.hero__linha { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+.hero__linha .hero__ctas { margin: 0; }
+.hero .hero__linha .io-card { position: relative !important; right: auto; bottom: auto; margin: 0 0 0 auto; }
+@media (max-width: 900px) {
+  .hero__linha { flex-direction: column; align-items: center; gap: 22px; }
+  .hero__linha .hero__ctas { width: 100%; justify-content: center; align-items: center; flex-direction: column; }
+  .hero .hero__linha .io-card { margin: 0 auto; }
+}
+/* Contato: WhatsApp, Instagram e LinkedIn no MESMO formato, um abaixo do outro, mesma largura */
+.cta-vidro__botoes--coluna { flex-direction: column; align-items: center; gap: 14px; }
+.cta-vidro__botoes--coluna .btn { width: min(380px, 100%); justify-content: center; gap: 12px; }
+.cta-vidro__botoes--coluna .btn svg { width: 22px; height: 22px; flex: none; }
+/* Contato escuro: Instagram e LinkedIn com as cores OFICIAIS bem vivas (o vidro translúcido apagava sobre o azul-escuro) */
+.cta-vidro__botoes .btn.btn--ig {
+  background: radial-gradient(120% 70% at 50% -25%, rgba(255,255,255,.35), rgba(255,255,255,0) 58%),
+    linear-gradient(115deg, #feda75 0%, #fa7e1e 22%, #d62976 50%, #962fbf 76%, #4f5bd5 100%) !important;
+}
+.cta-vidro__botoes .btn.btn--in {
+  background: radial-gradient(120% 70% at 50% -25%, rgba(255,255,255,.3), rgba(255,255,255,0) 58%),
+    linear-gradient(180deg, #2c86e0, #0a66c2 55%, #0855a3) !important; color: #fff !important;
+}
