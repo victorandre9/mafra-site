@@ -94,7 +94,8 @@ export default function Experience() {
           .from(".reveal-up", { y: 40, opacity: 0, duration: 1, ease: "expo.out", stagger: 0.1 }, 0.4)
           .from(".header > *", { y: -60, opacity: 0, duration: 1, ease: "expo.out", stagger: 0.08 }, 0.3)
           .from(".hero__scroll", { opacity: 0, duration: 1 }, 1)
-          .add(() => droneSay("Oi! Toque em mim para um diagnóstico rápido 👋", 3.4, [".hero__sub", ".hero__ctas"]), 0.8);
+          // celular: a saudação aparece EM CIMA DO VÍDEO (faixa entre o cabeçalho e o selo); computador: como antes
+          .add(() => droneSay("Oi! Toque em mim para um diagnóstico rápido 👋", 3.4, window.innerWidth <= 760 ? [".header", ".hero .pill"] : [".hero__sub", ".hero__ctas"]), 0.8);
         ScrollTrigger.refresh();
       }
 
@@ -630,7 +631,10 @@ export default function Experience() {
         if (W <= 760) {
           // nasce na MESMA LINHA do botão verde, no espaço à direita dele (os dois botões têm a mesma
           // largura e deixam essa faixa livre); o balão de abertura fica acima, no vão entre texto e botões
-          const cta = $(".hero__ctas .btn:not(.btn--ghost)")?.getBoundingClientRect();
+          // nasce DENTRO da faixa do vídeo (entre o cabeçalho e o selo do topo), à direita (pedido do Victor, 20/11/2026)
+          const cab = $(".header")?.getBoundingClientRect(), selo = $(".hero .pill")?.getBoundingClientRect();
+          const cta = cab && selo && selo.top - cab.bottom > 140 ? null : $(".hero__ctas .btn:not(.btn--ghost)")?.getBoundingClientRect();
+          if (cab && selo && !cta) pts[0] = { x: W * 0.8, y: cab.bottom + (selo.top - cab.bottom) * 0.62 + window.scrollY };
           if (cta) {
             const yDoc = cta.top + window.scrollY; // posição com a página no topo
             const livreX = Math.max(cta.right + 10, W * 0.55);

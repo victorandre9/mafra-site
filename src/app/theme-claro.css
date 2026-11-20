@@ -1037,7 +1037,7 @@ body.com-video .faixas-fundo { opacity: 0 !important; }
 /* no esboço, as setas e o brilho do topo saem para o vídeo aparecer */
 .hero-bg .hero__chevrons, .hero__glow { opacity: 0 !important; }
 /* puxar a tela além do topo (iPhone): sem "elástico" que deixava aparecer o fundo vazio acima do vídeo */
-html, body { overscroll-behavior-y: none; }
+/* (o bloqueio do "elástico" saiu: ele também desligava o "puxar para atualizar" do iPhone — pedido do Victor) */
 /* iPhone: esconde o botão de play nativo (aparece quando o aparelho segura o play automático, ex. Modo de Pouca Energia);
    o vídeo começa no primeiro toque e, até lá, fica a imagem do primeiro quadro */
 .video-topo video::-webkit-media-controls, .video-topo video::-webkit-media-controls-start-playback-button,
