@@ -97,7 +97,7 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   na coluna livre à direita do celular (computador) e nenhuma no celular.
   Aparecem só depois do topo; suaves para não brigar com o texto.
 - Malha de pontos (`Background3D`): tem paradas também DENTRO dos Cases e nas Perguntas — sem elas parecia travada.
-- **Topo com VÍDEO** (20/11/2026, gerado no Runway Gen-4.5 pela API — chave salva no ambiente `mafra-site`):
+- **Topo com VÍDEO** (20/11/2026, gerado no Runway Gen-4.5 pela API e ampliado para 2K no Magnific (217 créditos); computador `topo-hd.mp4` 1080p, celular `topo.mp4` 720p — chave salva no ambiente `mafra-site`):
   `public/video/topo.mp4` em LOOP atrás do topo (mudo + play forçados pelo código; recarrega se o Safari congelar ao voltar do
   app; vigia a cada 1 s). Celular: faixa de vídeo NÍTIDA no alto e texto abaixo. Com o vídeo na tela, malha 3D e setas somem.
 - Topo: lista "/ Diagnóstico & processos…" e cartão de vidro **"Fale com o Victor"** (foto, abre o WhatsApp) na MESMA linha
