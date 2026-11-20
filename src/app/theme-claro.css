@@ -974,7 +974,7 @@ body.na-metodologia .faixa:not(.faixa--1):not(.faixa--6) { opacity: 0 !important
 .io-card__txt { display: grid; gap: 5px; }
 .io-card__txt b { font: 600 .95rem var(--font-display); }
 .io-card__txt small { font: 500 .62rem var(--font-mono); letter-spacing: .14em; text-transform: uppercase; color: #4f6078; }
-.io-card__btn { margin-top: 4px; justify-self: start; padding: 7px 14px; border-radius: 999px; background: #011834; color: #fff; font: 600 .72rem var(--font-body); }
+.io-card__btn { margin-top: 4px; justify-self: start; padding: 7px 14px; border-radius: 999px; background: #0c6b38; color: #fff; font: 600 .72rem var(--font-body); }
 @media (max-width: 900px) { .io-servicos { display: none; } .io-card { position: relative; right: auto; bottom: auto; margin: 22px auto 0; } .hero { flex-direction: column; justify-content: center; } }
 
 /* selo com barra à esquerda (left-accent badge) */
@@ -982,10 +982,10 @@ body.na-metodologia .faixa:not(.faixa--1):not(.faixa--6) { opacity: 0 !important
   backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); font: 500 .7rem var(--font-mono); letter-spacing: .15em; text-transform: uppercase; color: #fff; }
 
 /* CONTATO em versão cinema: azul-marinho escuro, setas da marca se mexendo, emendas suaves no claro */
-.contact.cta-vidro { position: relative; overflow: hidden; background: radial-gradient(120% 90% at 50% 30%, #0b2a55, #011228 70%) !important;
+.contact.cta-vidro { position: relative; overflow: hidden; background: radial-gradient(120% 90% at 50% 30%, #0b3a24, #03140c 70%) !important;
   padding: 170px 0 40px !important; text-align: center; color: #fff; }
 .cta-vidro__fundo { position: absolute; inset: 0; pointer-events: none; }
-.cta-vidro__seta { position: absolute; color: #1f5fa8; opacity: .35; animation: cta-flutua 9s ease-in-out infinite; }
+.cta-vidro__seta { position: absolute; color: #18a057; opacity: .35; animation: cta-flutua 9s ease-in-out infinite; }
 .cta-vidro__seta path { fill: currentColor; }
 .cta-vidro__seta--a { width: 26vw; height: 70%; right: -6vw; top: 10%; }
 .cta-vidro__seta--b { width: 12vw; height: 34%; left: 6vw; top: 18%; opacity: .25; animation-delay: -3s; }
@@ -996,7 +996,7 @@ body.na-metodologia .faixa:not(.faixa--1):not(.faixa--6) { opacity: 0 !important
 .cta-vidro__fade--bot { bottom: 0; height: 0; }
 .cta-vidro__inner { position: relative; z-index: 2; }
 .cta-vidro__titulo { margin: 22px auto 16px; max-width: 900px; font: 700 clamp(2.6rem, 6vw, 5rem)/1 var(--font-display); letter-spacing: -.03em; color: #fff; }
-.cta-vidro__titulo em { font-style: normal; background: linear-gradient(90deg, #8ec5ff, #ffffff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.cta-vidro__titulo em { font-style: normal; background: linear-gradient(90deg, #7fe3ad, #ffffff); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .cta-vidro__sub { max-width: 600px; margin: 0 auto 34px; color: rgba(255, 255, 255, .72); font-size: 1.02rem; line-height: 1.6; }
 .cta-vidro__botoes { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; align-items: center; }
 /* botão de vidro forte com contorno de luz (o "liquid glass" do prompt) */
