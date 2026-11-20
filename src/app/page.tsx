@@ -267,7 +267,11 @@ export default function Home() {
         <section className="hero">
           {/* ESBOÇO: vídeo do Runway em loop atrás do topo (rola junto com a seção, sem sumir de repente) */}
           <div className="video-topo" aria-hidden="true">
-            <video src="/video/topo.mp4" poster="/video/topo-poster.jpg" autoPlay loop muted playsInline preload="auto" />
+            {/* computador: versão HD (1920x1080, recomprimida do original do Runway); celular: a leve */}
+            <video poster="/video/topo-poster.jpg" autoPlay loop muted playsInline preload="auto">
+              <source src="/video/topo-hd.mp4" type="video/mp4" media="(min-width: 761px)" />
+              <source src="/video/topo.mp4" type="video/mp4" />
+            </video>
           </div>
           <div className="container hero__content">
             <p className="pill reveal-up">Processos mais inteligentes. Equipes mais produtivas. Empresa mais lucrativa.</p>
