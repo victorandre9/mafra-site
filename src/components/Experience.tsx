@@ -146,13 +146,14 @@ export default function Experience() {
           const forma = f.querySelector(".faixa__forma");
           gsap.timeline({ repeat: -1, delay: i * 1, repeatDelay: 0 })
             .fromTo(forma, { xPercent: fora, opacity: 0 }, { xPercent: 0, opacity: 1, duration: 1.2, ease: "expo.out" })
-            .to(forma, { yPercent: -8, duration: 1.65, ease: "sine.inOut", yoyo: true, repeat: 1 })
+            .to(forma, { yPercent: -5, duration: 1.65, ease: "sine.inOut", yoyo: true, repeat: 1 })
             .to(forma, { xPercent: fora, opacity: 0, duration: 1.5, ease: "power3.in" })
             .to({}, { duration: Math.max(0, CICLO - 6) });
-          // rolagem: só um deslize vertical suave (parallax), cada uma numa velocidade
-          gsap.fromTo(f, { yPercent: 20 + i * 4 }, { yPercent: -20 - i * 4, ease: "none",
-            scrollTrigger: { trigger: document.body, start: "top top", end: "bottom bottom", scrub: 1.2 } });
+          // (sem parallax: velocidades diferentes faziam uma seta entrar dentro da outra)
         });
+        // na tela travada da Metodologia (celular 3D) ficam só duas setas
+        ScrollTrigger.create({ trigger: ".process", start: "top 60%", end: "bottom 40%",
+          onToggle: (self) => document.body.classList.toggle("na-metodologia", self.isActive) });
       }
 
       /* ---------- Parallax do hero + chevrons da marca ---------- */

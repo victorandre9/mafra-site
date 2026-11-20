@@ -23,7 +23,14 @@ const STAGES: Stage[] = [
   { sel: ".process", d: [-0.52, -0.36, 0.45, 0.35], m: [-0.36, 0.44, 0.26, 0.3] },
   { sel: ".stats", d: [0.0, 0.0, 1.35, 0.35], m: [0.0, 0.0, 0.85, 0.3] },
   { sel: "#cases", d: [-0.42, 0.05, 0.62, 0.35], m: [-0.3, -0.36, 0.4, 0.3] },
+  // Cases ficou longo (5 apps em 2 grupos): paradas intermediárias, senão a malha andava tão devagar
+  // nesse trecho que parecia travada no alto (relato do Victor, 19/11/2026)
+  { sel: ".work__grupo--b2b .project:nth-child(2)", d: [0.4, 0.28, 0.5, 0.35], m: [0.3, 0.38, 0.32, 0.3] },
+  { sel: ".work__grupo--b2b .project:nth-child(3)", d: [-0.38, -0.25, 0.55, 0.35], m: [-0.3, -0.34, 0.36, 0.3] },
+  { sel: ".work__grupo--b2c", d: [0.42, 0.0, 0.7, 0.35], m: [0.28, 0.36, 0.4, 0.3] },
+  { sel: ".work__grupo--b2c .project:nth-child(2)", d: [-0.4, 0.22, 0.5, 0.35], m: [-0.28, -0.3, 0.34, 0.3] },
   { sel: "#sobre", d: [0.36, -0.05, 0.75, 0.35], m: [0.25, 0.33, 0.45, 0.3] },
+  { sel: "#perguntas", d: [-0.4, 0.1, 0.6, 0.35], m: [-0.25, -0.32, 0.38, 0.3] },
   { sel: ".contact", d: [0.3, 0.0, 1.05, 0.35], m: [0.05, 0.28, 0.6, 0.3] },
 ];
 
