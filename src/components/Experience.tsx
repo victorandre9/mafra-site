@@ -58,7 +58,10 @@ export default function Experience() {
           // 3 s no 1º tema, 4 s no 2º, 5 s no 3º… A animação mora junto do robô, mais abaixo.
           // vale no computador (menu do topo) e no celular (menu que abre no botão ☰) — pedido do Victor
           const iDesk = $$(".nav .nav__link").indexOf(a);
-          const iNav = iDesk >= 0 ? iDesk : $$(".mobile-menu a").indexOf(a);
+          let iNav = iDesk >= 0 ? iDesk : $$(".mobile-menu a").indexOf(a);
+          // botões do topo ("Conversar sobre o diagnóstico", "Conhecer o método"): mesmo voo do menu,
+          // com o tempo do tema de destino (Método 4 s, Contato 7 s)
+          if (iNav < 0 && a.closest(".hero__ctas")) iNav = $$(".nav .nav__link").findIndex((n) => n.getAttribute("href") === id);
           if (lenis && iNav >= 0 && typeof target !== "number") {
             window.dispatchEvent(new CustomEvent("mafra:voo", { detail: { alvo: target, dur: 3 + iNav } }));
             return;
@@ -131,6 +134,43 @@ export default function Experience() {
         }
         rt.set(track, { yPercent: 0 });
       }
+
+      /* ---------- ESBOÇO: vídeo em loop no topo ----------
+         Enquanto o topo está na tela, a malha de pontos e as setas do fundo saem (elas brigavam com o vídeo). */
+      // o React não grava `muted` no HTML, e sem "mudo" o navegador bloqueia o play automático:
+      // força mudo + play, e tenta de novo no primeiro toque/rolagem/clique
+      {
+        const v = $(".video-topo video") as HTMLVideoElement | null;
+        if (v) {
+          v.muted = true; v.defaultMuted = true; v.setAttribute("muted", ""); v.setAttribute("playsinline", "");
+          const tocar = () => { if (v.paused) v.play().catch(() => {}); };
+          tocar();
+          v.addEventListener("canplay", tocar, { once: true });
+          ["touchstart", "touchend", "click", "pointerdown", "scroll", "keydown"].forEach((ev) => window.addEventListener(ev, tocar, { passive: true }));
+          cleanups.push(() => ["touchstart", "touchend", "click", "pointerdown", "scroll", "keydown"].forEach((ev) => window.removeEventListener(ev, tocar)));
+          // volta a tocar SEMPRE: ao voltar para a aba/app (o Safari pausa ao sair), ao voltar ao topo,
+          // e um vigia a cada 2 s religa se o navegador tiver parado o vídeo sozinho
+          // Safari do iPhone: ao voltar de outro app o vídeo fica CONGELADO, mas `paused` continua false —
+          // então não basta "dar play se pausado". Recarrega e dá play de novo ao voltar, e o vigia mede se
+          // o tempo do vídeo está ANDANDO; parado por ~2 s com o topo na tela → recarrega.
+          const reiniciar = () => { const t = v.currentTime; v.load(); v.addEventListener("loadeddata", () => { try { v.currentTime = t; } catch { /* ok */ } v.play().catch(() => {}); }, { once: true }); };
+          const voltar = () => { if (document.visibilityState === "visible") { reiniciar(); setTimeout(tocar, 400); } };
+          document.addEventListener("visibilitychange", voltar);
+          window.addEventListener("pageshow", voltar);
+          window.addEventListener("focus", voltar);
+          let ultimoT = -1, parado = 0;
+          const vigia = setInterval(() => {
+            if (!document.body.classList.contains("com-video") || document.visibilityState !== "visible") return;
+            if (v.paused) { tocar(); return; }
+            if (Math.abs(v.currentTime - ultimoT) < 0.05) { if (++parado >= 2) { parado = 0; reiniciar(); } } else parado = 0;
+            ultimoT = v.currentTime;
+          }, 1000);
+          cleanups.push(() => { document.removeEventListener("visibilitychange", voltar); window.removeEventListener("pageshow", voltar); window.removeEventListener("focus", voltar); clearInterval(vigia); });
+        }
+      }
+      ScrollTrigger.create({ trigger: ".hero", start: "top bottom", end: "bottom 30%",
+        onToggle: (self) => { document.body.classList.toggle("com-video", self.isActive); if (self.isActive) ($(".video-topo video") as HTMLVideoElement | null)?.play().catch(() => {}); } });
+      document.body.classList.toggle("com-video", window.scrollY < window.innerHeight * 0.7);
 
       /* ---------- FAIXAS ANIMADAS NO FUNDO (modelo 1, pedido do Victor, 19/11/2026) ----------
          Refinado a pedido dele ("deitam e ficam em pé, esquisito"): sem giro, sem distorção, forma de
@@ -689,10 +729,10 @@ export default function Experience() {
       // da malha de pontos do fundo e do cabeçalho. Se o ponto da rota estiver ocupado, ela flutua até o
       // espaço vazio mais próximo; se não houver nenhum (comum no celular, onde o texto ocupa a largura
       // toda), ela fica onde está e fica translúcida enquanto o texto passa por baixo.
-      const avoidX = gsap.quickTo(layer, "x", { duration: 1.3, ease: "sine.inOut" });
-      const avoidY = gsap.quickTo(layer, "y", { duration: 1.3, ease: "sine.inOut" });
+      const avoidX = gsap.quickTo(layer, "x", { duration: 0.9, ease: "sine.inOut" });
+      const avoidY = gsap.quickTo(layer, "y", { duration: 0.9, ease: "sine.inOut" });
       const corpo = $(".drone__dodge");
-      const SEL_TEXTO = "main h1, main h2, main h3, main p, main li, main .btn, main .pill, main .eyebrow, main .step.is-active, main .stat, main .holo.is-on, main .card__icon, main .project__media, main .phone__frame, main .about__badge, .footer .logo, .footer p, .footer__links";
+      const SEL_TEXTO = "main h1, main h2, main h3, main p, main li, main .btn, main .pill, main .eyebrow, main .step.is-active, main .stat, main .holo.is-on, main .card__icon, main .project__media, main .phone__frame, main .about__badge, main .card, main .project, main .about__item, main .faq__item, main .io-card, main .io-servicos, main .vidro-forte, main .process__note, .footer .logo, .footer p, .footer__links";
       let obst: Element[] = [];
       const coletar = () => { obst = Array.from(document.querySelectorAll(SEL_TEXTO)); };
       coletar();
@@ -812,10 +852,18 @@ export default function Experience() {
         avoidX(tx); avoidY(ty);
         // só fica translúcida se o aperto durar (evita piscar)
         if (semSaida) { if (!apertoDesde) apertoDesde = agora; } else apertoDesde = 0;
-        const deveApagar = !isTouch && semSaida && agora > inicioVoo + 7000 && agora - apertoDesde > 450; // celular: sempre visível (pedido do Victor); computador: só se o aperto durar
+        // TRANSPARENTE QUANDO PRECISAR (pedido do Victor, 20/11/2026, computador E celular): mede onde o Orbe
+        // ESTÁ agora; se ele cobre texto, botão ou card (mais de 12%), fica bem translúcido até sair dali
+        let cobre = 0;
+        const ob = (orbEl ?? corpo).getBoundingClientRect();
+        for (const r of rs) {
+          const w = Math.min(ob.right, r.right) - Math.max(ob.left, r.left), h = Math.min(ob.bottom, r.bottom) - Math.max(ob.top, r.top);
+          if (w > 0 && h > 0) cobre += w * h;
+        }
+        const deveApagar = agora > inicioVoo + 4000 && cobre > ob.width * ob.height * 0.12;
         if (deveApagar !== apagado) {
           apagado = deveApagar;
-          gsap.to(corpo, { opacity: deveApagar ? 0.55 : 1, duration: deveApagar ? 0.3 : 0.6, overwrite: "auto" });
+          gsap.to(corpo, { opacity: deveApagar ? 0.28 : 1, duration: deveApagar ? 0.25 : 0.5, overwrite: "auto" });
         }
       };
       gsap.ticker.add(avoid);
