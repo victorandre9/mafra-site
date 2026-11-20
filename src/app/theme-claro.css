@@ -959,3 +959,11 @@ body.em-voo .drone-layer { z-index: 95; } /* durante o voo, o robô fica acima d
 /* tela travada do celular 3D (Metodologia): só duas setas, longe do celular e do texto */
 body.na-metodologia .faixa:not(.faixa--1):not(.faixa--6) { opacity: 0 !important; }
 @media (prefers-reduced-motion: reduce) { .faixas-fundo { opacity: .6 !important; } }
+/* Metodologia (tela travada com o celular 3D): as 2 setas ficam na coluna livre à direita, fora do celular,
+   do texto e dos balões (pedido do Victor: "atrás do celular fica confuso"). No celular (aparelho) não sobra espaço: somem. */
+@media (min-width: 761px) {
+  /* coluna livre à direita do celular, acima do balão de baixo (embaixo não cabe em monitor menor) */
+  body.na-metodologia .faixa--1 { top: 13vh; right: 1vw; height: 17vh; }
+  body.na-metodologia .faixa--6 { top: 35vh; bottom: auto; left: auto; right: 1vw; height: 17vh; }
+}
+@media (max-width: 760px) { body.na-metodologia .faixa { opacity: 0 !important; } }
