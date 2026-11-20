@@ -93,7 +93,8 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
 - **Fundo animado** (modelo 1, 19/11/2026): 6 faixas diagonais da marca (`.faixas-fundo`, mesma forma do
   `Chevron` do topo), fixas atrás do conteúdo. Refinadas: seta própria mais LARGA, proporção fixa (vmin), SEM giro; cada uma
   entra pela lateral, flutua e sai (ciclo de 6 s, uma entrando a cada ~1 s). VAGAS FIXAS que não se cruzam
-  (3 à direita, 3 à esquerda, alturas separadas), sem parallax; na Metodologia (`body.na-metodologia`) ficam só 2.
+  (3 à direita, 3 à esquerda, alturas separadas), sem parallax; na Metodologia (`body.na-metodologia`, ligado no PRÓPRIO gatilho que trava a tela) ficam só 2,
+  na coluna livre à direita do celular (computador) e nenhuma no celular.
   Aparecem só depois do topo; suaves para não brigar com o texto.
 - Malha de pontos (`Background3D`): tem paradas também DENTRO dos Cases e nas Perguntas — sem elas parecia travada.
 - Botões verdes: flash claro passando da esquerda para a direita a cada 3 s (`verde-varre`).

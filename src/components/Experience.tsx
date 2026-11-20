@@ -151,9 +151,6 @@ export default function Experience() {
             .to({}, { duration: Math.max(0, CICLO - 6) });
           // (sem parallax: velocidades diferentes faziam uma seta entrar dentro da outra)
         });
-        // na tela travada da Metodologia (celular 3D) ficam só duas setas
-        ScrollTrigger.create({ trigger: ".process", start: "top 60%", end: "bottom 40%",
-          onToggle: (self) => document.body.classList.toggle("na-metodologia", self.isActive) });
       }
 
       /* ---------- Parallax do hero + chevrons da marca ---------- */
@@ -301,6 +298,9 @@ export default function Experience() {
         .timeline({
           scrollTrigger: {
             trigger: ".process", pin: ".process__pin", start: "top top", end: () => (window.innerWidth <= 900 ? "+=160%" : "+=240%"), scrub: 1,
+            // na tela travada da Metodologia ficam só 2 setas do fundo (classe lida no CSS). Fica AQUI, no próprio
+            // gatilho que trava a tela: um gatilho separado era calculado antes da trava e desligava cedo demais
+            onToggle: (self) => document.body.classList.toggle("na-metodologia", self.isActive),
             onUpdate: (self) => {
               setStep(Math.min(3, Math.floor(self.progress * 4)));
               posHolosRef();
