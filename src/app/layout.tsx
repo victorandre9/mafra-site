@@ -22,13 +22,13 @@ export const metadata: Metadata = {
     locale: "pt_BR",
     siteName: "MAFRA Consultoria & Tecnologia",
     url: "/",
-    images: [{ url: "/og-image.jpg?v=2", width: 1200, height: 630, alt: "MAFRA Consultoria & Tecnologia — Transformo processos em resultados que movem." }],
+    images: [{ url: "/og-image.jpg?v=3", width: 1200, height: 630, alt: "MAFRA Consultoria & Tecnologia — Transformo processos em resultados que movem." }],
   },
   twitter: {
     card: "summary_large_image",
     title: "MAFRA Consultoria & Tecnologia",
     description: "Processos mais inteligentes. Equipes mais produtivas. Empresa mais lucrativa.",
-    images: ["/og-image.jpg?v=2"],
+    images: ["/og-image.jpg?v=3"],
   },
 };
 
