@@ -991,7 +991,7 @@ body.na-metodologia .faixa:not(.faixa--1):not(.faixa--6) { opacity: 0 !important
 .cta-vidro__seta--b { width: 12vw; height: 34%; left: 6vw; top: 18%; opacity: .25; animation-delay: -3s; }
 .cta-vidro__seta--c { width: 18vw; height: 50%; left: -5vw; bottom: 0; opacity: .2; animation-delay: -6s; }
 @keyframes cta-flutua { 50% { transform: translate(-14px, -18px); } }
-.cta-vidro__fade { position: absolute; left: 0; right: 0; height: 160px; pointer-events: none; z-index: 1; }
+.cta-vidro__fade { position: absolute; left: 0; right: 0; height: 36px; pointer-events: none; z-index: 1; }
 .cta-vidro__fade--top { top: 0; background: linear-gradient(to bottom, #f3f6f9, rgba(243, 246, 249, 0)); }
 .cta-vidro__fade--bot { bottom: 0; height: 0; }
 .cta-vidro__inner { position: relative; z-index: 2; }
@@ -1104,3 +1104,43 @@ body.com-video .bg3d { opacity: 0; }
 
 /* balão compacto da saudação "Clique aqui!" */
 .drone__bubble.drone__bubble--curta { font-size: .66rem; padding: 5px 9px; white-space: pre-line; text-align: center; line-height: 1.25; }
+
+/* ===== SITE EM BLOCOS: claro / AZUL (pedido do Victor, 21/11/2026) =====
+   Mesmo azul do Contato. Sequência: topo (claro) · faixa + manifesto (azul) · serviços (claro) ·
+   metodologia + números (azul) · cases (claro) · sobre (azul) · perguntas (claro) · contato (azul).
+   O fundo azul ocupa a LARGURA TODA da tela (mesmo nas seções com .container); a faixa clara de
+   transição fica só no comecinho de cada bloco. */
+section.bloco-azul { position: relative; isolation: isolate; }
+section.bloco-azul::before { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 100vw; transform: translateX(-50%);
+  z-index: -1; pointer-events: none;
+  background: radial-gradient(120% 90% at 50% 30%, #0b2a55, #011228 70%); }
+section.bloco-azul--abre::after { content: ""; position: absolute; top: 0; left: 50%; width: 100vw; height: 36px; transform: translateX(-50%);
+  z-index: -1; pointer-events: none; background: linear-gradient(to bottom, #f3f6f9, rgba(243, 246, 249, 0)); }
+/* blocos azuis colados (faixa + manifesto, metodologia + números): sem espaço claro entre eles */
+section.marquee.bloco-azul { margin-block: 0 !important; padding-block: 64px 28px; }
+section.manifesto.bloco-azul { margin-top: 0; padding-block: 60px 110px; }
+section.stats.bloco-azul { margin-top: 0; padding-block: 40px 110px; }
+section.about.bloco-azul { padding-block: 110px; }
+@media (max-width: 760px) {
+  section.marquee.bloco-azul { padding-block: 48px 20px; }
+  section.manifesto.bloco-azul { padding-block: 40px 80px; }
+  section.stats.bloco-azul { padding-block: 28px 80px; }
+  section.about.bloco-azul { padding-block: 80px; }
+}
+/* textos sobre o azul */
+.bloco-azul .section-title, .bloco-azul h2 { color: #fff !important; }
+.bloco-azul .grad, .bloco-azul .manifesto__text em { background: linear-gradient(90deg, #8ec5ff, #ffffff) !important;
+  -webkit-background-clip: text !important; background-clip: text !important; color: transparent !important; }
+.bloco-azul .eyebrow { color: #8ec5ff !important; }
+.bloco-azul .manifesto__text { color: #fff; }
+.bloco-azul .about__lead, .bloco-azul .about__head p { color: rgba(255, 255, 255, .76) !important; }
+.bloco-azul .about__ring text { fill: rgba(255, 255, 255, .7) !important; }
+/* metodologia: etapas apagadas em branco; a ativa continua no cartão branco */
+.bloco-azul .step:not(.is-active) h3 { color: #fff !important; }
+.bloco-azul .step:not(.is-active) p { color: rgba(255, 255, 255, .7) !important; }
+.bloco-azul .step:not(.is-active) .step__n { color: #8ec5ff !important; }
+.bloco-azul .process__note p { color: rgba(255, 255, 255, .76) !important; }
+.bloco-azul .process__note-q strong { color: #fff !important; }
+.bloco-azul .process__bar { background: rgba(255, 255, 255, .15); }
+.bloco-azul .stat { background: #fff !important; backdrop-filter: none; }
+.bloco-azul .process__note { background: rgba(255, 255, 255, .07) !important; }
