@@ -331,7 +331,7 @@ export default function Home() {
         </section>
 
         {/* MARQUEE */}
-        <section className="marquee" aria-label="O que eu digitalizo">
+        <section className="marquee bloco-azul bloco-azul--abre" aria-label="O que eu digitalizo">
           <div className="marquee__track">
             {[0, 1].map((g) => (
               <div key={g} className="marquee__group" aria-hidden={g === 1}>
@@ -346,7 +346,7 @@ export default function Home() {
         </section>
 
         {/* MANIFESTO */}
-        <section className="manifesto container">
+        <section className="manifesto container bloco-azul">
           <p className="manifesto__text">
             <SplitWords text="Sistema bom não é o mais bonito. É o que" />{" "}
             <em><SplitWords text="nasce da rotina real," /></em>{" "}
@@ -388,7 +388,7 @@ export default function Home() {
         </section>
 
         {/* MÉTODO (celular 3D pinado) */}
-        <section className="process" id="metodo">
+        <section className="process bloco-azul bloco-azul--abre" id="metodo">
           <div className="process__pin">
             <div className="container process__grid">
               <div className="process__text">
@@ -420,7 +420,7 @@ export default function Home() {
         </section>
 
         {/* NÚMEROS */}
-        <section className="stats container">
+        <section className="stats container bloco-azul">
           {STATS.map((s) => (
             <div key={s.label} className="stat">
               <span className="stat__line" aria-hidden="true" />
@@ -514,7 +514,7 @@ export default function Home() {
         </section>
 
         {/* SOBRE */}
-        <section className="about container" id="sobre">
+        <section className="about container bloco-azul bloco-azul--abre" id="sobre">
           <div className="about__head">
             <div className="about__badge">
               <svg className="about__ring" viewBox="0 0 200 200" aria-hidden="true">
