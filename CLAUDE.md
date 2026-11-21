@@ -107,9 +107,13 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
 - Robô: obstáculos incluem CARDS inteiros; cobrindo texto/botão/card > 12% fica translúcido (0,28) no computador e no celular.
 - **Abertura com a logo** (21/11/2026): fundo azul-marinho, logo ORIGINAL entra girando, dois anéis de luz giram em volta,
   brilho atravessa a logo, aura pulsa; na saída a logo cresce e some (`.preloader__orbita`, ~2 s).
-- Robô no celular nasce na PARTE BRANCA, abaixo do vídeo e do selo, no canto direito (1º vão livre medido pelo layout; sem vão, cai no vídeo); fica parado ali até a 1ª rolagem. Saudação "Clique aqui! 👆" em balão compacto de 2 linhas, só se couber sem cobrir texto.
+- Robô no celular nasce na PARTE BRANCA, EM FRENTE à palavra "movem" (centro da última linha do título, canto direito; vão livre medido pelo layout; sem vão, cai no vídeo); fica parado ali até a 1ª rolagem. Saudação "Clique aqui! 👆" em balão compacto de 2 linhas, só se couber sem cobrir texto.
 - iPhone em economia de bateria (vídeo bloqueado): esconde o vídeo e o botão de play, fica a imagem parada (`.video-bloqueado`).
 - Malha de pontos/setas: somem só com o topo quase inteiro na tela (`com-video` termina em `bottom 85%`); o vídeo usa `video-na-tela`.
+- **Site em BLOCOS claro/azul** (21/11/2026, `section.bloco-azul`, mesmo azul do Contato, largura total):
+  topo (claro) · faixa + manifesto (azul) · serviços (claro) · metodologia + números (azul) · cases (claro) · sobre (azul) ·
+  perguntas (claro) · contato (azul). Faixa clara de transição CURTA (36px) só no começo de cada bloco (`bloco-azul--abre`);
+  o Contato também (antes 160px, "efeito branco muito forte").
 - Botões verdes: flash claro passando da esquerda para a direita a cada 3 s (`verde-varre`).
 
 ## Pendências conhecidas

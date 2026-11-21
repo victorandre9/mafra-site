@@ -669,7 +669,20 @@ export default function Experience() {
             const obs = [seloEl, ...$$(".hero__title .char, .hero__title .rotator, .hero p, .hero .btn, .hero .io-card")].map((e) => doc(e as HTMLElement));
             const baseSelo = doc(seloEl).b;
             let y = -1;
-            for (let yy = baseSelo + hh + 6; yy < baseSelo + 700; yy += 4) {
+            // preferência (pedido do Victor, 21/11/2026): EM FRENTE à palavra "movem" — centro da última linha do título;
+            // procura o vão livre mais perto dessa altura (para cima e para baixo) antes da busca geral
+            const linhas = $$(".hero__title .line") as HTMLElement[];
+            const ult = linhas.length ? doc(linhas[linhas.length - 1]) : null;
+            if (ult) {
+              const y0 = (ult.t + ult.b) / 2;
+              for (let d = 0; d <= 60 && y < 0; d += 4) {
+                for (const yy of d ? [y0 - d, y0 + d] : [y0]) {
+                  if (yy - hh < baseSelo) continue;
+                  if (!obs.some((q) => x + hw > q.l && x - hw < q.r && yy + hh > q.t && yy - hh < q.b)) { y = yy; break; }
+                }
+              }
+            }
+            for (let yy = baseSelo + hh + 6; y < 0 && yy < baseSelo + 700; yy += 4) {
               const bate = obs.some((q) => x + hw > q.l && x - hw < q.r && yy + hh > q.t && yy - hh < q.b);
               if (!bate) { y = yy; break; }
             }
