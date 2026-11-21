@@ -64,7 +64,8 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
 - Nunca em cima do texto nem do **celular 3D** (seção "Metodologia de trabalho", a que trava a tela).
   O esconderijo é guardado em coordenada de TELA; sem lugar 100% livre, ele vai para o ponto que menos
   cobre texto, com o celular pesando 4x (`custo` em `Experience.tsx`).
-  Enquanto o celular 3D está na tela, o Orbe fica numa VAGA FIXA na lateral dele (lado escolhido na entrada, não troca).
+  Enquanto o celular 3D está na tela, o Orbe ESTACIONA ABAIXO DO CELULAR (21/11/2026, um pouco à esquerda do centro, balões
+  abrem ao lado dele; o balão também desvia do celular). Sem espaço embaixo (tela baixa), volta para a VAGA FIXA na lateral.
 - O Orbe NUNCA sai da tela (trava `travar`, a cada quadro).
 - Selo do topo ("Processos mais inteligentes…"): card com a COR DOS BALÕES do robô (vidro verde), letra branca, cantos de 12px, texto centralizado (`.hero .pill`).
 
