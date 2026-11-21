@@ -1229,9 +1229,19 @@ section.marquee { margin-block: 56px 64px !important; }
   .footer { padding-top: 24px !important; }
 }
 
-/* TESTE vídeo na rolagem: no celular a faixa do vídeo ocupa MAIS da tela (48 → 62% da altura) */
-@media (max-width: 760px) {
-  .video-topo { height: 62svh !important; }
-  .hero { padding-top: calc(62svh - 40px) !important; }
-}
+/* TESTE (pedido do Victor, 21/11/2026): a PRIMEIRA TELA INTEIRA é o vídeo, FIXO no fundo; todo o texto vem DEPOIS
+   e sobe por cima dele como uma cortina clara. O recorte do .hero (clip-path) faz o vídeo fixo sumir quando o topo acaba. */
+.hero { padding-top: calc(100svh + 40px) !important; clip-path: inset(0); }
+.video-topo { position: fixed !important; inset: 0 !important; height: 100svh !important; width: 100% !important; }
+.video-topo::after { background: linear-gradient(to bottom, rgba(1, 24, 52, .18), transparent 30%, transparent 75%, rgba(1, 24, 52, .25)) !important; }
+.hero::before { content: ""; position: absolute; left: 0; right: 0; top: 100svh; bottom: 0; z-index: 1; pointer-events: none;
+  background: #f3f6f9; border-radius: 28px 28px 0 0; box-shadow: 0 -24px 60px rgba(1, 24, 52, .28); }
+.hero .io-servicos { top: calc(100svh + 70px) !important; }
+@media (max-width: 760px) { .video-topo video { object-position: 55% 50%; } }
+/* aviso para rolar, no pé do vídeo */
+.video-topo .rolar-aviso { position: absolute; left: 50%; bottom: 28px; transform: translateX(-50%); z-index: 2; color: #fff;
+  font: 600 .8rem var(--font-mono); letter-spacing: .2em; text-transform: uppercase; text-shadow: 0 2px 10px rgba(0,0,0,.45);
+  display: flex; flex-direction: column; align-items: center; gap: 8px; animation: rolar-pulo 1.8s ease-in-out infinite; }
+.video-topo .rolar-aviso::after { content: ""; width: 2px; height: 26px; background: linear-gradient(#fff, transparent); }
+@keyframes rolar-pulo { 50% { transform: translate(-50%, 6px); } }
 .video-topo video { will-change: transform; }

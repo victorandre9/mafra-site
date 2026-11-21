@@ -281,6 +281,7 @@ export default function Home() {
               <source src="/video/topo-hd-r.mp4?v=1" type="video/mp4" media="(min-width: 761px)" />
               <source src="/video/topo-r.mp4?v=1" type="video/mp4" />
             </video>
+            <span className="rolar-aviso">Role para baixo</span>
           </div>
           <div className="container hero__content">
             <p className="pill reveal-up">Processos mais inteligentes. Equipes mais produtivas. Empresa mais lucrativa.</p>
