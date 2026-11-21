@@ -1145,44 +1145,26 @@ section.about.bloco-azul { padding-block: 110px; }
 .bloco-azul .stat { background: #fff !important; backdrop-filter: none; }
 .bloco-azul .process__note { background: rgba(255, 255, 255, .07) !important; }
 
-/* ===== CARDS EM VIDRO TECNOLÓGICO (pedido do Victor, 21/11/2026) =====
-   Exclusivo dos cards (diferente dos botões): vidro translúcido, borda fina de luz, CANTONEIRAS de luz nos 4 cantos
-   e uma grade tecnológica bem suave. Nos blocos azuis o vidro é escuro (texto branco); nos claros, vidro fosco claro. */
-:root {
-  --cant-c: #4f9bdc;
-  --cantoneiras:
-    linear-gradient(var(--cant-c), var(--cant-c)) left 12px top 12px / 18px 2px no-repeat,
-    linear-gradient(var(--cant-c), var(--cant-c)) left 12px top 12px / 2px 18px no-repeat,
-    linear-gradient(var(--cant-c), var(--cant-c)) right 12px top 12px / 18px 2px no-repeat,
-    linear-gradient(var(--cant-c), var(--cant-c)) right 12px top 12px / 2px 18px no-repeat,
-    linear-gradient(var(--cant-c), var(--cant-c)) left 12px bottom 12px / 18px 2px no-repeat,
-    linear-gradient(var(--cant-c), var(--cant-c)) left 12px bottom 12px / 2px 18px no-repeat,
-    linear-gradient(var(--cant-c), var(--cant-c)) right 12px bottom 12px / 18px 2px no-repeat,
-    linear-gradient(var(--cant-c), var(--cant-c)) right 12px bottom 12px / 2px 18px no-repeat;
-}
+/* ===== CARDS EM VIDRO COM AURA — "modelo 2", escolhido pelo Victor (21/11/2026) =====
+   Exclusivo dos cards (diferente dos botões): vidro fosco, filete de luz no topo e um BRILHO AZUL saindo do canto
+   de baixo à direita, como luz por trás do vidro. Sem cantoneiras e sem quadriculado (recusados).
+   Nos blocos azuis o vidro é escuro (texto branco); nos claros, vidro fosco claro. */
 /* blocos CLAROS: serviços, cases, perguntas */
 main .card:not(.card--cta), main .project:not(.project--cta), main .faq__item {
-  background:
-    var(--cantoneiras),
-    repeating-linear-gradient(0deg, rgba(31, 95, 168, .045) 0 1px, transparent 1px 28px),
-    repeating-linear-gradient(90deg, rgba(31, 95, 168, .045) 0 1px, transparent 1px 28px),
-    linear-gradient(150deg, rgba(255, 255, 255, .82), rgba(236, 243, 251, .62)) !important;
-  border: 1px solid rgba(31, 95, 168, .22) !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .95), inset 0 0 0 1px rgba(255, 255, 255, .35),
-              0 18px 44px rgba(1, 24, 52, .10), 0 0 0 4px rgba(79, 155, 220, .05) !important;
-  -webkit-backdrop-filter: blur(14px) saturate(140%); backdrop-filter: blur(14px) saturate(140%);
+  background: radial-gradient(120% 80% at 100% 100%, rgba(79, 155, 220, .30), transparent 60%),
+    linear-gradient(170deg, rgba(255, 255, 255, .92), rgba(238, 244, 251, .72)) !important;
+  border: 1px solid rgba(255, 255, 255, .9) !important;
+  box-shadow: inset 0 1px 0 #fff, inset 0 -1px 0 rgba(31, 95, 168, .10), 0 0 0 1px rgba(31, 95, 168, .12),
+              0 22px 50px -10px rgba(1, 24, 52, .16) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(150%); backdrop-filter: blur(18px) saturate(150%);
 }
 /* blocos AZUIS: sobre (formação) e números */
 main .bloco-azul .about__item, main .bloco-azul .stat {
-  --cant-c: #8ec5ff;
-  background:
-    var(--cantoneiras),
-    repeating-linear-gradient(0deg, rgba(142, 197, 255, .05) 0 1px, transparent 1px 28px),
-    repeating-linear-gradient(90deg, rgba(142, 197, 255, .05) 0 1px, transparent 1px 28px),
-    linear-gradient(150deg, rgba(255, 255, 255, .13), rgba(255, 255, 255, .03)) !important;
-  border: 1px solid rgba(142, 197, 255, .32) !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25), 0 20px 50px rgba(0, 0, 0, .35), 0 0 30px rgba(79, 155, 220, .12) !important;
-  -webkit-backdrop-filter: blur(16px) saturate(150%); backdrop-filter: blur(16px) saturate(150%);
+  background: radial-gradient(120% 80% at 100% 100%, rgba(79, 155, 220, .55), transparent 62%),
+    linear-gradient(170deg, rgba(255, 255, 255, .14), rgba(255, 255, 255, .04)) !important;
+  border: 1px solid rgba(255, 255, 255, .16) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35), 0 24px 60px -12px rgba(0, 0, 0, .5) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(150%); backdrop-filter: blur(18px) saturate(150%);
 }
 main .bloco-azul .about__item h3 { color: #fff !important; }
 main .bloco-azul .about__item p, main .bloco-azul .stat p { color: rgba(255, 255, 255, .74) !important; }
@@ -1192,9 +1174,3 @@ main .bloco-azul .stat__n small { color: rgba(255, 255, 255, .7) !important; }
 /* etiquetas dentro dos cards: chip de vidro azul-gelo (sem sumir no vidro claro) */
 main .card:not(.card--cta) li, main .project:not(.project--cta) li {
   background: rgba(79, 155, 220, .10) !important; border: 1px solid rgba(31, 95, 168, .22) !important; color: #0b1a2e !important; }
-/* perguntas: cards baixos — sem as cantoneiras (encostavam no texto), mantém vidro e grade */
-main .faq__item {
-  background:
-    repeating-linear-gradient(0deg, rgba(31, 95, 168, .045) 0 1px, transparent 1px 28px),
-    repeating-linear-gradient(90deg, rgba(31, 95, 168, .045) 0 1px, transparent 1px 28px),
-    linear-gradient(150deg, rgba(255, 255, 255, .82), rgba(236, 243, 251, .62)) !important; }
