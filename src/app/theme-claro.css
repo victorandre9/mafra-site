@@ -1182,3 +1182,30 @@ section.marquee { margin-block: 56px 64px !important; }
 /* palavras em destaque do manifesto: azul-claro SÓLIDO (o degradê recortado no texto sumia no iPhone) */
 .bloco-azul .manifesto__text em, .bloco-azul .manifesto__text em .word, .bloco-azul .manifesto__text em * {
   background: none !important; -webkit-text-fill-color: #7fe3ad !important; color: #7fe3ad !important; }
+
+/* ===== CARD "FALE COM O VICTOR": modelo 2 (holográfico) com a FOTO GRANDE do modelo 3 (escolha do Victor, 21/11/2026) =====
+   Vidro claro; borda em degradê azul que GIRA; brilho que atravessa o card a cada 4 s; foto grande ocupando a lateral e se
+   dissolvendo no card; nome e botão em degradê azul-marinho; linha "Respondo pelo WhatsApp" com ponto de luz. */
+@property --io-ang { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
+.hero a.io-card { position: relative !important; overflow: hidden; border-radius: 22px !important; padding: 0 !important; gap: 0 !important;
+  align-items: stretch !important; min-width: 380px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, .96), rgba(236, 243, 251, .88)) padding-box,
+    conic-gradient(from var(--io-ang), #34d27a, #b9f0d2, #ffffff, #18a057, #34d27a) border-box !important;
+  border: 2px solid transparent !important; animation: io-gira 5s linear infinite;
+  box-shadow: 0 26px 60px -16px rgba(24, 160, 87, .45), 0 0 40px rgba(52, 210, 122, .25) !important; }
+@keyframes io-gira { to { --io-ang: 360deg; } }
+.hero a.io-card::after { content: ""; position: absolute; inset: 0; pointer-events: none; transform: translateX(-120%);
+  background: linear-gradient(110deg, transparent 35%, rgba(255, 255, 255, .8) 50%, transparent 65%); animation: io-brilho 4s ease-in-out infinite; }
+@keyframes io-brilho { 0%, 55% { transform: translateX(-120%); } 85%, 100% { transform: translateX(120%); } }
+.hero a.io-card img { width: 128px !important; height: auto !important; min-height: 150px; border-radius: 0 !important; object-fit: cover;
+  -webkit-mask: linear-gradient(90deg, #000 70%, transparent); mask: linear-gradient(90deg, #000 70%, transparent); }
+.hero a.io-card .io-card__txt { padding: 18px 22px 18px 6px; gap: 7px !important; align-content: center; }
+.hero a.io-card .io-card__txt b { font-size: 1.3rem !important; background: linear-gradient(90deg, #011834, #18a057);
+  -webkit-background-clip: text; background-clip: text; color: transparent !important; -webkit-text-fill-color: transparent; }
+.hero a.io-card .io-card__txt small { color: #4f6078 !important; }
+.io-card__online { display: inline-flex; align-items: center; gap: 6px; font: 500 .74rem var(--font-body); color: #4f6078; }
+.io-card__online::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #34d27a; box-shadow: 0 0 10px #34d27a; }
+.hero a.io-card .io-card__btn { background: linear-gradient(90deg, #011834, #18a057) !important; color: #fff !important; padding: 9px 16px !important;
+  font-size: .78rem !important; box-shadow: 0 8px 20px rgba(24, 160, 87, .35); }
+@media (max-width: 900px) { .hero a.io-card { min-width: 0; width: calc(100vw - 32px); } .hero a.io-card img { width: 112px !important; } }
+@media (prefers-reduced-motion: reduce) { .hero a.io-card, .hero a.io-card::after { animation: none; } }

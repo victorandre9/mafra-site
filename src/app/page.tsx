@@ -312,6 +312,7 @@ export default function Home() {
             <img src="/sobre/victor-mafra.jpg?v=5" alt="Victor Mafra" width={80} height={96} />
             <span className="io-card__txt">
               <b>Fale com o Victor</b>
+              <span className="io-card__online">Respondo pelo WhatsApp</span>
               <small>MAFRA Consultoria &amp; Tecnologia</small>
               <span className="io-card__btn">Agendar 15 min de conversa ›</span>
             </span>

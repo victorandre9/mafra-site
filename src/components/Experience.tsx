@@ -808,6 +808,14 @@ export default function Experience() {
         // ainda animam (e antes da primeira rolagem) o desvio enxergaria "texto" onde não há — fica parado ali
         if (window.scrollY > 30) jaRolou = true;
         if (isTouch && nasceuNoBranco && !jaRolou) return;
+        // VOLTOU AO TOPO (pedido do Victor, 21/11/2026: "reproduza sempre"): no celular, com a página no topo, o Orbe
+        // volta SEMPRE ao lugar de nascimento (em frente a "movem", medido livre) — larga o esconderijo de antes
+        if (isTouch && nasceuNoBranco && window.scrollY < 30) {
+          if (tx !== 0 || ty !== 0) { tx = 0; ty = 0; escX = 0; escY = 0; rotaLivreDesde = 0; avoidX(0); avoidY(0); }
+          if (apagado) { apagado = false; gsap.to(corpo, { opacity: 1, duration: 0.5, overwrite: "auto" }); }
+          if (naVaga) { naVaga = false; ladoVaga = null; gsap.to(corpo, { scale: 1, duration: 0.6, overwrite: "auto" }); }
+          return;
+        }
         if (agora - ultimo < 200) return; // 5x por segundo basta, não pesa e não deixa tremer
         ultimo = agora;
         const W = window.innerWidth, H = window.innerHeight;
