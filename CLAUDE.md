@@ -107,7 +107,8 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
 - Robô: obstáculos incluem CARDS inteiros; cobrindo texto/botão/card > 12% fica translúcido (0,28) no computador e no celular.
 - **Abertura com a logo** (21/11/2026): fundo azul-marinho, logo ORIGINAL entra girando, dois anéis de luz giram em volta,
   brilho atravessa a logo, aura pulsa; na saída a logo cresce e some (`.preloader__orbita`, ~2 s).
-- Robô no celular nasce no ponto mais baixo da faixa do vídeo, à direita, colado em cima do selo; saudação curta "Clique aqui! 👆".
+- Robô no celular nasce na PARTE BRANCA, abaixo do vídeo e do selo, no canto direito (1º vão livre medido pelo layout; sem vão, cai no vídeo); fica parado ali até a 1ª rolagem. Saudação "Clique aqui! 👆" em balão compacto de 2 linhas, só se couber sem cobrir texto.
+- iPhone em economia de bateria (vídeo bloqueado): esconde o vídeo e o botão de play, fica a imagem parada (`.video-bloqueado`).
 - Malha de pontos/setas: somem só com o topo quase inteiro na tela (`com-video` termina em `bottom 85%`); o vídeo usa `video-na-tela`.
 - Botões verdes: flash claro passando da esquerda para a direita a cada 3 s (`verde-varre`).
 
