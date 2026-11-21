@@ -120,6 +120,9 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   Blocos azuis (sobre, números): vidro escuro, texto branco; claros (serviços, cases, perguntas): vidro claro. Serviços mantêm
   o aro triplo; `card--cta`/`project--cta` ficam como eram. Alternativas mostradas: borda de luz girando (1), filete no topo (3).
   Borda dos cards 3px (3x mais grossa, mesma cor); números do bloco azul em BRANCO sólido (o span tinha degradê marinho).
+- **Card "Fale com o Victor"** (21/11/2026): modelo 2 holográfico (borda em degradê azul girando, brilho atravessando a cada 4 s,
+  nome/botão em degradê marinho, linha "Respondo pelo WhatsApp") com a FOTO GRANDE do modelo 3 (lateral, dissolvendo no card).
+- Robô no celular: sempre que a página VOLTA AO TOPO, ele retorna ao lugar em frente a "movem" (larga o esconderijo).
 - Botões verdes: flash claro passando da esquerda para a direita a cada 3 s (`verde-varre`).
 
 ## Pendências conhecidas
