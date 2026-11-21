@@ -197,13 +197,28 @@ export default function Experience() {
             const travar = (sim: boolean) => { if (sim) lenis?.stop(); else lenis?.start(); document.documentElement.classList.toggle("historia-travada", sim); };
             travar(true);
             const fim = () => { setTimeout(() => { ocupado = false; }, 250); };
+            // PROTEÇÃO (o teste travou no iPhone): o site NUNCA pode ficar preso. Se o trecho não andar no tempo
+            // esperado, pula direto para a cena; se o vídeo não conseguir tocar (economia de bateria, sem dados),
+            // a história se desliga e o site rola normal.
+            let falhas = 0;
+            let desistiu = false;
+            const desistir = () => { desistiu = true; liberado = true; travar(false); caixa?.classList.add("rolou"); };
+            if (v.readyState < 1) { v.preload = "auto"; v.load(); }
             const tocarAte = (alvoT: number) => {
               ocupado = true;
-              const vigiaFim = () => {
-                if (v.currentTime >= alvoT - 0.03 || v.ended) { v.pause(); try { v.currentTime = alvoT; } catch { /* ok */ } gsap.ticker.remove(vigiaFim); fim(); }
+              let feito = false;
+              const concluir = (ok: boolean) => {
+                if (feito) return; feito = true;
+                gsap.ticker.remove(vigiaFim); clearTimeout(segura);
+                v.pause(); try { v.currentTime = alvoT; } catch { /* ok */ }
+                if (!ok && ++falhas >= 2) desistir();
+                fim();
               };
+              const vigiaFim = () => { if (v.currentTime >= alvoT - 0.03 || v.ended) concluir(true); };
+              const segura = setTimeout(() => concluir(false), Math.max(0, alvoT - v.currentTime) * 1000 + 2500);
               gsap.ticker.add(vigiaFim);
-              v.play().catch(() => { try { v.currentTime = alvoT; } catch { /* ok */ } gsap.ticker.remove(vigiaFim); fim(); });
+              const pr = v.play();
+              if (pr) pr.catch(() => concluir(false));
             };
             const voltarPara = (alvoT: number) => {
               ocupado = true; v.pause();
@@ -225,7 +240,7 @@ export default function Experience() {
             };
             // roda do mouse / trackpad: um gesto = uma rajada de eventos; só conta um novo depois de 350 ms de silêncio
             const roda = (ev: WheelEvent) => {
-              if (liberado && window.scrollY <= 2 && ev.deltaY < 0) { liberado = false; travar(true); } // voltou ao topo: história de novo
+              if (!desistiu && liberado && window.scrollY <= 2 && ev.deltaY < 0) { liberado = false; travar(true); } // voltou ao topo: história de novo
               if (!naHistoria()) return;
               // segura a página: impede o navegador E a rolagem suave do site (que é religada na abertura)
               ev.preventDefault(); ev.stopPropagation(); lenis?.stop();
@@ -236,7 +251,7 @@ export default function Experience() {
             // dedo: um deslize = um gesto (decidido ao soltar). No começo da história, puxar para baixo continua
             // sendo o "puxar para atualizar" do celular
             let y0 = 0;
-            const toqueIni = (ev: TouchEvent) => { y0 = ev.touches[0].clientY; if (liberado && window.scrollY <= 2) { liberado = false; travar(true); } };
+            const toqueIni = (ev: TouchEvent) => { y0 = ev.touches[0].clientY; if (!desistiu && liberado && window.scrollY <= 2) { liberado = false; travar(true); } };
             const toqueMove = (ev: TouchEvent) => {
               if (!naHistoria()) return;
               const dy = y0 - ev.touches[0].clientY; // > 0: dedo subindo (= rolar para baixo)
