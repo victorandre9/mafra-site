@@ -75,12 +75,14 @@ export default function Experience() {
       /* ---------- Preloader → intro ---------- */
       const counter = { v: 0 };
       const count = $(".js-count");
-      const dur = reduce ? 0.1 : 1.4;
+      const dur = reduce ? 0.1 : 2;
       gsap
         .timeline({ onComplete: intro })
         .to(counter, { v: 100, duration: dur, ease: "power2.inOut", onUpdate: () => { count.textContent = String(Math.round(counter.v)); } })
         .to(".preloader__bar span", { width: "100%", duration: dur, ease: "power2.inOut" }, 0)
-        .to(".preloader__inner", { y: -30, opacity: 0, duration: 0.4 })
+        // saída: a logo cresce e some, as barras somem, e a cortina sobe
+        .to(".preloader__bar, .preloader__count", { opacity: 0, duration: 0.3 })
+        .to(".preloader__orbita", { scale: 1.25, opacity: 0, filter: "blur(6px)", duration: 0.55, ease: "power2.in" }, "<")
         .to(".preloader", { clipPath: "inset(0 0 100% 0)", duration: 0.9, ease: "expo.inOut" }, "-=0.1")
         .set(".preloader", { display: "none" });
 
@@ -94,8 +96,9 @@ export default function Experience() {
           .from(".reveal-up", { y: 40, opacity: 0, duration: 1, ease: "expo.out", stagger: 0.1 }, 0.4)
           .from(".header > *", { y: -60, opacity: 0, duration: 1, ease: "expo.out", stagger: 0.08 }, 0.3)
           .from(".hero__scroll", { opacity: 0, duration: 1 }, 1)
-          // celular: a saudação aparece EM CIMA DO VÍDEO (faixa entre o cabeçalho e o selo); computador: como antes
-          .add(() => droneSay("Oi! Toque em mim para um diagnóstico rápido 👋", 3.4, window.innerWidth <= 760 ? [".header", ".hero .pill"] : [".hero__sub", ".hero__ctas"]), 0.8);
+          // saudação curta ("Clique aqui!", pedido do Victor 21/11/2026) para não brigar com as regras do texto;
+          // no celular ela sai colada no Orbe (que nasce logo abaixo do vídeo); no computador, no vão de sempre
+          .add(() => droneSay("Clique aqui! 👆", 3.4, window.innerWidth <= 760 ? undefined : [".hero__sub", ".hero__ctas"]), 0.8);
         ScrollTrigger.refresh();
       }
 
@@ -161,7 +164,7 @@ export default function Experience() {
           window.addEventListener("focus", voltar);
           let ultimoT = -1, parado = 0;
           const vigia = setInterval(() => {
-            if (!document.body.classList.contains("com-video") || document.visibilityState !== "visible") return;
+            if (!document.body.classList.contains("video-na-tela") || document.visibilityState !== "visible") return;
             if (v.paused) { tocar(); return; }
             if (Math.abs(v.currentTime - ultimoT) < 0.05) { if (++parado >= 2) { parado = 0; reiniciar(); } } else parado = 0;
             ultimoT = v.currentTime;
@@ -170,8 +173,13 @@ export default function Experience() {
         }
       }
       ScrollTrigger.create({ trigger: ".hero", start: "top bottom", end: "bottom 30%",
-        onToggle: (self) => { document.body.classList.toggle("com-video", self.isActive); if (self.isActive) ($(".video-topo video") as HTMLVideoElement | null)?.play().catch(() => {}); } });
-      document.body.classList.toggle("com-video", window.scrollY < window.innerHeight * 0.7);
+        onToggle: (self) => { document.body.classList.toggle("video-na-tela", self.isActive); if (self.isActive) ($(".video-topo video") as HTMLVideoElement | null)?.play().catch(() => {}); } });
+      document.body.classList.toggle("video-na-tela", window.scrollY < window.innerHeight * 0.7);
+      // malha de pontos e setas voltam BEM MAIS CEDO (pedido do Victor, 21/11/2026): somem só enquanto o topo
+      // ocupa quase a tela toda; ao começar a rolar (fim do topo passando de 85% da tela) elas já aparecem
+      const malhaST = ScrollTrigger.create({ trigger: ".hero", start: "top bottom", end: "bottom 85%",
+        onToggle: (self) => document.body.classList.toggle("com-video", self.isActive) });
+      document.body.classList.toggle("com-video", malhaST.isActive || window.scrollY < 10);
 
       /* ---------- FAIXAS ANIMADAS NO FUNDO (modelo 1, pedido do Victor, 19/11/2026) ----------
          Refinado a pedido dele ("deitam e ficam em pé, esquisito"): sem giro, sem distorção, forma de
@@ -634,7 +642,9 @@ export default function Experience() {
           // nasce DENTRO da faixa do vídeo (entre o cabeçalho e o selo do topo), à direita (pedido do Victor, 20/11/2026)
           const cab = $(".header")?.getBoundingClientRect(), selo = $(".hero .pill")?.getBoundingClientRect();
           const cta = cab && selo && selo.top - cab.bottom > 140 ? null : $(".hero__ctas .btn:not(.btn--ghost)")?.getBoundingClientRect();
-          if (cab && selo && !cta) pts[0] = { x: W * 0.8, y: cab.bottom + (selo.top - cab.bottom) * 0.62 + window.scrollY };
+          // nasce no PONTO MAIS BAIXO da faixa do vídeo, à direita, colado em cima do selo — sem texto por baixo
+          // (pedido do Victor, 21/11/2026: "um pouco abaixo"; ao lado do título não cabe o Orbe inteiro no celular)
+          if (cab && selo && !cta) pts[0] = { x: W * 0.8, y: Math.max(cab.bottom + 80, selo.top - 58) + window.scrollY };
           if (cta) {
             const yDoc = cta.top + window.scrollY; // posição com a página no topo
             const livreX = Math.max(cta.right + 10, W * 0.55);
@@ -736,7 +746,7 @@ export default function Experience() {
       const avoidX = gsap.quickTo(layer, "x", { duration: 0.9, ease: "sine.inOut" });
       const avoidY = gsap.quickTo(layer, "y", { duration: 0.9, ease: "sine.inOut" });
       const corpo = $(".drone__dodge");
-      const SEL_TEXTO = "main h1, main h2, main h3, main p, main li, main .btn, main .pill, main .eyebrow, main .step.is-active, main .stat, main .holo.is-on, main .card__icon, main .project__media, main .phone__frame, main .about__badge, main .card, main .project, main .about__item, main .faq__item, main .io-card, main .io-servicos, main .vidro-forte, main .process__note, .footer .logo, .footer p, .footer__links";
+      const SEL_TEXTO = "main h1:not(.hero__title), .hero__title .char, .hero__title .rotator, main h2, main h3, main p, main li, main .btn, main .pill, main .eyebrow, main .step.is-active, main .stat, main .holo.is-on, main .card__icon, main .project__media, main .phone__frame, main .about__badge, main .card, main .project, main .about__item, main .faq__item, main .io-card, main .io-servicos, main .vidro-forte, main .process__note, .footer .logo, .footer p, .footer__links";
       let obst: Element[] = [];
       const coletar = () => { obst = Array.from(document.querySelectorAll(SEL_TEXTO)); };
       coletar();
