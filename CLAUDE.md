@@ -125,6 +125,9 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
 - Robô no celular: sempre que a página VOLTA AO TOPO, ele retorna ao lugar em frente a "movem" (larga o esconderijo).
 - **Espaçamento no celular** (21/11/2026): temas encostados, ~10px entre os textos; só os CASES têm distância maior do bloco azul (88px).
 - **Imagem do link compartilhado** (`public/og-image.jpg`, 21/11/2026): modelo 4 — fundo azul-marinho, logo original, frase do topo e FOTO do Victor à direita com selo "Fale com o Victor →". Ao trocar, subir o `?v=` em `layout.tsx`.
+- **TESTE (branch `teste-video-rolagem`, NÃO no ar)**: vídeo do topo em tela cheia com HISTÓRIA (escritório → armazém → separação →
+  caminhão → entrega, mergulhando nas telas). TRAVA: cada gesto (fraco ou forte) = UMA cena; a tela do site só sobe depois da última cena.
+  Créditos do Runway acabaram (21/11/2026). Depois: aplicar a mesma trava no celular 3D da Metodologia.
 - Botões verdes: flash claro passando da esquerda para a direita a cada 3 s (`verde-varre`).
 
 ## Pendências conhecidas

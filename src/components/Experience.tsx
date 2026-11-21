@@ -172,7 +172,7 @@ export default function Experience() {
           // Safari do iPhone: ao voltar de outro app o vídeo fica CONGELADO, mas `paused` continua false —
           // então não basta "dar play se pausado". Recarrega e dá play de novo ao voltar, e o vigia mede se
           // o tempo do vídeo está ANDANDO; parado por ~2 s com o topo na tela → recarrega.
-          const reiniciar = () => { const t = v.currentTime; v.load(); v.addEventListener("loadeddata", () => { try { v.currentTime = t; } catch { /* ok */ } v.play().catch(() => {}); }, { once: true }); };
+          const reiniciar = () => { if (modoRolagem) return; const t = v.currentTime; v.load(); v.addEventListener("loadeddata", () => { try { v.currentTime = t; } catch { /* ok */ } v.play().catch(() => {}); }, { once: true }); };
           const voltar = () => { if (document.visibilityState === "visible") { reiniciar(); setTimeout(tocar, 400); } };
           document.addEventListener("visibilitychange", voltar);
           window.addEventListener("pageshow", voltar);
@@ -185,26 +185,83 @@ export default function Experience() {
             ultimoT = v.currentTime;
           }, 1000);
           {
+            // ===== HISTÓRIA COM TRAVA (pedido do Victor, 21/11/2026) =====
+            // Cada GESTO (fraco ou forte, roda do mouse, dedo ou tecla) avança UMA cena: o vídeo toca o trecho até a
+            // próxima cena e para. Gesto para cima volta uma cena. A tela do site NÃO sobe enquanto a história não
+            // terminar: só depois da última cena o próximo gesto libera a rolagem normal.
             const caixa = v.closest(".video-topo") as HTMLElement | null;
-            let alvo = 0, atual = 0; const base = 0;
-            const st = ScrollTrigger.create({ trigger: ".hero", start: "top top", end: () => "+=" + Math.round(window.innerHeight * 2.5),
-              onUpdate: (self) => {
-                const rolou = self.progress > 0.005;
-                void rolou; if (!v.paused) v.pause();
-                // percorre o vídeo inteiro ao longo da rolagem do topo, a partir do quadro em que estava
-                const d = v.duration || 10;
-                alvo = Math.min(d - 0.05, base + self.progress * d);
-                caixa?.classList.toggle("rolou", self.progress > 0.03);
-              } });
-            const passo = () => {
-              if (!modoRolagem || !v.duration) return;
-              const dif = alvo - atual;
-              atual += dif * 0.25;
-              atual = ((atual % v.duration) + v.duration) % v.duration;
-              if (Math.abs(v.currentTime - atual) > 1 / 30) { try { v.currentTime = atual; } catch { /* ok */ } }
+            const T = 5.0417 - 0.5; // duração de cada cena na montagem (5 s menos a emenda)
+            const PAUSAS = [0.05, T + 1.0, 2 * T + 1.0, 3 * T + 1.0, 4 * T + 1.0, 4 * T + 4.95]; // onde o vídeo para
+            let cena = 0, ocupado = false, liberado = false, ultimoGesto = 0;
+            const naHistoria = () => !liberado && window.scrollY < 4;
+            const travar = (sim: boolean) => { if (sim) lenis?.stop(); else lenis?.start(); document.documentElement.classList.toggle("historia-travada", sim); };
+            travar(true);
+            const fim = () => { setTimeout(() => { ocupado = false; }, 250); };
+            const tocarAte = (alvoT: number) => {
+              ocupado = true;
+              const vigiaFim = () => {
+                if (v.currentTime >= alvoT - 0.03 || v.ended) { v.pause(); try { v.currentTime = alvoT; } catch { /* ok */ } gsap.ticker.remove(vigiaFim); fim(); }
+              };
+              gsap.ticker.add(vigiaFim);
+              v.play().catch(() => { try { v.currentTime = alvoT; } catch { /* ok */ } gsap.ticker.remove(vigiaFim); fim(); });
             };
-            gsap.ticker.add(passo);
-            cleanups.push(() => { gsap.ticker.remove(passo); st.kill(); });
+            const voltarPara = (alvoT: number) => {
+              ocupado = true; v.pause();
+              const o = { t: v.currentTime };
+              gsap.to(o, { t: alvoT, duration: 0.7, ease: "power2.inOut", onUpdate: () => { try { v.currentTime = o.t; } catch { /* ok */ } }, onComplete: fim });
+            };
+            const gesto = (dir: 1 | -1) => {
+              if (ocupado) return;
+              if (dir > 0) {
+                if (cena >= PAUSAS.length - 1) { // acabou o vídeo: libera o site e já sobe a "cortina" com o texto
+                  liberado = true; travar(false); caixa?.classList.add("rolou");
+                  const destino = Math.round(window.innerHeight * 0.92);
+                  if (lenis) lenis.scrollTo(destino, { duration: 1.4 }); else window.scrollTo({ top: destino, behavior: "smooth" });
+                  return;
+                }
+                cena++; tocarAte(PAUSAS[cena]);
+              } else if (cena > 0) { cena--; voltarPara(PAUSAS[cena]); }
+              caixa?.classList.toggle("rolou", cena > 0);
+            };
+            // roda do mouse / trackpad: um gesto = uma rajada de eventos; só conta um novo depois de 350 ms de silêncio
+            const roda = (ev: WheelEvent) => {
+              if (liberado && window.scrollY <= 2 && ev.deltaY < 0) { liberado = false; travar(true); } // voltou ao topo: história de novo
+              if (!naHistoria()) return;
+              // segura a página: impede o navegador E a rolagem suave do site (que é religada na abertura)
+              ev.preventDefault(); ev.stopPropagation(); lenis?.stop();
+              const agora = performance.now(), novo = agora - ultimoGesto > 350;
+              ultimoGesto = agora;
+              if (novo && Math.abs(ev.deltaY) > 2) gesto(ev.deltaY > 0 ? 1 : -1);
+            };
+            // dedo: um deslize = um gesto (decidido ao soltar). No começo da história, puxar para baixo continua
+            // sendo o "puxar para atualizar" do celular
+            let y0 = 0;
+            const toqueIni = (ev: TouchEvent) => { y0 = ev.touches[0].clientY; if (liberado && window.scrollY <= 2) { liberado = false; travar(true); } };
+            const toqueMove = (ev: TouchEvent) => {
+              if (!naHistoria()) return;
+              const dy = y0 - ev.touches[0].clientY; // > 0: dedo subindo (= rolar para baixo)
+              if (dy > 0 || cena > 0) { ev.preventDefault(); ev.stopPropagation(); }
+            };
+            const toqueFim = (ev: TouchEvent) => {
+              if (!naHistoria()) return;
+              const dy = y0 - ev.changedTouches[0].clientY;
+              if (Math.abs(dy) > 30 && (dy > 0 || cena > 0)) gesto(dy > 0 ? 1 : -1);
+            };
+            const tecla = (ev: KeyboardEvent) => {
+              if (!naHistoria()) return;
+              if (["ArrowDown", "PageDown", " "].includes(ev.key)) { ev.preventDefault(); ev.stopPropagation(); gesto(1); }
+              if (["ArrowUp", "PageUp"].includes(ev.key)) { ev.preventDefault(); gesto(-1); }
+            };
+            window.addEventListener("wheel", roda, { passive: false, capture: true });
+            window.addEventListener("touchstart", toqueIni, { passive: true });
+            window.addEventListener("touchmove", toqueMove, { passive: false, capture: true });
+            window.addEventListener("touchend", toqueFim, { passive: true });
+            window.addEventListener("keydown", tecla, { capture: true });
+            cleanups.push(() => {
+              window.removeEventListener("wheel", roda, { capture: true }); window.removeEventListener("touchstart", toqueIni);
+              window.removeEventListener("touchmove", toqueMove, { capture: true }); window.removeEventListener("touchend", toqueFim);
+              window.removeEventListener("keydown", tecla, { capture: true }); travar(false);
+            });
           }
           cleanups.push(() => { document.removeEventListener("visibilitychange", voltar); window.removeEventListener("pageshow", voltar); window.removeEventListener("focus", voltar); clearInterval(vigia); });
         }
