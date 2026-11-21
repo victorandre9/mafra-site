@@ -1228,3 +1228,10 @@ section.marquee { margin-block: 56px 64px !important; }
   #contato { padding-top: 64px !important; }
   .footer { padding-top: 24px !important; }
 }
+
+/* TESTE vídeo na rolagem: no celular a faixa do vídeo ocupa MAIS da tela (48 → 62% da altura) */
+@media (max-width: 760px) {
+  .video-topo { height: 62svh !important; }
+  .hero { padding-top: calc(62svh - 40px) !important; }
+}
+.video-topo video { will-change: transform; }

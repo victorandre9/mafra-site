@@ -151,7 +151,10 @@ export default function Experience() {
           // iPhone em modo de economia de bateria bloqueia o vídeo automático e desenha um botão de play por cima:
           // nesse caso o vídeo fica escondido e aparece a IMAGEM PARADA do topo (sem botão); ao primeiro toque ele tenta de novo
           const caixaVideo = v.closest(".video-topo");
-          const tocar = () => { if (v.paused) v.play().then(() => caixaVideo?.classList.remove("video-bloqueado")).catch(() => caixaVideo?.classList.add("video-bloqueado")); };
+          // TESTE "vídeo na rolagem" (pedido do Victor, 21/11/2026): no topo parado o vídeo toca em loop; ao rolar,
+          // ele PAUSA e passa a andar junto com o dedo (para frente e para trás), com um zoom leve. Volta a tocar no topo.
+          let modoRolagem = false;
+          const tocar = () => { if (modoRolagem) return; if (v.paused) v.play().then(() => caixaVideo?.classList.remove("video-bloqueado")).catch(() => caixaVideo?.classList.add("video-bloqueado")); };
           v.addEventListener("playing", () => caixaVideo?.classList.remove("video-bloqueado"));
           tocar();
           v.addEventListener("canplay", tocar, { once: true });
@@ -169,16 +172,40 @@ export default function Experience() {
           window.addEventListener("focus", voltar);
           let ultimoT = -1, parado = 0;
           const vigia = setInterval(() => {
-            if (!document.body.classList.contains("video-na-tela") || document.visibilityState !== "visible") return;
+            if (modoRolagem || !document.body.classList.contains("video-na-tela") || document.visibilityState !== "visible") return;
             if (v.paused) { tocar(); return; }
             if (Math.abs(v.currentTime - ultimoT) < 0.05) { if (++parado >= 2) { parado = 0; reiniciar(); } } else parado = 0;
             ultimoT = v.currentTime;
           }, 1000);
+          {
+            const caixa = v.closest(".video-topo") as HTMLElement | null;
+            let alvo = 0, atual = 0, base = 0;
+            const st = ScrollTrigger.create({ trigger: ".hero", start: "top top", end: () => "+=" + Math.round(window.innerHeight * 1.1),
+              onUpdate: (self) => {
+                const rolou = self.progress > 0.005;
+                if (rolou && !modoRolagem) { modoRolagem = true; v.pause(); base = v.currentTime; atual = base; }
+                if (!rolou && modoRolagem) { modoRolagem = false; tocar(); }
+                // percorre o vídeo inteiro ao longo da rolagem do topo, a partir do quadro em que estava
+                const d = v.duration || 10;
+                alvo = (base + self.progress * d) % d;
+                if (caixa) gsap.set(v, { scale: 1 + self.progress * 0.18, transformOrigin: "50% 40%" });
+              } });
+            const passo = () => {
+              if (!modoRolagem || !v.duration) return;
+              let dif = alvo - atual;
+              if (Math.abs(dif) > v.duration / 2) dif -= Math.sign(dif) * v.duration; // atravessa a volta do loop
+              atual += dif * 0.25;
+              atual = ((atual % v.duration) + v.duration) % v.duration;
+              if (Math.abs(v.currentTime - atual) > 1 / 30) { try { v.currentTime = atual; } catch { /* ok */ } }
+            };
+            gsap.ticker.add(passo);
+            cleanups.push(() => { gsap.ticker.remove(passo); st.kill(); });
+          }
           cleanups.push(() => { document.removeEventListener("visibilitychange", voltar); window.removeEventListener("pageshow", voltar); window.removeEventListener("focus", voltar); clearInterval(vigia); });
         }
       }
       ScrollTrigger.create({ trigger: ".hero", start: "top bottom", end: "bottom 30%",
-        onToggle: (self) => { document.body.classList.toggle("video-na-tela", self.isActive); if (self.isActive) ($(".video-topo video") as HTMLVideoElement | null)?.play().catch(() => {}); } });
+        onToggle: (self) => { document.body.classList.toggle("video-na-tela", self.isActive); if (self.isActive && window.scrollY < 10) ($(".video-topo video") as HTMLVideoElement | null)?.play().catch(() => {}); } });
       document.body.classList.toggle("video-na-tela", window.scrollY < window.innerHeight * 0.7);
       // malha de pontos e setas voltam BEM MAIS CEDO (pedido do Victor, 21/11/2026): somem só enquanto o topo
       // ocupa quase a tela toda; ao começar a rolar (fim do topo passando de 85% da tela) elas já aparecem
