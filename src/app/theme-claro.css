@@ -1153,7 +1153,7 @@ section.about.bloco-azul { padding-block: 110px; }
 main .card:not(.card--cta), main .project:not(.project--cta), main .faq__item {
   background: radial-gradient(120% 80% at 100% 100%, rgba(52, 210, 122, .30), transparent 60%),
     linear-gradient(170deg, rgba(255, 255, 255, .92), rgba(238, 244, 251, .72)) !important;
-  border: 1px solid rgba(255, 255, 255, .9) !important;
+  border: 3px solid rgba(255, 255, 255, .9) !important;
   box-shadow: inset 0 1px 0 #fff, inset 0 -1px 0 rgba(24, 160, 87, .10), 0 0 0 1px rgba(24, 160, 87, .12),
               0 22px 50px -10px rgba(1, 24, 52, .16) !important;
   -webkit-backdrop-filter: blur(18px) saturate(150%); backdrop-filter: blur(18px) saturate(150%);
@@ -1162,14 +1162,15 @@ main .card:not(.card--cta), main .project:not(.project--cta), main .faq__item {
 main .bloco-azul .about__item, main .bloco-azul .stat {
   background: radial-gradient(120% 80% at 100% 100%, rgba(52, 210, 122, .55), transparent 62%),
     linear-gradient(170deg, rgba(255, 255, 255, .14), rgba(255, 255, 255, .04)) !important;
-  border: 1px solid rgba(255, 255, 255, .16) !important;
+  border: 3px solid rgba(255, 255, 255, .16) !important;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35), 0 24px 60px -12px rgba(0, 0, 0, .5) !important;
   -webkit-backdrop-filter: blur(18px) saturate(150%); backdrop-filter: blur(18px) saturate(150%);
 }
 main .bloco-azul .about__item h3 { color: #fff !important; }
 main .bloco-azul .about__item p, main .bloco-azul .stat p { color: rgba(255, 255, 255, .74) !important; }
 main .bloco-azul .about__n { color: #7fe3ad !important; }
-main .bloco-azul .stat__n { background: linear-gradient(180deg, #ffffff, #7fe3ad) !important; -webkit-background-clip: text !important; background-clip: text !important; }
+main .bloco-azul .stat__n, main .bloco-azul .stat__n span { background: none !important; -webkit-text-fill-color: #fff !important; color: #fff !important; }
+main .bloco-azul .stat__n small { -webkit-text-fill-color: #7fe3ad !important; }
 main .bloco-azul .stat__n small { color: rgba(255, 255, 255, .7) !important; }
 /* etiquetas dentro dos cards: chip de vidro azul-gelo (sem sumir no vidro claro) */
 main .card:not(.card--cta) li, main .project:not(.project--cta) li {
