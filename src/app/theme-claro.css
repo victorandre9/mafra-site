@@ -1237,7 +1237,7 @@ section.marquee { margin-block: 56px 64px !important; }
 .hero::before { content: ""; position: absolute; left: 0; right: 0; top: 100svh; bottom: 0; z-index: 1; pointer-events: none;
   background: #f3f6f9; border-radius: 28px 28px 0 0; box-shadow: 0 -24px 60px rgba(1, 24, 52, .28); }
 .hero .io-servicos { top: calc(100svh + 70px) !important; }
-@media (max-width: 760px) { .video-topo video { object-position: 55% 50%; } }
+@media (max-width: 760px) { .video-topo video { object-position: 50% 50% !important; } } /* celular: vídeo VERTICAL 1080x1920 ampliado por IA (Real-ESRGAN) */
 /* aviso para rolar, no pé do vídeo */
 .video-topo .rolar-aviso { position: absolute; left: 50%; bottom: 28px; transform: translateX(-50%); z-index: 2; color: #fff;
   font: 600 .8rem var(--font-mono); letter-spacing: .2em; text-transform: uppercase; text-shadow: 0 2px 10px rgba(0,0,0,.45);

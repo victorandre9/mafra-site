@@ -279,7 +279,7 @@ export default function Home() {
             <video poster="/video/topo-poster-r.jpg?v=1" autoPlay loop muted playsInline preload="auto">
               {/* TESTE vídeo na rolagem: versões com todos os quadros-chave (avançar/voltar liso ao rolar) */}
               <source src="/video/topo-hd-r.mp4?v=2" type="video/mp4" media="(min-width: 761px)" />
-              <source src="/video/topo-r.mp4?v=2" type="video/mp4" />
+              <source src="/video/topo-r.mp4?v=3" type="video/mp4" />
             </video>
             <span className="rolar-aviso">Role para baixo</span>
           </div>
