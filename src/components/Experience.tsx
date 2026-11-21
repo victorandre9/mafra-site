@@ -153,7 +153,14 @@ export default function Experience() {
           const caixaVideo = v.closest(".video-topo");
           // TESTE "vídeo na rolagem" (pedido do Victor, 21/11/2026): no topo parado o vídeo toca em loop; ao rolar,
           // ele PAUSA e passa a andar junto com o dedo (para frente e para trás), com um zoom leve. Volta a tocar no topo.
-          let modoRolagem = false;
+          // SÓ NA ROLAGEM (pedido do Victor: "o vídeo está em loop"): nunca toca sozinho; fica parado no quadro
+          // em que está e só anda quando a página rola (para baixo avança, para cima volta)
+          const modoRolagem = true;
+          v.loop = false; v.autoplay = false; v.removeAttribute("autoplay");
+          // iPhone só desenha o quadro pedido depois de o vídeo ter "tocado" uma vez: toca e pausa na hora
+          const destravar = () => { v.play().then(() => { v.pause(); caixaVideo?.classList.remove("video-bloqueado"); }).catch(() => {}); };
+          if (v.readyState >= 2) destravar(); else v.addEventListener("loadeddata", destravar, { once: true });
+          ["touchstart", "pointerdown", "scroll"].forEach((ev) => window.addEventListener(ev, () => { if (!v.currentTime) destravar(); }, { once: true, passive: true }));
           const tocar = () => { if (modoRolagem) return; if (v.paused) v.play().then(() => caixaVideo?.classList.remove("video-bloqueado")).catch(() => caixaVideo?.classList.add("video-bloqueado")); };
           v.addEventListener("playing", () => caixaVideo?.classList.remove("video-bloqueado"));
           tocar();
@@ -179,21 +186,19 @@ export default function Experience() {
           }, 1000);
           {
             const caixa = v.closest(".video-topo") as HTMLElement | null;
-            let alvo = 0, atual = 0, base = 0;
+            let alvo = 0, atual = 0; const base = 0;
             const st = ScrollTrigger.create({ trigger: ".hero", start: "top top", end: () => "+=" + Math.round(window.innerHeight * 1.1),
               onUpdate: (self) => {
                 const rolou = self.progress > 0.005;
-                if (rolou && !modoRolagem) { modoRolagem = true; v.pause(); base = v.currentTime; atual = base; }
-                if (!rolou && modoRolagem) { modoRolagem = false; tocar(); }
+                void rolou; if (!v.paused) v.pause();
                 // percorre o vídeo inteiro ao longo da rolagem do topo, a partir do quadro em que estava
                 const d = v.duration || 10;
-                alvo = (base + self.progress * d) % d;
+                alvo = Math.min(d - 0.05, base + self.progress * d);
                 if (caixa) gsap.set(v, { scale: 1 + self.progress * 0.18, transformOrigin: "50% 40%" });
               } });
             const passo = () => {
               if (!modoRolagem || !v.duration) return;
-              let dif = alvo - atual;
-              if (Math.abs(dif) > v.duration / 2) dif -= Math.sign(dif) * v.duration; // atravessa a volta do loop
+              const dif = alvo - atual;
               atual += dif * 0.25;
               atual = ((atual % v.duration) + v.duration) % v.duration;
               if (Math.abs(v.currentTime - atual) > 1 / 30) { try { v.currentTime = atual; } catch { /* ok */ } }
