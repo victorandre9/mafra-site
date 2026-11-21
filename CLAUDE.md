@@ -114,10 +114,10 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   topo (claro) · faixa + manifesto (azul) · serviços (claro) · metodologia + números (azul) · cases (claro) · sobre (azul) ·
   perguntas (claro) · contato (azul). Faixa clara de transição CURTA (36px) só no começo de cada bloco (`bloco-azul--abre`);
   o Contato também (antes 160px, "efeito branco muito forte").
-- **Cards em VIDRO TECNOLÓGICO** (21/11/2026, fim de `theme-claro.css`): exclusivo dos cards (não igual aos botões) — vidro
-  translúcido com blur, borda fina de luz, CANTONEIRAS de luz nos 4 cantos (`--cantoneiras`) e grade suave. Blocos azuis
-  (sobre, números): vidro escuro, texto branco; blocos claros (serviços, cases, perguntas): vidro fosco claro. Perguntas sem
-  cantoneiras; cards de Serviços mantêm o aro triplo; `card--cta`/`project--cta` ficam como eram.
+- **Cards em VIDRO COM AURA** (modelo 2 escolhido pelo Victor, 21/11/2026, fim de `theme-claro.css`): vidro fosco, filete de
+  luz no topo e brilho azul saindo do canto de baixo à direita. Cantoneiras em "L" e quadriculado foram RECUSADOS (não voltar).
+  Blocos azuis (sobre, números): vidro escuro, texto branco; claros (serviços, cases, perguntas): vidro claro. Serviços mantêm
+  o aro triplo; `card--cta`/`project--cta` ficam como eram. Alternativas mostradas: borda de luz girando (1), filete no topo (3).
 - Botões verdes: flash claro passando da esquerda para a direita a cada 3 s (`verde-varre`).
 
 ## Pendências conhecidas
