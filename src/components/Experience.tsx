@@ -528,7 +528,7 @@ export default function Experience() {
         const W0 = window.innerWidth, H0 = window.innerHeight;
         const topo0 = ($(".header")?.getBoundingClientRect().bottom ?? 60) + 8;
         const bw = bubble.offsetWidth, bh = bubble.offsetHeight;
-        const textosEls = $$("main h1:not(.hero__title), .hero__title .char, .hero__title .rotator, main h2, main h3, main p, main li, main .btn, main .pill, main summary, main .stat__n, main .swipe-hint, .footer p");
+        const textosEls = $$("main .phone__frame, main h1:not(.hero__title), .hero__title .char, .hero__title .rotator, main h2, main h3, main p, main li, main .btn, main .pill, main summary, main .stat__n, main .swipe-hint, .footer p");
         const textos = textosEls.map((e) => e.getBoundingClientRect());
         const soltarGrudar = () => { if (grudar) gsap.ticker.remove(grudar); grudar = undefined; };
         const centroOrbe = () => {
@@ -862,9 +862,18 @@ export default function Experience() {
             if (ladoVaga === null) ladoVaga = gapE >= gapD ? "E" : "D";
             const ladoE = ladoVaga === "E";
             const gap = ladoE ? gapE : gapD;
-            const caber = Math.min(1, (gap - 10) / tam);
-            const vx = ladoE ? gap / 2 : fr.right + gap / 2;
-            const vy = gsap.utils.clamp(Math.max(fr.top, topo), Math.min(fr.bottom, base), fr.top + Math.max(60, fr.height * 0.3));
+            let caber = Math.min(1, (gap - 10) / tam);
+            let vx = ladoE ? gap / 2 : fr.right + gap / 2;
+            let vy = gsap.utils.clamp(Math.max(fr.top, topo), Math.min(fr.bottom, base), fr.top + Math.max(60, fr.height * 0.3));
+            // ESTACIONA ABAIXO DO CELULAR (pedido do Victor, 21/11/2026): o espaço embaixo do aparelho é livre e
+            // largo — ali o Orbe não atrapalha nada e as falas cabem ao lado dele. Um pouco à esquerda do centro,
+            // para o balão abrir à direita. Sem espaço embaixo, volta para a lateral do celular.
+            const livreBaixo = H - fr.bottom - 24;
+            if (livreBaixo >= tam * 0.7) {
+              caber = Math.min(1, livreBaixo / (tam + 20));
+              vx = W * 0.3;
+              vy = Math.min(H - 14 - (tam * caber) / 2, fr.bottom + 18 + (tam * caber) / 2);
+            }
             tx = vx - x; ty = vy - y;
             escX = vx; escY = vy;
             avoidX(tx); avoidY(ty);
