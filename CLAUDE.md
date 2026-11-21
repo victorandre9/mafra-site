@@ -118,6 +118,7 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   luz no topo e brilho azul saindo do canto de baixo à direita. Cantoneiras em "L" e quadriculado foram RECUSADOS (não voltar).
   Blocos azuis (sobre, números): vidro escuro, texto branco; claros (serviços, cases, perguntas): vidro claro. Serviços mantêm
   o aro triplo; `card--cta`/`project--cta` ficam como eram. Alternativas mostradas: borda de luz girando (1), filete no topo (3).
+  Borda dos cards 3px (3x mais grossa, mesma cor); números do bloco azul em BRANCO sólido (o span tinha degradê marinho).
 - Botões verdes: flash claro passando da esquerda para a direita a cada 3 s (`verde-varre`).
 
 ## Pendências conhecidas
