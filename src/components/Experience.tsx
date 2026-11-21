@@ -98,7 +98,8 @@ export default function Experience() {
           .from(".hero__scroll", { opacity: 0, duration: 1 }, 1)
           // saudação curta ("Clique aqui!", pedido do Victor 21/11/2026) para não brigar com as regras do texto;
           // no celular ela sai colada no Orbe (que nasce logo abaixo do vídeo); no computador, no vão de sempre
-          .add(() => droneSay("Clique aqui! 👆", 3.4, window.innerWidth <= 760 ? undefined : [".hero__sub", ".hero__ctas"]), 0.8);
+          // celular: espera o título terminar de entrar (as letras ainda animando enganam a medida do texto)
+          .add(() => droneSay(window.innerWidth <= 760 ? "Clique\naqui! 👆" : "Clique aqui! 👆", 3.4, window.innerWidth <= 760 ? undefined : [".hero__sub", ".hero__ctas"]), window.innerWidth <= 760 ? 2.4 : 0.8);
         ScrollTrigger.refresh();
       }
 
@@ -147,7 +148,11 @@ export default function Experience() {
         const v = $(".video-topo video") as HTMLVideoElement | null;
         if (v) {
           v.muted = true; v.defaultMuted = true; v.setAttribute("muted", ""); v.setAttribute("playsinline", "");
-          const tocar = () => { if (v.paused) v.play().catch(() => {}); };
+          // iPhone em modo de economia de bateria bloqueia o vídeo automático e desenha um botão de play por cima:
+          // nesse caso o vídeo fica escondido e aparece a IMAGEM PARADA do topo (sem botão); ao primeiro toque ele tenta de novo
+          const caixaVideo = v.closest(".video-topo");
+          const tocar = () => { if (v.paused) v.play().then(() => caixaVideo?.classList.remove("video-bloqueado")).catch(() => caixaVideo?.classList.add("video-bloqueado")); };
+          v.addEventListener("playing", () => caixaVideo?.classList.remove("video-bloqueado"));
           tocar();
           v.addEventListener("canplay", tocar, { once: true });
           ["touchstart", "touchend", "click", "pointerdown", "scroll", "keydown"].forEach((ev) => window.addEventListener(ev, tocar, { passive: true }));
@@ -511,6 +516,8 @@ export default function Experience() {
         hold = Math.max(4, hold); // pedido do Victor: toda fala do Orbe fica pelo menos 4 s na tela
         if (bubbleTl?.isActive()) return false; // nunca troca a frase no meio de outra
         bubbleTxt.textContent = text;
+        // frase curta (a saudação "Clique aqui!") usa um balão compacto, para caber no vão sem cobrir texto
+        bubble.classList.toggle("drone__bubble--curta", text.length <= 16);
         // ===== POSIÇÃO DO BALÃO: 360° em volta do Orbe (pedido do Victor) =====
         // Testa 12 direções (em cima, embaixo, esquerda, direita e diagonais), sempre COLADO no Orbe,
         // e fica com a que cabe inteira na tela e cobre menos texto. A direção escolhida vale enquanto a
@@ -521,7 +528,7 @@ export default function Experience() {
         const W0 = window.innerWidth, H0 = window.innerHeight;
         const topo0 = ($(".header")?.getBoundingClientRect().bottom ?? 60) + 8;
         const bw = bubble.offsetWidth, bh = bubble.offsetHeight;
-        const textosEls = $$("main h1, main h2, main h3, main p, main li, main .btn, main .pill, main summary, main .stat__n, main .swipe-hint, .footer p");
+        const textosEls = $$("main h1:not(.hero__title), .hero__title .char, .hero__title .rotator, main h2, main h3, main p, main li, main .btn, main .pill, main summary, main .stat__n, main .swipe-hint, .footer p");
         const textos = textosEls.map((e) => e.getBoundingClientRect());
         const soltarGrudar = () => { if (grudar) gsap.ticker.remove(grudar); grudar = undefined; };
         const centroOrbe = () => {
@@ -629,6 +636,7 @@ export default function Experience() {
         [0.18, 0.5], [0.2, 0.16], [0.5, 0.12], [0.8, 0.2], [0.82, 0.6],
         [0.8, 0.86], [0.2, 0.86], [0.18, 0.22], [0.8, 0.16],
       ];
+      let nasceuNoBranco = false, jaRolou = false;
       const toPx = () => {
         const W = window.innerWidth, H = window.innerHeight;
         const pts = (W <= 760 ? routeMobile : route).map(([x, y]) => ({ x: x * W, y: y * H }));
@@ -642,9 +650,33 @@ export default function Experience() {
           // nasce DENTRO da faixa do vídeo (entre o cabeçalho e o selo do topo), à direita (pedido do Victor, 20/11/2026)
           const cab = $(".header")?.getBoundingClientRect(), selo = $(".hero .pill")?.getBoundingClientRect();
           const cta = cab && selo && selo.top - cab.bottom > 140 ? null : $(".hero__ctas .btn:not(.btn--ghost)")?.getBoundingClientRect();
-          // nasce no PONTO MAIS BAIXO da faixa do vídeo, à direita, colado em cima do selo — sem texto por baixo
-          // (pedido do Victor, 21/11/2026: "um pouco abaixo"; ao lado do título não cabe o Orbe inteiro no celular)
-          if (cab && selo && !cta) pts[0] = { x: W * 0.8, y: Math.max(cab.bottom + 80, selo.top - 58) + window.scrollY };
+          // nasce na PARTE BRANCA, abaixo do vídeo e do selo "Processos mais inteligentes…", no CANTO DIREITO
+          // (pedido do Victor, 21/11/2026, com print). Procura, de cima para baixo, a primeira altura em que o Orbe
+          // inteiro cabe colado na borda direita sem encostar em nenhuma letra do título nem no texto.
+          // As medidas são de LAYOUT (offsetLeft/Top), porque na abertura as letras ainda estão animando.
+          if (cab && selo && !cta) {
+            const doc = (el: HTMLElement) => {
+              let x = 0, y = 0, n: HTMLElement | null = el;
+              while (n) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent as HTMLElement | null; }
+              return { l: x, t: y, r: x + el.offsetWidth, b: y + el.offsetHeight };
+            };
+            const orbEl = drone.querySelector(".drone__orb") as HTMLElement | null;
+            const tam = Math.max(orbEl?.offsetWidth ?? 0, drone.offsetWidth, 60);
+            const altura = Math.max(orbEl?.offsetHeight ?? 0, drone.offsetHeight, 60);
+            const hw = tam / 2 + 6, hh = altura / 2 + 6;
+            const x = W - (tam / 2 + 4) - 8;
+            const seloEl = $(".hero .pill") as HTMLElement;
+            const obs = [seloEl, ...$$(".hero__title .char, .hero__title .rotator, .hero p, .hero .btn, .hero .io-card")].map((e) => doc(e as HTMLElement));
+            const baseSelo = doc(seloEl).b;
+            let y = -1;
+            for (let yy = baseSelo + hh + 6; yy < baseSelo + 700; yy += 4) {
+              const bate = obs.some((q) => x + hw > q.l && x - hw < q.r && yy + hh > q.t && yy - hh < q.b);
+              if (!bate) { y = yy; break; }
+            }
+            // sem vão livre (celular muito estreito): nasce no ponto mais baixo da faixa do vídeo, como antes
+            pts[0] = y > 0 ? { x, y } : { x: W * 0.8, y: Math.max(cab.bottom + 80, selo.top - 58) + window.scrollY };
+            nasceuNoBranco = y > 0;
+          }
           if (cta) {
             const yDoc = cta.top + window.scrollY; // posição com a página no topo
             const livreX = Math.max(cta.right + 10, W * 0.55);
@@ -681,6 +713,8 @@ export default function Experience() {
         lastX = Number(gsap.getProperty(drone, "x"));
       };
       buildFlight();
+      // a fonte do título chega depois: refaz a rota (e o ponto de nascimento) com as medidas certas
+      document.fonts?.ready.then(() => { if (window.scrollY < 30) buildFlight(); });
       let rt: ReturnType<typeof setTimeout>;
       let lastW = window.innerWidth;
       on(window, "resize", () => {
@@ -757,6 +791,10 @@ export default function Experience() {
       const avoid = () => {
         const agora = performance.now();
         if (voando) return;
+        // abertura no celular: o ponto de nascimento já foi medido livre com a página pronta; enquanto as letras
+        // ainda animam (e antes da primeira rolagem) o desvio enxergaria "texto" onde não há — fica parado ali
+        if (window.scrollY > 30) jaRolou = true;
+        if (isTouch && nasceuNoBranco && !jaRolou) return;
         if (agora - ultimo < 200) return; // 5x por segundo basta, não pesa e não deixa tremer
         ultimo = agora;
         const W = window.innerWidth, H = window.innerHeight;

@@ -1097,3 +1097,10 @@ body.com-video .faixas-fundo { opacity: 0 !important; }
 /* malha volta com transição suave, não de uma vez */
 .bg3d { transition: opacity .6s ease, visibility 0s; }
 body.com-video .bg3d { opacity: 0; }
+
+/* vídeo do topo bloqueado (iPhone em economia de bateria): some o vídeo e o botão de play; fica a imagem parada */
+.video-topo { background: url(/video/topo-poster.jpg?v=2) center / cover no-repeat; }
+.video-topo.video-bloqueado video { visibility: hidden; }
+
+/* balão compacto da saudação "Clique aqui!" */
+.drone__bubble.drone__bubble--curta { font-size: .66rem; padding: 5px 9px; white-space: pre-line; text-align: center; line-height: 1.25; }
