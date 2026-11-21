@@ -112,7 +112,7 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
 - iPhone em economia de bateria (vídeo bloqueado): esconde o vídeo e o botão de play, fica a imagem parada (`.video-bloqueado`).
 - Malha de pontos/setas: somem só com o topo quase inteiro na tela (`com-video` termina em `bottom 85%`); o vídeo usa `video-na-tela`.
 - **Site em BLOCOS claro/azul** (21/11/2026, `section.bloco-azul`, mesmo azul do Contato, largura total):
-  topo (claro) · faixa + manifesto (azul) · serviços (claro) · metodologia + números (azul) · cases (claro) · sobre (azul) ·
+  topo (claro) · faixa que passa (no BRANCO, com respiro antes do azul) · manifesto (azul) · serviços (claro) · metodologia + números (azul) · cases (claro) · sobre (azul) ·
   perguntas (claro) · contato (azul). Faixa clara de transição CURTA (36px) só no começo de cada bloco (`bloco-azul--abre`);
   o Contato também (antes 160px, "efeito branco muito forte").
 - **Cards em VIDRO COM AURA** (modelo 2 escolhido pelo Victor, 21/11/2026, fim de `theme-claro.css`): vidro fosco, filete de

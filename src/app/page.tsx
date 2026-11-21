@@ -331,7 +331,7 @@ export default function Home() {
         </section>
 
         {/* MARQUEE */}
-        <section className="marquee bloco-azul bloco-azul--abre" aria-label="O que eu digitalizo">
+        <section className="marquee" aria-label="O que eu digitalizo">
           <div className="marquee__track">
             {[0, 1].map((g) => (
               <div key={g} className="marquee__group" aria-hidden={g === 1}>
@@ -346,7 +346,7 @@ export default function Home() {
         </section>
 
         {/* MANIFESTO */}
-        <section className="manifesto container bloco-azul">
+        <section className="manifesto container bloco-azul bloco-azul--abre">
           <p className="manifesto__text">
             <SplitWords text="Sistema bom não é o mais bonito. É o que" />{" "}
             <em><SplitWords text="nasce da rotina real," /></em>{" "}
