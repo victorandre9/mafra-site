@@ -191,7 +191,15 @@ export default function Home() {
       {/* PRELOADER */}
       <div className="preloader" aria-hidden="true">
         <div className="preloader__inner">
-          <div className="preloader__logo"><LogoImage size={200} priority /></div>
+          <div className="preloader__logo">
+            {/* abertura com a logo ORIGINAL: dois anéis de luz girando em volta, brilho passando por cima e pulso */}
+            <div className="preloader__orbita">
+              <span className="preloader__aura" />
+              <span className="preloader__anel" />
+              <span className="preloader__anel preloader__anel--2" />
+              <div className="preloader__brilho"><LogoImage size={200} priority /></div>
+            </div>
+          </div>
           <div className="preloader__bar"><span /></div>
           <div className="preloader__count"><span className="js-count">0</span>%</div>
         </div>
