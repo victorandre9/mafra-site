@@ -197,12 +197,33 @@ export default function Experience() {
             const travar = (sim: boolean) => { if (sim) lenis?.stop(); else lenis?.start(); document.documentElement.classList.toggle("historia-travada", sim); };
             travar(true);
             const fim = () => { setTimeout(() => { ocupado = false; }, 250); };
+            // LEGENDAS (pedido do Victor): uma pergunta de impacto na abertura, o nome da etapa em cada cena
+            // e uma frase final que chama para o site. Somem enquanto o vídeo anda e aparecem quando ele para.
+            const LEGENDAS: Array<[string, string, string]> = [
+              ["01 · Gestão", "Você sabe o que acontece entre o pedido e a entrega?", "Deslize para acompanhar ↓"],
+              ["02 · Estoque", "Cada item no lugar certo — e à vista no sistema.", ""],
+              ["03 · Separação", "Pedido conferido na hora, sem papel e sem retrabalho.", ""],
+              ["04 · Expedição", "Cada caixa registrada antes de sair.", ""],
+              ["05 · Entrega", "O cliente recebe no prazo, com tudo rastreado.", ""],
+              ["Do escritório ao cliente", "Eu conecto cada etapa da sua empresa em um só sistema.", "Deslize para conhecer ↓"],
+            ];
+            const leg = caixa?.querySelector(".historia-legenda") as HTMLElement | null;
+            const legenda = (n: number | null) => {
+              if (!leg) return;
+              if (n === null) { leg.classList.remove("on"); return; }
+              const [tag, txt, dica] = LEGENDAS[Math.min(n, LEGENDAS.length - 1)];
+              (leg.querySelector(".historia-legenda__tag") as HTMLElement).textContent = tag;
+              (leg.querySelector(".historia-legenda__txt") as HTMLElement).textContent = txt;
+              (leg.querySelector(".historia-legenda__dica") as HTMLElement).textContent = dica;
+              leg.classList.remove("on"); void leg.offsetWidth; leg.classList.add("on");
+            };
+            setTimeout(() => { if (!liberado) legenda(0); }, 2600); // depois da abertura com a logo
             // PROTEÇÃO (o teste travou no iPhone): o site NUNCA pode ficar preso. Se o trecho não andar no tempo
             // esperado, pula direto para a cena; se o vídeo não conseguir tocar (economia de bateria, sem dados),
             // a história se desliga e o site rola normal.
             let falhas = 0;
             let desistiu = false;
-            const desistir = () => { desistiu = true; liberado = true; travar(false); caixa?.classList.add("rolou"); };
+            const desistir = () => { desistiu = true; liberado = true; travar(false); caixa?.classList.add("rolou"); legenda(null); };
             if (v.readyState < 1) { v.preload = "auto"; v.load(); }
             // toca o trecho 2,5x mais rápido (menos de 2 s por cena) e, se vier outro gesto enquanto toca, só
             // ESTICA o destino até a próxima cena — nenhum deslize se perde (5 deslizes = vídeo inteiro)
@@ -215,6 +236,7 @@ export default function Experience() {
               v.pause(); try { v.currentTime = alvoT; } catch { /* ok */ }
               if (!ok && ++falhas >= 2) desistir();
               ocupado = false;
+              if (!liberado) legenda(cena);
             };
             const vigiaFim = () => { if (v.currentTime >= alvoT - 0.03 || v.ended) concluir(true); };
             const tocarAte = (t: number) => {
@@ -229,14 +251,14 @@ export default function Experience() {
             const voltarPara = (alvoT: number) => {
               ocupado = true; v.pause();
               const o = { t: v.currentTime };
-              gsap.to(o, { t: alvoT, duration: 0.7, ease: "power2.inOut", onUpdate: () => { try { v.currentTime = o.t; } catch { /* ok */ } }, onComplete: fim });
+              gsap.to(o, { t: alvoT, duration: 0.7, ease: "power2.inOut", onUpdate: () => { try { v.currentTime = o.t; } catch { /* ok */ } }, onComplete: () => { fim(); legenda(cena); } });
             };
             const gesto = (dir: 1 | -1) => {
               if (ocupado && !(dir > 0 && tocando)) return; // tocando para a frente: o novo gesto estica o destino
               if (dir > 0) {
                 if (cena >= PAUSAS.length - 1) { // acabou o vídeo: libera o site e já sobe a "cortina" com o texto
                   if (tocando) return; // a última cena ainda está tocando: o site só sobe depois do vídeo terminar
-                  liberado = true; travar(false); caixa?.classList.add("rolou");
+                  liberado = true; travar(false); caixa?.classList.add("rolou"); legenda(null);
                   const destino = Math.round(window.innerHeight * 0.92);
                   if (lenis) lenis.scrollTo(destino, { duration: 1.4 }); else window.scrollTo({ top: destino, behavior: "smooth" });
                   return;
@@ -244,6 +266,7 @@ export default function Experience() {
                 cena++; tocarAte(PAUSAS[cena]);
               } else if (cena > 0) { cena--; voltarPara(PAUSAS[cena]); }
               caixa?.classList.toggle("rolou", cena > 0);
+              legenda(null); // a legenda some enquanto o vídeo anda
             };
             // roda do mouse / trackpad: um gesto = uma rajada de eventos; só conta um novo depois de 350 ms de silêncio
             const roda = (ev: WheelEvent) => {
@@ -639,7 +662,7 @@ export default function Experience() {
         const W0 = window.innerWidth, H0 = window.innerHeight;
         const topo0 = ($(".header")?.getBoundingClientRect().bottom ?? 60) + 8;
         const bw = bubble.offsetWidth, bh = bubble.offsetHeight;
-        const textosEls = $$("main .phone__frame, main h1:not(.hero__title), .hero__title .char, .hero__title .rotator, main h2, main h3, main p, main li, main .btn, main .pill, main summary, main .stat__n, main .swipe-hint, .footer p");
+        const textosEls = $$(".historia-legenda.on, main .phone__frame, main h1:not(.hero__title), .hero__title .char, .hero__title .rotator, main h2, main h3, main p, main li, main .btn, main .pill, main summary, main .stat__n, main .swipe-hint, .footer p");
         const textos = textosEls.map((e) => e.getBoundingClientRect());
         const soltarGrudar = () => { if (grudar) gsap.ticker.remove(grudar); grudar = undefined; };
         const centroOrbe = () => {
@@ -904,7 +927,7 @@ export default function Experience() {
       const avoidX = gsap.quickTo(layer, "x", { duration: 0.9, ease: "sine.inOut" });
       const avoidY = gsap.quickTo(layer, "y", { duration: 0.9, ease: "sine.inOut" });
       const corpo = $(".drone__dodge");
-      const SEL_TEXTO = "main h1:not(.hero__title), .hero__title .char, .hero__title .rotator, main h2, main h3, main p, main li, main .btn, main .pill, main .eyebrow, main .step.is-active, main .stat, main .holo.is-on, main .card__icon, main .project__media, main .phone__frame, main .about__badge, main .card, main .project, main .about__item, main .faq__item, main .io-card, main .io-servicos, main .vidro-forte, main .process__note, .footer .logo, .footer p, .footer__links";
+      const SEL_TEXTO = ".historia-legenda.on, main h1:not(.hero__title), .hero__title .char, .hero__title .rotator, main h2, main h3, main p, main li, main .btn, main .pill, main .eyebrow, main .step.is-active, main .stat, main .holo.is-on, main .card__icon, main .project__media, main .phone__frame, main .about__badge, main .card, main .project, main .about__item, main .faq__item, main .io-card, main .io-servicos, main .vidro-forte, main .process__note, .footer .logo, .footer p, .footer__links";
       let obst: Element[] = [];
       const coletar = () => { obst = Array.from(document.querySelectorAll(SEL_TEXTO)); };
       coletar();

@@ -281,7 +281,12 @@ export default function Home() {
               <source src="/video/topo-hd-r.mp4?v=2" type="video/mp4" media="(min-width: 761px)" />
               <source src="/video/topo-r.mp4?v=3" type="video/mp4" />
             </video>
-            <span className="rolar-aviso">Role para baixo</span>
+            {/* TESTE: legenda da história (uma por cena), escrita pelo código conforme a cena */}
+            <div className="historia-legenda" aria-live="polite">
+              <span className="historia-legenda__tag" />
+              <p className="historia-legenda__txt" />
+              <small className="historia-legenda__dica" />
+            </div>
           </div>
           <div className="container hero__content">
             <p className="pill reveal-up">Processos mais inteligentes. Equipes mais produtivas. Empresa mais lucrativa.</p>
