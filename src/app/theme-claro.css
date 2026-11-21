@@ -1113,7 +1113,7 @@ body.com-video .bg3d { opacity: 0; }
 section.bloco-azul { position: relative; isolation: isolate; }
 section.bloco-azul::before { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 100vw; transform: translateX(-50%);
   z-index: -1; pointer-events: none;
-  background: radial-gradient(120% 90% at 50% 30%, #0b2a55, #011228 70%); }
+  background: radial-gradient(120% 90% at 50% 30%, #0b3a24, #03140c 70%); }
 section.bloco-azul--abre::after { content: ""; position: absolute; top: 0; left: 50%; width: 100vw; height: 36px; transform: translateX(-50%);
   z-index: -1; pointer-events: none; background: linear-gradient(to bottom, #f3f6f9, rgba(243, 246, 249, 0)); }
 /* blocos azuis colados (faixa + manifesto, metodologia + números): sem espaço claro entre eles */
@@ -1129,16 +1129,16 @@ section.about.bloco-azul { padding-block: 110px; }
 }
 /* textos sobre o azul */
 .bloco-azul .section-title, .bloco-azul h2 { color: #fff !important; }
-.bloco-azul .grad, .bloco-azul .manifesto__text em { background: linear-gradient(90deg, #8ec5ff, #ffffff) !important;
+.bloco-azul .grad, .bloco-azul .manifesto__text em { background: linear-gradient(90deg, #7fe3ad, #ffffff) !important;
   -webkit-background-clip: text !important; background-clip: text !important; color: transparent !important; }
-.bloco-azul .eyebrow { color: #8ec5ff !important; }
+.bloco-azul .eyebrow { color: #7fe3ad !important; }
 .bloco-azul .manifesto__text { color: #fff; }
 .bloco-azul .about__lead, .bloco-azul .about__head p { color: rgba(255, 255, 255, .76) !important; }
 .bloco-azul .about__ring text { fill: rgba(255, 255, 255, .7) !important; }
 /* metodologia: etapas apagadas em branco; a ativa continua no cartão branco */
 .bloco-azul .step:not(.is-active) h3 { color: #fff !important; }
 .bloco-azul .step:not(.is-active) p { color: rgba(255, 255, 255, .7) !important; }
-.bloco-azul .step:not(.is-active) .step__n { color: #8ec5ff !important; }
+.bloco-azul .step:not(.is-active) .step__n { color: #7fe3ad !important; }
 .bloco-azul .process__note p { color: rgba(255, 255, 255, .76) !important; }
 .bloco-azul .process__note-q strong { color: #fff !important; }
 .bloco-azul .process__bar { background: rgba(255, 255, 255, .15); }
