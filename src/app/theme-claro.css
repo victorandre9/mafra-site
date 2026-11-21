@@ -1231,12 +1231,12 @@ section.marquee { margin-block: 56px 64px !important; }
 
 /* TESTE (pedido do Victor, 21/11/2026): a PRIMEIRA TELA INTEIRA é o vídeo, FIXO no fundo; todo o texto vem DEPOIS
    e sobe por cima dele como uma cortina clara. O recorte do .hero (clip-path) faz o vídeo fixo sumir quando o topo acaba. */
-.hero { padding-top: calc(100svh + 40px) !important; clip-path: inset(0); }
+.hero { padding-top: calc(250svh + 40px) !important; clip-path: inset(0); }
 .video-topo { position: fixed !important; inset: 0 !important; height: 100svh !important; width: 100% !important; }
 .video-topo::after { background: linear-gradient(to bottom, rgba(1, 24, 52, .18), transparent 30%, transparent 75%, rgba(1, 24, 52, .25)) !important; }
-.hero::before { content: ""; position: absolute; left: 0; right: 0; top: 100svh; bottom: 0; z-index: 1; pointer-events: none;
+.hero::before { content: ""; position: absolute; left: 0; right: 0; top: 250svh; bottom: 0; z-index: 1; pointer-events: none;
   background: #f3f6f9; border-radius: 28px 28px 0 0; box-shadow: 0 -24px 60px rgba(1, 24, 52, .28); }
-.hero .io-servicos { top: calc(100svh + 70px) !important; }
+.hero .io-servicos { top: calc(250svh + 70px) !important; }
 @media (max-width: 760px) { .video-topo video { object-position: 55% 50%; } }
 /* aviso para rolar, no pé do vídeo */
 .video-topo .rolar-aviso { position: absolute; left: 50%; bottom: 28px; transform: translateX(-50%); z-index: 2; color: #fff;
@@ -1245,3 +1245,7 @@ section.marquee { margin-block: 56px 64px !important; }
 .video-topo .rolar-aviso::after { content: ""; width: 2px; height: 26px; background: linear-gradient(#fff, transparent); }
 @keyframes rolar-pulo { 50% { transform: translate(-50%, 6px); } }
 .video-topo video { will-change: transform; }
+
+/* a história (escritório → armazém → separação → caminhão → entrega) dura ~2,5 telas de rolagem; o aviso some ao começar */
+.video-topo .rolar-aviso { transition: opacity .4s; }
+.video-topo.rolou .rolar-aviso { opacity: 0; }

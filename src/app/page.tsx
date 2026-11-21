@@ -276,10 +276,10 @@ export default function Home() {
           {/* ESBOÇO: vídeo do Runway em loop atrás do topo (rola junto com a seção, sem sumir de repente) */}
           <div className="video-topo" aria-hidden="true">
             {/* computador: versão HD (1920x1080, recomprimida do original do Runway); celular: a leve */}
-            <video poster="/video/topo-poster.jpg?v=2" autoPlay loop muted playsInline preload="auto">
+            <video poster="/video/topo-poster-r.jpg?v=1" autoPlay loop muted playsInline preload="auto">
               {/* TESTE vídeo na rolagem: versões com todos os quadros-chave (avançar/voltar liso ao rolar) */}
-              <source src="/video/topo-hd-r.mp4?v=1" type="video/mp4" media="(min-width: 761px)" />
-              <source src="/video/topo-r.mp4?v=1" type="video/mp4" />
+              <source src="/video/topo-hd-r.mp4?v=2" type="video/mp4" media="(min-width: 761px)" />
+              <source src="/video/topo-r.mp4?v=2" type="video/mp4" />
             </video>
             <span className="rolar-aviso">Role para baixo</span>
           </div>

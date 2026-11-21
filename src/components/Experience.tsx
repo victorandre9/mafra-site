@@ -187,14 +187,14 @@ export default function Experience() {
           {
             const caixa = v.closest(".video-topo") as HTMLElement | null;
             let alvo = 0, atual = 0; const base = 0;
-            const st = ScrollTrigger.create({ trigger: ".hero", start: "top top", end: () => "+=" + Math.round(window.innerHeight * 1.1),
+            const st = ScrollTrigger.create({ trigger: ".hero", start: "top top", end: () => "+=" + Math.round(window.innerHeight * 2.5),
               onUpdate: (self) => {
                 const rolou = self.progress > 0.005;
                 void rolou; if (!v.paused) v.pause();
                 // percorre o vídeo inteiro ao longo da rolagem do topo, a partir do quadro em que estava
                 const d = v.duration || 10;
                 alvo = Math.min(d - 0.05, base + self.progress * d);
-                if (caixa) gsap.set(v, { scale: 1 + self.progress * 0.18, transformOrigin: "50% 40%" });
+                caixa?.classList.toggle("rolou", self.progress > 0.03);
               } });
             const passo = () => {
               if (!modoRolagem || !v.duration) return;
