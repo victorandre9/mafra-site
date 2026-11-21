@@ -105,6 +105,10 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
 - **Contato escuro** (estilo Liquid Glass CTA): azul-marinho, setas flutuando, WhatsApp/Instagram/LinkedIn empilhados no mesmo
   formato com as cores OFICIAIS de cada app.
 - Robô: obstáculos incluem CARDS inteiros; cobrindo texto/botão/card > 12% fica translúcido (0,28) no computador e no celular.
+- **Abertura com a logo** (21/11/2026): fundo azul-marinho, logo ORIGINAL entra girando, dois anéis de luz giram em volta,
+  brilho atravessa a logo, aura pulsa; na saída a logo cresce e some (`.preloader__orbita`, ~2 s).
+- Robô no celular nasce no ponto mais baixo da faixa do vídeo, à direita, colado em cima do selo; saudação curta "Clique aqui! 👆".
+- Malha de pontos/setas: somem só com o topo quase inteiro na tela (`com-video` termina em `bottom 85%`); o vídeo usa `video-na-tela`.
 - Botões verdes: flash claro passando da esquerda para a direita a cada 3 s (`verde-varre`).
 
 ## Pendências conhecidas
