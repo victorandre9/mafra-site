@@ -204,18 +204,24 @@ export default function Experience() {
             let desistiu = false;
             const desistir = () => { desistiu = true; liberado = true; travar(false); caixa?.classList.add("rolou"); };
             if (v.readyState < 1) { v.preload = "auto"; v.load(); }
-            const tocarAte = (alvoT: number) => {
-              ocupado = true;
-              let feito = false;
-              const concluir = (ok: boolean) => {
-                if (feito) return; feito = true;
-                gsap.ticker.remove(vigiaFim); clearTimeout(segura);
-                v.pause(); try { v.currentTime = alvoT; } catch { /* ok */ }
-                if (!ok && ++falhas >= 2) desistir();
-                fim();
-              };
-              const vigiaFim = () => { if (v.currentTime >= alvoT - 0.03 || v.ended) concluir(true); };
-              const segura = setTimeout(() => concluir(false), Math.max(0, alvoT - v.currentTime) * 1000 + 2500);
+            // toca o trecho 2,5x mais rápido (menos de 2 s por cena) e, se vier outro gesto enquanto toca, só
+            // ESTICA o destino até a próxima cena — nenhum deslize se perde (5 deslizes = vídeo inteiro)
+            const VELOC = 2.5;
+            let alvoT = 0, tocando = false, segura: ReturnType<typeof setTimeout> | undefined;
+            const armarSegura = () => { clearTimeout(segura); segura = setTimeout(() => concluir(false), Math.max(0, alvoT - v.currentTime) / VELOC * 1000 + 2500); };
+            const concluir = (ok: boolean) => {
+              if (!tocando) return; tocando = false;
+              gsap.ticker.remove(vigiaFim); clearTimeout(segura);
+              v.pause(); try { v.currentTime = alvoT; } catch { /* ok */ }
+              if (!ok && ++falhas >= 2) desistir();
+              ocupado = false;
+            };
+            const vigiaFim = () => { if (v.currentTime >= alvoT - 0.03 || v.ended) concluir(true); };
+            const tocarAte = (t: number) => {
+              alvoT = t; armarSegura();
+              if (tocando) return; // já está tocando: só levou o destino para a frente
+              tocando = true; ocupado = true;
+              v.playbackRate = VELOC;
               gsap.ticker.add(vigiaFim);
               const pr = v.play();
               if (pr) pr.catch(() => concluir(false));
@@ -226,9 +232,10 @@ export default function Experience() {
               gsap.to(o, { t: alvoT, duration: 0.7, ease: "power2.inOut", onUpdate: () => { try { v.currentTime = o.t; } catch { /* ok */ } }, onComplete: fim });
             };
             const gesto = (dir: 1 | -1) => {
-              if (ocupado) return;
+              if (ocupado && !(dir > 0 && tocando)) return; // tocando para a frente: o novo gesto estica o destino
               if (dir > 0) {
                 if (cena >= PAUSAS.length - 1) { // acabou o vídeo: libera o site e já sobe a "cortina" com o texto
+                  if (tocando) return; // a última cena ainda está tocando: o site só sobe depois do vídeo terminar
                   liberado = true; travar(false); caixa?.classList.add("rolou");
                   const destino = Math.round(window.innerHeight * 0.92);
                   if (lenis) lenis.scrollTo(destino, { duration: 1.4 }); else window.scrollTo({ top: destino, behavior: "smooth" });
