@@ -289,7 +289,7 @@ export default function Home() {
                   nunca toca sozinho. Celular: versão vertical; computador: 1080p */}
               <video className="cine__video" poster="/cine/cine-poster.jpg" muted playsInline preload="auto">
                 <source src="/cine/cine-hd.mp4?v=1" type="video/mp4" media="(min-width: 761px)" />
-                <source src="/cine/cine-cel.mp4?v=1" type="video/mp4" />
+                <source src="/cine/cine-cel.mp4?v=2" type="video/mp4" />
               </video>
               <div className="cine__luz" />
               <div className="cine__progresso"><span /><span /><span /><span /><span /><span /></div>
