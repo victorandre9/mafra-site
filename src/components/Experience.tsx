@@ -461,17 +461,44 @@ export default function Experience() {
         };
         walk(el, false);
       };
+      /* ---------- TRANSIÇÕES ENTRE OS BLOCOS CLARO/AZUL (ideia do Victor, 22/11/2026) ----------
+         Branco → azul: o fundo azul ENTRA PELA DIREITA, como uma cortina deslizando com a rolagem.
+         Azul → branco: o branco DESCE por cima do azul (uma "cauda" azul embaixo do bloco vai sendo coberta de cima
+         para baixo). O texto do bloco seguinte só aparece DEPOIS da transição. */
+      if (!reduce) {
+        $$<HTMLElement>("section.bloco-azul--abre, section.cta-vidro").forEach((sec) => {
+          gsap.fromTo(sec, { "--azul-entra": "100%" }, { "--azul-entra": "0%", ease: "none",
+            scrollTrigger: { trigger: sec, start: "top bottom", end: "top 30%", scrub: 0.6 } });
+          // o texto do bloco azul só aparece quando a cortina já cobriu a tela (antes ficava branco sobre branco)
+          gsap.fromTo(sec, { "--conteudo": 0 }, { "--conteudo": 1, ease: "power1.in",
+            scrollTrigger: { trigger: sec, start: "top 55%", end: "top 25%", scrub: 0.6 } });
+        });
+        const pares: Array<[string, string]> = [[".manifesto", ".services"], [".stats", "#cases"], ["#sobre", ".bigtext"]];
+        pares.forEach(([azul, claro]) => {
+          const a2 = $(azul), c2 = $(claro);
+          if (!a2 || !c2) return;
+          const cauda = document.createElement("div");
+          cauda.className = "cauda-azul"; cauda.setAttribute("aria-hidden", "true");
+          a2.appendChild(cauda);
+          c2.classList.add("pos-azul");
+          gsap.fromTo(cauda, { clipPath: "inset(0% 0% 0% 0%)" }, { clipPath: "inset(100% 0% 0% 0%)", ease: "none",
+            scrollTrigger: { trigger: c2, start: "top bottom", end: "top 30%", scrub: 0.6 } });
+          cleanups.push(() => cauda.remove());
+        });
+      }
+      // dentro de um bloco que acabou de trocar de cor, o texto espera a transição terminar para aparecer
+      const inicioTexto = (el: Element) => (el.closest(".pos-azul, .bloco-azul--abre, .cta-vidro") ? "top 45%" : "top 85%");
       $$(".section-title").forEach((t) => {
         maskWords(t);
         gsap.from(t.querySelectorAll(".wm__i"), {
           yPercent: 115, rotate: 5, duration: 1.2, ease: "expo.out", stagger: 0.07,
-          scrollTrigger: { trigger: t, start: "top 85%" },
+          scrollTrigger: { trigger: t, start: inicioTexto(t) },
         });
       });
 
       // Textos de apoio: sobem saindo do desfoque
       $$(".work__lead, .about__lead, .contact__sub, .process__note, .eyebrow:not(.reveal-up)").forEach((p) => {
-        gsap.from(p, { y: 24, opacity: 0, filter: "blur(4px)", duration: 1.4, ease: "power3.out", scrollTrigger: { trigger: p, start: "top 90%" } });
+        gsap.from(p, { y: 24, opacity: 0, filter: "blur(4px)", duration: 1.4, ease: "power3.out", scrollTrigger: { trigger: p, start: inicioTexto(p) === "top 45%" ? "top 55%" : "top 90%" } });
       });
 
       // Faixa de tecnologias e textos gigantes reagem à velocidade da rolagem

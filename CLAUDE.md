@@ -127,6 +127,9 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
 - **Imagem do link compartilhado** (`public/og-image.jpg`, 21/11/2026): modelo 4 — fundo azul-marinho, logo original, frase do topo e FOTO do Victor à direita com selo "Fale com o Victor →". Ao trocar, subir o `?v=` em `layout.tsx`.
 - **Metodologia em janela baixa** (22/11/2026): no computador com pouca altura (notebook com escala do Windows) a seção travada
   encolhe com `zoom` em `.process__grid` (degraus por max-height 920/840/780/720/660); `posHolos` divide as posições pelo zoom.
+- **Transições entre blocos** (22/11/2026): branco→azul = fundo azul ENTRA PELA DIREITA (`--azul-entra`, clip-path, rolagem);
+  azul→branco = o branco DESCE sobre uma "cauda" azul (`.cauda-azul`, pares manifesto→serviços, números→cases, sobre→texto gigante).
+  Texto do bloco seguinte só aparece depois da transição (`--conteudo`, títulos começam em `top 45%`).
 - Botões verdes: flash claro passando da esquerda para a direita a cada 3 s (`verde-varre`).
 
 ## Pendências conhecidas
