@@ -128,6 +128,9 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
 - **TESTE (branch `teste-video-rolagem`, NÃO no ar)**: vídeo do topo em tela cheia com HISTÓRIA (escritório → armazém → separação →
   caminhão → entrega, mergulhando nas telas). TRAVA: cada gesto (fraco ou forte) = UMA cena; a tela do site só sobe depois da última cena.
   Créditos do Runway acabaram (21/11/2026). Depois: aplicar a mesma trava no celular 3D da Metodologia.
+- **PROTÓTIPO (branch `prototipo-abertura`, NÃO no ar, 22/11/2026)**: abertura cinematográfica com GSAP (linha do tempo com 6 paradas p0…p5,
+  trava 1 gesto = 1 parada, câmera atravessa o plano), imagens PROVISÓRIAS em `public/cine/`. Fase 3 (Wan 3.0) só com autorização
+  expressa do Victor por geração. Wan 3.0 no Runway: 10 créditos/s em 720p, 20/s em 1080p; aceita imagem inicial E final.
 - Botões verdes: flash claro passando da esquerda para a direita a cada 3 s (`verde-varre`).
 
 ## Pendências conhecidas

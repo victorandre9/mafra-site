@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import Experience from "@/components/Experience";
 import { LINK_INSTAGRAM, LINK_LINKEDIN, LINK_WHATSAPP } from "@/lib/contato";
 import Hero3DLazy from "@/components/Hero3DLazy";
@@ -281,6 +282,19 @@ export default function Home() {
               <source src="/video/topo-hd-r.mp4?v=2" type="video/mp4" media="(min-width: 761px)" />
               <source src="/video/topo-r.mp4?v=3" type="video/mp4" />
             </video>
+            {/* PROTÓTIPO CINEMATOGRÁFICO (sem custo): 5 planos com imagens PROVISÓRIAS; a câmera atravessa um plano
+                para chegar ao próximo. Quando as tomadas do Wan 3.0 forem aprovadas, cada plano recebe o seu vídeo. */}
+            <div className="cine" aria-hidden="true">
+              {([["1", "52% 50%"], ["2", "50% 55%"], ["3", "48% 55%"], ["4", "30% 60%"], ["5", "45% 55%"]] as const).map(([n, foco]) => (
+                <div key={n} className="cine__plano" style={{ "--foco": foco } as CSSProperties}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={`/cine/provisoria-${n}.webp`} alt="" />
+                </div>
+              ))}
+              <div className="cine__luz" />
+              <div className="cine__progresso"><span /><span /><span /><span /><span /><span /></div>
+              <div className="cine__aviso">Protótipo · imagens provisórias</div>
+            </div>
             {/* TESTE: legenda da história (uma por cena), escrita pelo código conforme a cena */}
             <div className="historia-legenda" aria-live="polite">
               <span className="historia-legenda__tag" />
