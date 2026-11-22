@@ -1227,3 +1227,12 @@ section.marquee { margin-block: 56px 64px !important; }
   #contato { padding-top: 64px !important; }
   .footer { padding-top: 24px !important; }
 }
+
+/* METODOLOGIA NO COMPUTADOR COM JANELA BAIXA (notebook com escala do Windows, pedido do Victor 22/11/2026):
+   a seção trava a tela e era mais alta que a janela — cortava o fim do texto e a base do celular 3D.
+   Encolhe o conjunto (texto + celular) proporcionalmente à altura disponível. */
+@media (min-width: 901px) and (max-height: 920px) { .process .process__grid { zoom: .92; } }
+@media (min-width: 901px) and (max-height: 840px) { .process .process__grid { zoom: .85; } }
+@media (min-width: 901px) and (max-height: 780px) { .process .process__grid { zoom: .79; } }
+@media (min-width: 901px) and (max-height: 720px) { .process .process__grid { zoom: .73; } }
+@media (min-width: 901px) and (max-height: 660px) { .process .process__grid { zoom: .67; } }
