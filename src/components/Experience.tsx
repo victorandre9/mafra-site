@@ -225,34 +225,31 @@ export default function Experience() {
             // e chega ao próximo (vem de um leve zoom e entra em foco), com um feixe de luz cruzando a tela.
             // Avanço e retrocesso são a mesma linha do tempo, tocada para a frente ou para trás — sempre suaves.
             // Quando houver vídeo aprovado, a mesma linha do tempo controla o tempo do vídeo (mesmas paradas).
-            const planos = Array.from(caixa?.querySelectorAll(".cine__plano") ?? []) as HTMLElement[];
-            const luz = caixa?.querySelector(".cine__luz") as HTMLElement | null;
+            // VÍDEO NA LINHA DO TEMPO: cada parada é um quadro do vídeo (o fim de cada tomada do Wan). Entre duas
+            // paradas a linha do tempo leva o tempo do vídeo de um quadro ao outro — para a frente OU para trás,
+            // sempre suave. O vídeo nunca toca sozinho.
+            const cv = caixa?.querySelector(".cine__video") as HTMLVideoElement | null;
             const marcas = Array.from(caixa?.querySelectorAll(".cine__progresso span") ?? []) as HTMLElement[];
             caixa?.classList.add("cine-ativo");
             const desistir = () => { desistiu = true; liberado = true; travar(false); caixa?.classList.add("rolou"); legenda(null); };
-            const PASSO = 1.7; // segundos de cada travessia
+            void desistir;
+            const PARADAS = [0.02, 5.0, 8.0, 11.0, 14.0, 16.92]; // segundos do vídeo (fim de cada tomada)
+            if (cv) { cv.muted = true; cv.setAttribute("muted", ""); cv.pause(); }
+            // iPhone só desenha o quadro pedido depois de o vídeo ter "tocado" uma vez: toca e pausa no 1º toque
+            const destravarCv = () => { if (!cv) return; cv.play().then(() => { cv.pause(); cv.currentTime = proxy.t; }).catch(() => {}); };
+            const proxy = { t: PARADAS[0] };
             const tl = gsap.timeline({ paused: true });
-            gsap.set(planos, { opacity: 0, scale: 1.18, filter: "blur(10px)" });
-            if (planos[0]) gsap.set(planos[0], { opacity: 1, scale: 1, filter: "blur(0px)" });
-            tl.addLabel("p0", 0);
-            let tempo = 0;
-            for (let k = 1; k < planos.length; k++) {
-              tl.to(planos[k - 1], { scale: 1.5, filter: "blur(12px)", opacity: 0, duration: PASSO, ease: "power2.in" }, tempo)
-                .fromTo(planos[k], { scale: 1.2, filter: "blur(12px)", opacity: 0 }, { scale: 1, filter: "blur(0px)", opacity: 1, duration: PASSO, ease: "power2.out", immediateRender: false }, tempo + 0.3);
-              if (luz) tl.fromTo(luz, { xPercent: -130, opacity: 0 }, { xPercent: 130, opacity: 1, duration: 1.1, ease: "power1.inOut", immediateRender: false }, tempo + 0.35);
-              tempo += PASSO + 0.3;
-              tl.addLabel("p" + k, tempo);
-            }
-            // parada final: a câmera se AFASTA da entrega (fecha a história) para a frase final
-            if (planos.length) tl.to(planos[planos.length - 1], { scale: 0.9, filter: "brightness(0.82)", duration: 1.4, ease: "power2.inOut" }, tempo);
-            tempo += 1.4; tl.addLabel("p" + planos.length, tempo);
-            const ULTIMA = planos.length; // = 5 → 6 paradas, uma por legenda
+            tl.to(proxy, { t: PARADAS[PARADAS.length - 1], duration: PARADAS[PARADAS.length - 1] - PARADAS[0], ease: "none",
+              onUpdate: () => { if (cv && Math.abs(cv.currentTime - proxy.t) > 1 / 40) { try { cv.currentTime = proxy.t; } catch { /* ok */ } } } });
+            PARADAS.forEach((s2, k) => tl.addLabel("p" + k, s2 - PARADAS[0]));
+            const ULTIMA = PARADAS.length - 1;
+            ["touchstart", "pointerdown", "wheel", "keydown"].forEach((ev) => window.addEventListener(ev, destravarCv, { once: true, passive: true }));
             const marcar = (n: number) => marcas.forEach((m, k) => m.classList.toggle("on", k <= n));
             marcar(0);
             let tocando = false, viagem: gsap.core.Tween | null = null;
             const irPara = (n: number) => {
               const atual = tl.time(), alvo = tl.labels["p" + n];
-              const dur = Math.max(0.6, Math.min(2.6, Math.abs(alvo - atual) * 0.85));
+              const dur = Math.max(0.7, Math.min(3.2, Math.abs(alvo - atual) * 0.55));
               viagem?.kill(); tocando = true; ocupado = true; marcar(n);
               viagem = tl.tweenTo("p" + n, { duration: dur, ease: "power2.inOut", onComplete: () => { tocando = false; ocupado = false; if (!liberado) legenda(n); } });
             };

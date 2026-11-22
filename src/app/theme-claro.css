@@ -1267,7 +1267,7 @@ section.marquee { margin-block: 56px 64px !important; }
 @keyframes rolar-pulo2 { 50% { transform: translateY(4px); } }
 
 /* ===== PROTÓTIPO CINEMATOGRÁFICO (sem custo) ===== */
-.video-topo.cine-ativo video { display: none !important; }
+.video-topo.cine-ativo video:not(.cine__video) { display: none !important; }
 .cine { position: absolute; inset: 0; overflow: hidden; background: #0b1a2e; }
 .cine__plano { position: absolute; inset: 0; will-change: transform, opacity, filter; transform-origin: 50% 48%; }
 .cine__plano img { width: 100%; height: 100%; object-fit: cover; object-position: var(--foco, 50% 50%); display: block;
@@ -1285,3 +1285,9 @@ section.marquee { margin-block: 56px 64px !important; }
   background: rgba(1, 24, 52, .6); padding: 5px 12px; border-radius: 999px; }
 @media (max-width: 760px) { .cine__progresso { right: 10px; } .cine__progresso span { height: 16px; width: 5px; } }
 @media (prefers-reduced-motion: reduce) { .cine__plano img { animation: none; } }
+
+/* vídeo da história (Wan 3.0) ocupando a tela inteira */
+.cine__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; display: block; }
+
+/* durante a história o robô sai de cena (ficava em cima das pessoas do vídeo) e volta quando o site sobe */
+html.historia-travada .drone { opacity: 0 !important; pointer-events: none; transition: opacity .4s; }
