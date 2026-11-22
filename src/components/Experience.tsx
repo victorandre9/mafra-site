@@ -380,9 +380,12 @@ export default function Experience() {
         const espE = f.left - (t ? t.right + 20 : s.left) - folga;
         const espD = document.documentElement.clientWidth - f.right - folga - 16;
         // o balão é levemente ampliado pelo 3D (translateZ + perspectiva): ~10% de margem na largura
-        const wE = Math.max(130, Math.min(210, espE * 0.9)), wD = Math.max(130, Math.min(210, espD * 0.9));
-        $$<HTMLElement>(".holo.hc-a").forEach((h) => { h.style.left = "auto"; h.style.right = `${s.right - f.left + folga}px`; h.style.width = `${wE}px`; });
-        $$<HTMLElement>(".holo.hc-b").forEach((h) => { h.style.right = "auto"; h.style.left = `${f.right - s.left + folga}px`; h.style.width = `${wD}px`; });
+        const wE = Math.max(100, Math.min(210, espE * 0.9)), wD = Math.max(100, Math.min(210, espD * 0.9));
+        // janela baixa: a seção é encolhida com `zoom` (CSS) — as medidas da tela vêm encolhidas e os valores
+        // escritos no estilo são encolhidos de novo; divide pelo zoom para o balão cair no lugar certo
+        const z = parseFloat(getComputedStyle($(".process__grid") ?? st).zoom || "1") || 1;
+        $$<HTMLElement>(".holo.hc-a").forEach((h) => { h.style.left = "auto"; h.style.right = `${(s.right - f.left + folga) / z}px`; h.style.width = `${wE / z}px`; });
+        $$<HTMLElement>(".holo.hc-b").forEach((h) => { h.style.right = "auto"; h.style.left = `${(f.right - s.left + folga) / z}px`; h.style.width = `${wD / z}px`; });
       };
       posHolosRef = posHolos;
       posHolos();
