@@ -1243,7 +1243,7 @@ section.bloco-azul--abre::before, section.bloco-azul--abre::after { clip-path: i
 section.cta-vidro { clip-path: inset(0 0 0 var(--azul-entra, 0%)); }
 /* azul → branco: a "cauda" azul embaixo do bloco, coberta pelo branco que desce */
 .cauda-azul { position: absolute; top: 100%; left: 50%; width: 100vw; height: 55vh; transform: translateX(-50%); z-index: -1; pointer-events: none;
-  background: linear-gradient(180deg, #011228, #06204a 70%, #0b2a55); }
+  background: linear-gradient(180deg, #03140c, #062a17 70%, #0b3a24); }
 section.cta-vidro .cauda-azul { z-index: 0; }
 .pos-azul { position: relative; z-index: 1; }
 @media (prefers-reduced-motion: reduce) { .cauda-azul { display: none; } }
