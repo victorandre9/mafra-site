@@ -30,8 +30,10 @@ export default function DroneOrb() {
     return () => window.removeEventListener("pointermove", move);
   }, []);
   return (
+    // a área de desenho é 1,5x maior que o quadro do Orbe (CSS `.drone__orb > div`) e o campo de visão abre na mesma
+    // proporção (38° → 54,6°): o Orbe fica do mesmo tamanho e o ARO, ao girar, não é mais cortado pela borda (Victor, 23/11/2026)
     <div ref={host} className="drone__orb">
-      <Canvas dpr={dpr} camera={{ position: [0, 0.25, 4.15], fov: 38 }} gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}>
+      <Canvas dpr={dpr} camera={{ position: [0, 0.25, 4.15], fov: 54.6 }} gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}>
         <ambientLight intensity={0.12} />
         <directionalLight position={[3, 4.5, 2.5]} intensity={3} />
         <pointLight position={[-2.6, 1.2, -2]} intensity={30} color={ESM_CLARO} />
