@@ -1248,3 +1248,46 @@ html.trocando-pagina main, html.trocando-pagina .footer { will-change: transform
 .header > * { margin-top: 0 !important; margin-bottom: 0 !important; }
 .header .logo { display: flex !important; align-items: center; line-height: 0 !important; height: auto !important; padding: 0 !important; margin: 0 !important; }
 .header .logo-img { display: block; margin: 0 !important; }
+
+/* ===== SITE EM PÁGINAS DE TELA CHEIA (23/11/2026) ===== */
+/* cópia visual da página que entra no carrossel (fica atrás da barra do topo) */
+.pagina-copia { position: fixed; inset: 0; z-index: 60; overflow: hidden; pointer-events: none; background: #f3f6f9; }
+.pagina-copia > div > * { pointer-events: none; }
+html.modo-paginas, html.modo-paginas body { overscroll-behavior-y: auto; }
+/* página encolhida/ampliada (zoom): o fundo azul de largura total continua indo de ponta a ponta da tela */
+section.bloco-azul::before, section.bloco-azul--abre::after { width: calc(100vw * var(--inv-zoom, 1)) !important; }
+/* páginas de tela cheia: conteúdo centralizado na altura (os cards não esticam até o pé da tela) */
+html.modo-paginas main > section[style*="min-height"], html.modo-paginas .footer[style*="min-height"] { align-content: center; }
+html.modo-paginas .stats[style*="min-height"] { align-items: center; }
+/* Serviços numa página só: os 6 cards sem altura mínima fixa */
+html.modo-paginas .services__track .card { min-height: 0 !important; }
+@media (min-width: 761px) {
+  /* páginas de tela cheia: Serviços em UMA página — 6 cards em 2 fileiras de 3, sem etiquetas */
+  html.modo-paginas .services__pin { padding: 70px 0 40px !important; }
+  html.modo-paginas .services__head { margin-bottom: 26px !important; }
+  html.modo-paginas .services__track { grid-template-columns: repeat(3, 1fr) !important; }
+  html.modo-paginas .services__track .card { grid-column: auto !important; grid-row: auto !important; gap: 12px !important; padding: 24px 24px !important; }
+  html.modo-paginas .services__track .card:nth-child(1) h3 { font-size: 1.6rem !important; }
+  html.modo-paginas .services__track .card:nth-child(1) p { font-size: 1rem; }
+  html.modo-paginas .services__track .card:nth-child(1) .card__icon svg { width: 44px; height: 44px; }
+  html.modo-paginas .services__track .card ul { display: none !important; }
+}
+@media (min-width: 761px) {
+  /* ícone no canto direito, na linha do número: o card fica mais baixo */
+  html.modo-paginas .services__track .card .card__icon { position: absolute !important; top: 18px; right: 18px; padding: 10px !important; }
+  html.modo-paginas .services__track .card h3 { margin-top: 18px; }
+}
+@media (min-width: 761px) {
+  /* páginas de tela cheia (computador): tudo cabe numa tela */
+  html.modo-paginas .hero { padding-top: 90px !important; padding-bottom: 30px !important; }
+  html.modo-paginas .bigtext { padding-top: 20px !important; padding-bottom: 10px !important; }
+  html.modo-paginas #perguntas { padding-top: 10px !important; padding-bottom: 30px !important; }
+  /* seção encolhida (zoom < 1) continua com a largura da tela inteira */
+  html.modo-paginas :is(.hero, .marquee, .manifesto, .services, .bigtext, #contato, #cases, #sobre, .footer) { max-width: calc(100vw * var(--inv-zoom, 1)) !important; }
+  /* números: página azul cheia, cards maiores e centralizados */
+  html.modo-paginas .stats { max-width: 1200px !important; align-content: center; }
+  html.modo-paginas .stats .stat { padding: 44px 40px !important; }
+  html.modo-paginas .stats .stat__n { font-size: clamp(4.5rem, 7vw, 7.5rem) !important; }
+  html.modo-paginas .stats .stat p { font-size: 1.3rem !important; }
+}
+@media (min-width: 761px) { html.modo-paginas .bigtext__row { font-size: clamp(2.4rem, 6vw, 6rem) !important; } }
