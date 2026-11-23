@@ -134,6 +134,11 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   cometa e raios, e fica viva (aura pulsando) enquanto o site carrega. FASE 2 (`.ab-roda`, quando tudo carregou e a fase 1
   assentou — `performance.now() ≥ 2,3 s`): brilho, slogan, carga, flash, portal; marcos do JS pelo relógio de `abLogoSai`
   (1,8 s cliques, 2,35 s intro, 2,96 s fim). A espera pelo carregamento (vídeo, 3D, página) continua como estava.
+  **PORTAL EM ÍRIS (23/11/2026, Victor: "travadinha na hora que abre o portal"):** a máscara `--furo` era redesenhada pelo
+  navegador a cada quadro e engasgava. Agora: no flash (1,8 s) o FUNDO (`.ab-fundo`: céu, dobra, raios) some e a ÍRIS
+  (`.ab-iris`) assume o escuro — um anel com furo que cresce (scale 0→1,667, furo 48vmax×escala) + 4 placas escuras que se
+  afastam 50vmax×escala com a MESMA curva. Só transform/opacity (compositor). O site (vídeo, 3D, animações) só ACORDA quando
+  o portal termina (2,96 s; Victor: "acabou o portal, inicia os vídeos do site").
 - Robô no celular nasce na PARTE BRANCA, EM FRENTE à palavra "movem" (centro da última linha do título, canto direito; vão livre medido pelo layout; sem vão, cai no vídeo); fica parado ali até a 1ª rolagem. Saudação "Clique aqui! 👆" em balão compacto de 2 linhas, só se couber sem cobrir texto.
 - iPhone em economia de bateria (vídeo bloqueado): esconde o vídeo e o botão de play, fica a imagem parada (`.video-bloqueado`).
 - Malha de pontos/setas: somem só com o topo quase inteiro na tela (`com-video` termina em `bottom 85%`); o vídeo usa `video-na-tela`.
