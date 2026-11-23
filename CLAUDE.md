@@ -127,9 +127,11 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
 - **Imagem do link compartilhado** (`public/og-image.jpg`, 21/11/2026): modelo 4 — fundo azul-marinho, logo original, frase do topo e FOTO do Victor à direita com selo "Fale com o Victor →". Ao trocar, subir o `?v=` em `layout.tsx`.
 - **Metodologia em janela baixa** (22/11/2026): no computador com pouca altura (notebook com escala do Windows) a seção travada
   encolhe com `zoom` em `.process__grid` (degraus por max-height 920/840/780/720/660); `posHolos` divide as posições pelo zoom.
-- **Transições entre blocos** (22/11/2026): branco→azul = fundo azul ENTRA PELA DIREITA (`--azul-entra`, clip-path, rolagem);
-  azul→branco = o branco DESCE sobre uma "cauda" azul (`.cauda-azul`, pares manifesto→serviços, números→cases, sobre→texto gigante).
-  Texto do bloco seguinte só aparece depois da transição (`--conteudo`, títulos começam em `top 45%`).
+- **Transição de PÁGINA entre blocos** (23/11/2026, "a página vai para o lado" — NÃO é o fundo entrando): branco→azul = a página
+  inteira (main + rodapé) sai pela ESQUERDA e volta pela DIREITA já no começo do bloco azul; azul→branco = a página DESCE.
+  Disparo: `top 72%` (lado) e `top 40%` ("desce", por causa da frase azul curta); rolagem presa durante a troca (`trocando-pagina`).
+- **Barra do topo justa na logo** (23/11/2026): só 3px acima e 3px abaixo da logo (computador e celular).
+- **Telas do celular 3D** (23/11/2026): cada tela é ampliada com `zoom` até o conteúdo ocupar o espaço útil (`ajustarTelas`).
 - Botões verdes: flash claro passando da esquerda para a direita a cada 3 s (`verde-varre`).
 
 ## Pendências conhecidas
