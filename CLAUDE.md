@@ -197,6 +197,16 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   sem o "entortar" pela velocidade da rolagem (só no celular). Mesmo tamanho (Victor não quer maior).
 - **Barra do topo justa na logo** (23/11/2026): só 3px acima e 3px abaixo da logo (computador e celular).
 - **Telas do celular 3D** (23/11/2026): cada tela é ampliada com `zoom` até o conteúdo ocupar o espaço útil (`ajustarTelas`).
+- **Cards em BOLHA** (23/11/2026, Victor: monitor de 15,6" não dava para ler; `src/lib/bolha.ts`, só computador): Serviços e
+  Cases. Mouse em cima = o card balança como bolha (`scale`) + "Clique para ampliar". Clique = o card vira GOTA D'ÁGUA
+  (`.bolha__gota`, brilho molhado), viaja crescendo até o centro e se desenvolve até o card grande balançando (elastic);
+  fecha (×, fora, Esc) voltando a ser gota e estourando no lugar. A cópia mora no <body> (fora do zoom das páginas).
+- **Perguntas em FOCO** (23/11/2026, `src/lib/faqFoco.ts`): sanfona (abriu uma, fecha as outras). No computador a resposta
+  NÃO abre na lista (a página mudava de altura e o encaixe encolhia/crescia tudo): o clique abre um painel em tela cheia —
+  círculo escuro nasce do ponto do clique, pergunta sobe palavra por palavra, resposta acende, luz passa; ← → navegam.
+  `html.bolha-aberta` segura a troca de páginas enquanto bolha/foco estão abertos.
+- **"Voltar ao topo"** no computador usa `__paginas.ir(0)` (a rolagem suave fica desligada no modo páginas).
+- Lista do topo ("/ Diagnóstico & processos…"): +2px e negrito (monitor pequeno).
 - Botões verdes: flash claro passando da esquerda para a direita a cada 3 s (`verde-varre`).
 
 ## Pendências conhecidas
