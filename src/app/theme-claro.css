@@ -1342,6 +1342,7 @@ html.modo-paginas .services { background: transparent !important; }
     -webkit-font-smoothing: antialiased; text-rendering: geometricPrecision; }
   html.modo-paginas section.marquee { max-width: none !important; width: calc(100% + 60px); margin-left: -30px !important; } /* cobre as pontas inclinadas */
 }
+@media (min-width: 761px) {
   /* Cases no computador (páginas): imagens com ALTURA fixa (não crescem quando o card alarga) → letra maior */
   html.modo-paginas #cases .project__media { aspect-ratio: auto !important; height: 30vh; background: #0a0618; }
   html.modo-paginas #cases .work__grupo--b2b .project__media { height: 19vh; }
