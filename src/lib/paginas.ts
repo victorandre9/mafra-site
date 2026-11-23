@@ -6,8 +6,8 @@
  *   (os 6 cards de Serviços cabem numa página). Só quando não cabe de jeito nenhum (Cases, Perguntas) vira várias
  *   paradas da mesma cor, cortadas no começo de um card/parágrafo.
  * - UM GESTO = UMA PARADA (roda, trackpad, dedo ou tecla; forte ou fraco). Durante a troca nenhum gesto conta.
- * - Claro → azul: a página atual sai pela ESQUERDA e a azul entra pela DIREITA AO MESMO TEMPO (carrossel: a página
- *   que entra é uma cópia visual, trocada pela real no fim). Azul → claro e mesma cor: a página DESCE.
+ * - Troca de BLOCO (computador): a página atual sai pela ESQUERDA e a próxima entra pela DIREITA ao mesmo tempo, só na
+ *   horizontal. É a PRÓPRIA página que desliza (nada de cópia): chega pronta, sem piscar. Dentro do bloco: DESCE.
  * - A Metodologia (tela travada) tem paradas internas: uma por etapa, antes de seguir para a próxima página.
  * - Se algo falhar, o site volta a rolar normalmente (nunca fica preso).
  */
@@ -131,6 +131,8 @@ export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, le
   let paradas: Parada[] = [];
   const calcular = () => {
     ajustarTamanhos();
+    // os gatilhos (Metodologia travada, animações) medem DEPOIS do encaixe; antes eles ficavam ~250 px fora do lugar
+    ScrollTrigger.refresh();
     const lista: Parada[] = [];
     const ch = cabecalho();
     grupos.forEach((g, gi) => {
@@ -180,55 +182,85 @@ export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, le
     gsap.to(o, { y, duration: dur, ease: "power3.inOut", onUpdate: () => { window.scrollTo(0, o.y); lenis?.scrollTo(o.y, { immediate: true, force: true }); }, onComplete: () => ok() });
   });
 
-  // carrossel: cópia visual da página que entra (só o que está na tela), deslizando junto com a real que sai
-  const carrossel = async (destino: Parada, dir: 1 | -1) => {
-    const g = grupos[destino.grupo];
-    const palco = document.createElement("main");
-    palco.className = "pagina-copia";
-    palco.setAttribute("aria-hidden", "true");
-    const dentro = document.createElement("div");
-    dentro.style.position = "absolute"; dentro.style.left = "0"; dentro.style.right = "0";
-    // Metodologia (tela travada): a parte fixa aparece sempre no alto da tela, então a cópia não é deslocada
-    dentro.style.top = g.ajustar === "metodo" ? "0px" : `${topoDoc(g.secs[0]) - destino.y}px`;
-    g.secs.forEach((s) => {
-      const c = s.cloneNode(true) as HTMLElement;
-      c.removeAttribute("id");
-      c.querySelectorAll("[id]").forEach((n) => n.removeAttribute("id"));
-      c.querySelectorAll("canvas").forEach((n) => n.remove());
-      // a cópia mostra a página PRONTA (texto já no lugar), como no vídeo de referência
-      c.querySelectorAll<HTMLElement>("[style]").forEach((n) => { ["transform", "opacity", "filter", "visibility", "clip-path", "translate", "rotate", "scale"].forEach((k) => n.style.removeProperty(k)); });
-      // vídeo na cópia: só a imagem de capa (sem tocar nem baixar de novo)
-      c.querySelectorAll("video").forEach((n) => { n.removeAttribute("autoplay"); n.preload = "none"; n.querySelectorAll("source").forEach((x) => x.remove()); });
-      dentro.appendChild(c);
-    });
-    palco.appendChild(dentro);
-    document.body.appendChild(palco);
-    const real = [q("main"), q(".footer")].filter(Boolean) as HTMLElement[];
-    const W = window.innerWidth;
-    gsap.set(palco, { x: W * dir });
-    await new Promise<void>((ok) => {
-      gsap.timeline({ onComplete: () => ok() })
-        .to(real, { x: -W * dir, duration: 0.9, ease: "power3.inOut" }, 0)
-        .to(palco, { x: 0, duration: 0.9, ease: "power3.inOut" }, 0);
-    });
-    // a página real também fica PRONTA na chegada (sem o texto "aparecendo" depois da troca)
+  // ---------- troca de bloco: a PRÓPRIA página desliza de lado (sem cópia, sem "piscar", sem reajuste na chegada) ----------
+  // A rolagem fica parada na página atual. A página que entra (que está logo abaixo/acima no site) é deslocada com
+  // `translate` para dentro da tela, começando da direita; a atual sai pela esquerda. No fim, na MESMA linha de código:
+  // tira os deslocamentos, leva a rolagem até a página nova e avisa os gatilhos — na tela nada muda, ela já estava ali.
+  const pinoDo = (g: Grupo) => ScrollTrigger.getAll().find((t) => t.pin && g.secs.some((s) => s.contains(t.trigger as Node)));
+
+  // deixa a página de destino PRONTA antes de aparecer: animações de entrada terminadas, contadores disparados e
+  // as animações ligadas à rolagem já no ponto em que ficarão na chegada
+  const prepararDestino = (g: Grupo, y: number, lateral: boolean) => {
     ScrollTrigger.getAll().forEach((st) => {
       const t = st.trigger as HTMLElement | undefined;
-      if (!t || st.pin || st.vars.scrub || !g.secs.some((s) => s.contains(t))) return;
-      st.animation?.progress(1);
+      if (!t || !g.secs.some((s) => s.contains(t))) return;
+      if (st.vars.scrub) {
+        if (!lateral || !st.animation) return;
+        const prog = gsap.utils.clamp(0, 1, (y - st.start) / Math.max(1, st.end - st.start));
+        st.animation.progress(prog);
+        if (st.pin && typeof st.vars.onUpdate === "function") st.vars.onUpdate({ ...st, progress: prog } as never); // etapa da Metodologia
+        return;
+      }
+      if (st.pin) return;
+      if (st.animation) st.animation.progress(1);
+      else if (st.vars.once && typeof st.vars.onEnter === "function") st.vars.onEnter(st);
     });
-    window.scrollTo(0, destino.y); lenis?.scrollTo(destino.y, { immediate: true, force: true });
-    gsap.set(real, { clearProps: "transform" });
-    // a cópia fica por cima mais um instante enquanto a página real termina de montar (sem piscar em branco)
-    await new Promise<void>((ok) => setTimeout(ok, 700));
-    await new Promise<void>((ok) => { gsap.to(palco, { opacity: 0, duration: 0.25, onComplete: () => ok() }); });
-    palco.remove();
+  };
+
+  // o que se mexe de cada grupo: as seções; mas um elemento TRAVADO (fixo na tela) se mexe sozinho, senão ele "pula"
+  const pecas = (g: Grupo) => {
+    const fixos = g.secs.flatMap((s) => Array.from(s.querySelectorAll<HTMLElement>(".pin-spacer > *"))).filter((e) => getComputedStyle(e).position === "fixed");
+    return fixos.length ? fixos : g.secs;
+  };
+  // deslocamento com `translate` (não mexe nas animações, que usam `transform`); o fator corrige o zoom da seção
+  const fatorZoom = (e: HTMLElement) => {
+    const antes = e.style.translate;
+    const x0 = e.getBoundingClientRect().left;
+    e.style.translate = "1000px 0px";
+    const f = (e.getBoundingClientRect().left - x0) / 1000 || 1;
+    e.style.translate = antes;
+    return f;
+  };
+
+  const deslizar = async (de: Parada, para: Parada, dir: 1 | -1) => {
+    const g1 = grupos[de.grupo], g2 = grupos[para.grupo];
+    const W = window.innerWidth;
+    prepararDestino(g2, para.y, true);
+    // onde a página de destino está HOJE no site (a Metodologia travada: começo ou fim da trava, conforme o lado)
+    let alvo = para.y;
+    const pino = pinoDo(g2);
+    // (a parte travada fica no alto da tela na chegada: o alvo é onde ela está agora no site)
+    if (pino && para.y > pino.start && para.y < pino.end && pino.pin) alvo = topoDoc(pino.pin);
+    const dy = alvo - window.scrollY;
+    const sai = pecas(g1).map((e) => ({ e, f: fatorZoom(e), antes: e.style.translate }));
+    const entra = g2.secs.map((e) => ({ e, f: fatorZoom(e), antes: e.style.translate }));
+    const pos = (p: number) => {
+      sai.forEach(({ e, f }) => { e.style.translate = `${(-W * dir * p) / f}px 0px`; });
+      entra.forEach(({ e, f }) => { e.style.translate = `${(W * dir * (1 - p)) / f}px ${-dy / f}px`; });
+    };
+    pos(0);
+    await new Promise<void>((ok) => {
+      const o = { p: 0 };
+      gsap.to(o, { p: 1, duration: 0.9, ease: "power3.inOut", onUpdate: () => pos(o.p), onComplete: () => ok() });
+    });
+    // chegada: tudo no mesmo instante (nenhum quadro desenhado no meio)
+    [...sai, ...entra].forEach(({ e, antes }) => { e.style.translate = antes; });
+    window.scrollTo(0, para.y); lenis?.scrollTo(para.y, { immediate: true, force: true });
+    ScrollTrigger.update();
+  };
+
+  // imagens: carregadas e decodificadas desde o começo, para nenhuma "aparecer" no meio de uma troca
+  const preCarregar = () => {
+    document.querySelectorAll<HTMLImageElement>("main img, .footer img").forEach((img) => {
+      if (img.loading === "lazy") img.loading = "eager";
+      img.decode?.().catch(() => {});
+    });
   };
 
   const ir = async (n: number) => {
     if (trocando || n < 0 || n >= paradas.length || n === atual) return;
     trocando = true;
-    html.classList.add("trocando-pagina");
+    html.classList.add("pagina-andando"); // (sem esconder a barra de rolagem: no Windows isso alargava a página e tudo se reorganizava)
     const de = paradas[atual], para = paradas[n];
     const dir: 1 | -1 = n > atual ? 1 : -1;
     try {
@@ -238,13 +270,13 @@ export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, le
       const lado = mudaGrupo && window.innerWidth > 760;
       atual = n; // decidido ANTES de andar: nenhum evento de rolagem no caminho muda a página
       nossoAte = performance.now() + 5000;
-      if (lado) await carrossel(para, dir);
-      else await rolar(para.y, mudaGrupo ? 1.0 : 0.85);
+      if (lado) await deslizar(de, para, dir);
+      else { prepararDestino(grupos[para.grupo], para.y, false); await rolar(para.y, mudaGrupo ? 1.0 : 0.85); }
       nossoAte = performance.now() + 400;
     } catch {
       desligar();
     } finally {
-      html.classList.remove("trocando-pagina");
+      html.classList.remove("pagina-andando");
       setTimeout(() => { trocando = false; }, 450);
     }
   };
@@ -293,7 +325,7 @@ export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, le
   // alturas mudaram (fotos, vídeo, fontes, janela): recalcula e REALINHA na mesma página
   const recalcular = () => {
     if (trocando) { setTimeout(recalcular, 500); return; }
-    ScrollTrigger.refresh(); calcular();
+    calcular();
     atual = Math.min(atual, paradas.length - 1);
     nossoAte = performance.now() + 400;
     window.scrollTo(0, paradas[atual].y); lenis?.scrollTo(paradas[atual].y, { immediate: true, force: true });
@@ -312,7 +344,8 @@ export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, le
   const aoRedimensionar = () => { clearTimeout(rz); rz = setTimeout(recalcular, 300); };
   window.addEventListener("resize", aoRedimensionar);
   // imagens e fontes mudam alturas depois do carregamento
-  window.addEventListener("load", () => recalcular());
+  window.addEventListener("load", () => { recalcular(); setTimeout(preCarregar, 1200); });
+  setTimeout(preCarregar, 4000);
   setTimeout(recalcular, 1800);
 
   function desligar() {
@@ -323,7 +356,7 @@ export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, le
     window.removeEventListener("keydown", tecla, { capture: true });
     window.removeEventListener("scroll", aoRolar);
     window.removeEventListener("resize", aoRedimensionar);
-    html.classList.remove("modo-paginas", "trocando-pagina");
+    html.classList.remove("modo-paginas", "pagina-andando");
     grupos.forEach((g) => g.secs.forEach((s) => { s.style.zoom = ""; s.style.minHeight = ""; s.style.paddingTop = ""; s.style.paddingBottom = ""; s.querySelectorAll<HTMLElement>(":scope > *").forEach((e) => { e.style.zoom = ""; e.style.marginTop = ""; e.style.width = ""; e.style.marginLeft = ""; e.style.marginRight = ""; }); }));
     lenis?.start();
   }

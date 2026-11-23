@@ -1238,8 +1238,6 @@ section.marquee { margin-block: 56px 64px !important; }
 @media (min-width: 901px) and (max-height: 660px) { .process .process__grid { zoom: .67; } }
 
 /* ===== TRANSIÇÃO DE PÁGINA (22/11/2026): durante a troca, a página inteira se move; nada de rolagem por baixo ===== */
-html.trocando-pagina, html.trocando-pagina body { overflow: hidden; }
-html.trocando-pagina main, html.trocando-pagina .footer { will-change: transform; }
 .pos-azul { position: relative; z-index: 1; }
 
 /* BARRA DO TOPO (logo, menu, "Fale comigo") justa na logo: só 3px acima e 3px abaixo (pedido do Victor, 23/11/2026) */
@@ -1290,3 +1288,6 @@ html.modo-paginas .services__track .card { min-height: 0 !important; }
   html.modo-paginas .stats .stat p { font-size: 1.3rem !important; }
 }
 @media (min-width: 761px) { html.modo-paginas .bigtext__row { font-size: clamp(2.4rem, 6vw, 6rem) !important; } }
+/* páginas de tela cheia: a barra do topo fica SEMPRE na tela (sumir ao descer era um "reajuste" depois de cada troca) */
+html.modo-paginas .header.is-hidden { transform: none !important; }
+@media (min-width: 761px) { html.modo-paginas .bigtext { padding-top: 64px !important; } } /* a faixa não fica atrás da barra do topo */

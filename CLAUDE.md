@@ -129,9 +129,13 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   encolhe com `zoom` em `.process__grid` (degraus por max-height 920/840/780/720/660); `posHolos` divide as posições pelo zoom.
 - **Site em PÁGINAS DE TELA CHEIA** (23/11/2026, `src/lib/paginas.ts`, só COMPUTADOR): 1 gesto (fraco ou forte) = 1 página,
   nunca pula nem para no meio. Cada página cabe numa tela (zoom de 60% a 150%; letra cresce se sobra espaço). Troca de
-  BLOCO = a página entra INTEIRA pela direita, só na horizontal (cópia visual deslizando, como o vídeo de referência do
+  BLOCO = a página entra INTEIRA pela direita, só na horizontal (a própria página desliza, como o vídeo de referência do
   Victor); dentro do bloco desce. Cases = 2 páginas (`PEDACOS`); Metodologia = 4 paradas na tela travada; Serviços = 6 cards
   em 2 fileiras de 3. **CELULAR: rolagem contínua normal, tudo para baixo, sem páginas e sem lateral** (ordem do Victor).
+  A troca lateral move a PRÓPRIA página (`translate` nas seções; a parte travada da Metodologia se move sozinha) — NUNCA
+  cópia/clone: a cópia piscava e a página "se reajustava" na chegada (Victor, 23/11/2026). A página de destino chega PRONTA
+  (`prepararDestino`: animações de entrada terminadas). Nada de esconder a barra de rolagem na troca (no Windows alargava a
+  página). `ScrollTrigger.refresh()` sempre DEPOIS do encaixe (`ajustarTamanhos`). A barra do topo não some ao rolar.
 - **Barra do topo justa na logo** (23/11/2026): só 3px acima e 3px abaixo da logo (computador e celular).
 - **Telas do celular 3D** (23/11/2026): cada tela é ampliada com `zoom` até o conteúdo ocupar o espaço útil (`ajustarTelas`).
 - Botões verdes: flash claro passando da esquerda para a direita a cada 3 s (`verde-varre`).
