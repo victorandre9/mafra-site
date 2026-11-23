@@ -14,9 +14,9 @@ import gsap from "gsap";
  *    Esc, voltando para o card. A cópia mora no <body> (fora do `zoom` das páginas) e rola com o mouse por dentro.
  *    Enquanto aberta, `html.bolha-aberta` segura a troca de páginas (paginas.ts).
  */
-const AUMENTO = 2.2;
-// moldura renderizada: centro da lente e raio interno (px CSS) dentro da imagem de 468×501
-const MOLDURA = { w: 468, h: 501, cx: 212, cy: 220, r: 105 };
+const AUMENTO = 2.1;
+// moldura renderizada (2ª versão, "mais proporcional": aro fino, cabo curto): centro da lente e raio interno em px CSS
+const MOLDURA = { w: 211, h: 227, cx: 97.5, cy: 102, r: 66 };
 
 export function iniciarBolha(): () => void {
   const html = document.documentElement;
@@ -75,6 +75,8 @@ export function iniciarBolha(): () => void {
   const posicionar = () => {
     raf = 0;
     if (!alvo || !copiaLupa) return;
+    // (proteção: se a cópia sumiu da lente — ex.: uma saída e entrada muito rápidas —, refaz)
+    if (!conteudo.firstChild || !copiaLupa.isConnected) { const a = alvo; alvo = null; mostrarLupa(a, { clientX: mx, clientY: my } as MouseEvent); return; }
     // a lente acompanha o mouse com um leve atraso (movimento macio)
     lx += (mx - lx) * 0.38; ly += (my - ly) * 0.38;
     lente.style.translate = `${lx - MOLDURA.cx}px ${ly - MOLDURA.cy}px`; // (`translate` à parte: o gsap usa `transform` para aparecer)
@@ -101,7 +103,7 @@ export function iniciarBolha(): () => void {
   const esconderLupa = () => {
     alvo?.classList.remove("com-lupa");
     alvo = null;
-    if (visivel) { visivel = false; gsap.to(lente, { opacity: 0, scale: 0.8, duration: 0.2, ease: "power2.in", onComplete: () => { if (!visivel) conteudo.replaceChildren(); } }); }
+    if (visivel) { visivel = false; gsap.to(lente, { opacity: 0, scale: 0.8, duration: 0.2, ease: "power2.in", onComplete: () => { if (!visivel && !alvo) conteudo.replaceChildren(); } }); }
   };
   lente.style.transformOrigin = `${MOLDURA.cx}px ${MOLDURA.cy}px`;
 

@@ -1752,9 +1752,9 @@ html.bolha-aberta a, html.bolha-aberta button, html.bolha-aberta button * { curs
 /* ================= LUPA 3D que amplia o texto (23/11/2026, modelo 2 do Victor) — src/lib/bolha.ts =================
    O card não sai do lugar: a lente segue o mouse e mostra uma cópia do card ampliada 2,2x embaixo dela. */
 .card--bolha.com-lupa, .card--bolha.com-lupa * { cursor: none !important; }
-.lupa-lente { position: fixed; left: 0; top: 0; width: 468px; height: 501px; z-index: 135; pointer-events: none; opacity: 0; will-change: transform; }
-.lupa-lente__vidro { position: absolute; left: 107px; top: 115px; width: 210px; height: 210px; border-radius: 50%; overflow: hidden; background: #fff;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .6), inset 0 0 22px rgba(1, 24, 52, .28); }
+.lupa-lente { position: fixed; left: 0; top: 0; width: 211px; height: 227px; z-index: 135; pointer-events: none; opacity: 0; will-change: transform; }
+.lupa-lente__vidro { position: absolute; left: 31.5px; top: 36px; width: 132px; height: 132px; border-radius: 50%; overflow: hidden; background: #fff;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .6), inset 0 0 14px rgba(1, 24, 52, .28); }
 .lupa-lente__conteudo { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
 .lupa-lente__brilho { position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
   background: radial-gradient(ellipse 46% 30% at 32% 22%, rgba(255, 255, 255, .55), transparent 70%),
@@ -1766,3 +1766,19 @@ html.bolha-aberta a, html.bolha-aberta button, html.bolha-aberta button * { curs
 .lupa-lente .lupa-ctx > i, .lupa-lente .work__grid > i, .lupa-lente .work__grupo-head { display: none !important; }
 .lupa-lente .card, .lupa-lente .project { margin: 0 !important; transform: none !important; translate: none !important; scale: none !important;
   animation: none !important; opacity: 1 !important; visibility: visible !important; }
+
+/* SERVIÇOS no computador (Victor, 23/11/2026: "título longe do menu", "letra muito pequena"): título a ~10px do menu
+   (o respiro vem de paginas.ts), letras maiores e o bloco usando 90% da LARGURA DA TELA (largura de layout = tela ÷ zoom):
+   cards largos = menos linhas = a página cabe com zoom maior = letra maior na tela */
+@media (min-width: 761px) {
+  html.modo-paginas .services { padding-top: 0 !important; }
+  html.modo-paginas .services__pin { padding: 0 0 18px !important; }
+  html.modo-paginas .services__head { margin-bottom: 18px !important; }
+  html.modo-paginas .services__head, html.modo-paginas .services__track { width: calc(90vw * var(--inv-zoom, 1)) !important; max-width: none !important;
+    margin-left: auto !important; margin-right: auto !important; padding-left: 0 !important; padding-right: 0 !important; }
+  html.modo-paginas .services .section-title { font-size: clamp(2.4rem, 3.4vw, 3.4rem) !important; }
+  html.modo-paginas .services__lead { font-size: 1.2rem !important; max-width: 70ch !important; }
+  html.modo-paginas .services__track .card h3, html.modo-paginas .services__track .card:nth-child(1) h3 { font-size: 1.75rem !important; }
+  html.modo-paginas .services__track .card p, html.modo-paginas .services__track .card:nth-child(1) p { font-size: 1.22rem !important; line-height: 1.5 !important; }
+  html.modo-paginas .services__track .card--cta h3 { font-size: 1.9rem !important; }
+}
