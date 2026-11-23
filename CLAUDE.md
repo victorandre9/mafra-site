@@ -140,6 +140,9 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   Topo: título em 2 linhas largas, card "Fale com o Victor" 1,15x na linha dos botões (1,35 ficou grande demais), com a
   foto GRANDE (`victor-mafra-retrato.jpg`, 1122×1402; a de 720 px ficava sem qualidade). Manifesto: menor e centralizado.
   Serviços sem o véu branco (a malha de pontos aparece igual à dos Cases).
+  Pedaços (Cases) medidos SEM a animação de entrada (`topoLayout`), seção com 1px de respiro (margem não atravessa) e
+  margem corrigida medindo de novo. Se uma página MUDA de altura sozinha (ex.: números contando 0→30 quebravam a linha),
+  um ResizeObserver reencaixa tudo. `.stat__n` sem quebra de linha. Card "A solução da sua empresa" 72px mais abaixo.
 - **Robô no computador (páginas, 23/11/2026)**: NÃO segue mais a rolagem. A cada troca (`mafra:pagina`, avisado por
   `paginas.ts`) ele escolhe um lugar LIVRE na página que está chegando (vagas laterais alternadas, `VAGAS`) e voa até lá
   com uma MOLA amortecida (arco para cima quando vai longe; inclina na direção do voo). Não fala enquanto voa.
