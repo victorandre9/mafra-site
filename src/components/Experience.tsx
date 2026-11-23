@@ -6,6 +6,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 import Lenis from "lenis";
 import { iniciarPaginas } from "@/lib/paginas";
+import { iniciarBolha } from "@/lib/bolha";
+import { iniciarFaqFoco } from "@/lib/faqFoco";
 import { EV_ABERTURA, esperar3D } from "@/lib/abertura";
 
 
@@ -70,6 +72,16 @@ export default function Experience() {
           if (lenis && iNav >= 0 && typeof target !== "number") {
             window.dispatchEvent(new CustomEvent("mafra:voo", { detail: { alvo: target, dur: 3 + iNav } }));
             return;
+          }
+          // computador em PÁGINAS: "Voltar ao topo" (e âncoras soltas) usam a troca de páginas — a rolagem suave
+          // fica desligada lá e o botão não fazia nada (Victor, 23/11/2026)
+          const pag = (window as unknown as { __paginas?: { paradas: () => { y: number }[]; ir: (n: number) => void } }).__paginas;
+          if (pag && document.documentElement.classList.contains("modo-paginas")) {
+            if (target === 0) { pag.ir(0); return; }
+            const y = (target as HTMLElement).getBoundingClientRect().top + window.scrollY;
+            const ps = pag.paradas();
+            let k = 0; ps.forEach((p, i) => { if (p.y <= y + 4) k = i; });
+            pag.ir(k); return;
           }
           if (lenis) lenis.scrollTo(target, { duration: 1.6 });
           else if (target === 0) window.scrollTo(0, 0);
@@ -568,6 +580,10 @@ export default function Experience() {
       if (!reduce) {
         // começa depois que os outros gatilhos (Metodologia, textos) já existem, para medir as paradas certas
         const paginasTimer = setTimeout(() => { cleanups.push(iniciarPaginas(gsap, ScrollTrigger, lenis)); }, 600);
+        // cards de Serviços e Cases ampliáveis em BOLHA (computador)
+        if (window.innerWidth > 760) cleanups.push(iniciarBolha());
+        // perguntas: sanfona (abriu uma, fecha as outras) + no computador o FOCO em tela cheia
+        cleanups.push(iniciarFaqFoco());
         cleanups.push(() => clearTimeout(paginasTimer));
       }
       // dentro de um bloco que acabou de trocar de cor, o texto espera a transição terminar para aparecer

@@ -1641,3 +1641,86 @@ html.pg-no-azul .pg-setas button { background: rgba(1, 24, 52, .45); color: #fff
 body.em-voo .pg-mapa, body.em-voo .pg-setas { opacity: 0; pointer-events: none; }
 html.abrindo .pg-mapa, html.abrindo .pg-setas { display: none; } /* fora da tela de verdade: o vidro fosco por cima da abertura pesava */
 @media (max-width: 760px) { .pg-mapa, .pg-setas { display: none; } }
+
+/* ================= CARDS EM BOLHA (23/11/2026, Victor: em monitor de 15,6" não dava para ler) — src/lib/bolha.ts =================
+   Computador: passar o mouse = o card balança como bolha (propriedade `scale`, não briga com o tilt) + "Clique para ampliar";
+   clicar = a cópia vem em bolha até o centro, em tamanho de leitura. Fecha clicando fora, no × ou com Esc. */
+@media (min-width: 761px) {
+  .card--bolha { cursor: zoom-in !important; }
+  .card--bolha:hover { animation: cardBolha .9s cubic-bezier(.3, .7, .4, 1) both; }
+  @keyframes cardBolha { 0% { scale: 1; } 25% { scale: 1.035 .975; } 50% { scale: .99 1.025; } 75% { scale: 1.02 1.01; } 100% { scale: 1.015; } }
+  .card__dica { position: absolute; right: 14px; bottom: 14px; z-index: 3; padding: 6px 12px 6px 30px; border-radius: 999px;
+    font: 600 .78rem/1 var(--font-body, inherit); letter-spacing: .01em; color: #fff; pointer-events: none;
+    background: rgba(1, 24, 52, .82); box-shadow: 0 8px 20px -8px rgba(1, 24, 52, .55);
+    opacity: 0; translate: 0 6px; transition: opacity .25s ease, translate .25s ease; }
+  .card__dica::before { content: ""; position: absolute; left: 10px; top: 50%; width: 12px; height: 12px; margin-top: -6px; border-radius: 50%;
+    border: 2px solid #8ec5ff; box-shadow: inset 0 0 0 2px rgba(142, 197, 255, .25); }
+  .card--bolha:hover .card__dica { opacity: 1; translate: 0 0; }
+  .bolha-origem { visibility: hidden !important; }
+}
+.bolha { position: fixed; inset: 0; z-index: 140; }
+.bolha__fundo { position: absolute; inset: 0; background: rgba(1, 16, 36, .5); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); cursor: zoom-out; }
+html .bolha .bolha__track { position: absolute; inset: 0; display: grid !important; place-items: center; place-content: center !important; grid-template-columns: auto !important; grid-template-rows: auto !important; grid-auto-flow: row !important; width: auto !important; padding: 0 !important;
+  gap: 0 !important; transform: none !important; translate: none !important; cursor: zoom-out; pointer-events: auto; }
+.bolha .bolha__track > i { display: none; }
+.bolha .bolha__card { position: relative; width: min(680px, 88vw) !important; max-height: 90vh; overflow: auto; cursor: auto;
+  grid-column: auto !important; grid-row: auto !important; min-height: 0 !important; margin: 0 !important;
+  padding: 44px 46px 40px !important; gap: 16px !important; border-radius: 28px !important; transform-origin: 50% 50%;
+  box-shadow: 0 0 0 6px rgba(142, 197, 255, .18), 0 40px 90px -30px rgba(1, 16, 36, .7) !important; scale: none; animation: none !important; }
+.bolha .card.bolha__card { display: flex !important; flex-direction: column !important; background: #fff !important; }
+html .bolha .card.bolha__card h3 { font-size: 2rem !important; margin-top: 6px !important; padding-right: 130px; }
+html .bolha .card.bolha__card p { font-size: 1.15rem !important; line-height: 1.65 !important; }
+html .bolha .card.bolha__card ul { display: flex !important; margin-top: 10px !important; }
+html .bolha .card.bolha__card li { font-size: .9rem !important; }
+html .bolha .card.bolha__card .card__icon { position: absolute !important; top: 26px !important; right: 76px !important; }
+.bolha .project.bolha__card { width: min(760px, 88vw) !important; padding: 0 0 8px !important; }
+.bolha .project.bolha__card .project__media { aspect-ratio: auto !important; height: 30vh; margin: 12px 12px 0; }
+.bolha .project.bolha__card .project__media img:not(.project__placa) { width: 100%; height: 100%; object-fit: contain; }
+.bolha .project.bolha__card .project__info { padding: 26px 34px 28px !important; }
+.bolha .project.bolha__card .project__info h3 { font-size: 1.8rem !important; }
+.bolha .project.bolha__card .project__info p { font-size: 1.12rem !important; line-height: 1.6 !important; }
+.bolha .project.bolha__card .project__info li { font-size: .92rem !important; }
+.bolha .reflexo-mouse { display: none !important; }
+.bolha__x { position: absolute; top: 16px; right: 16px; z-index: 5; width: 44px; height: 44px; border-radius: 50%; border: 0; cursor: pointer;
+  font: 400 1.9rem/1 system-ui, sans-serif; color: #fff; background: rgba(1, 24, 52, .88); box-shadow: 0 8px 20px -8px rgba(1, 24, 52, .6);
+  display: grid; place-items: center; padding-bottom: 3px; transition: scale .2s ease, background .2s ease; }
+.bolha__x:hover { scale: 1.1; background: #1f5fa8; }
+html.bolha-aberta .drone-layer { opacity: 0 !important; }
+/* a GOTA: brilho molhado por cima do card enquanto ele é bolha (reflexo no alto, aro de luz, azul no fundo) */
+.bolha__gota { position: absolute; inset: 0; z-index: 4; pointer-events: none; border-radius: inherit;
+  background:
+    radial-gradient(ellipse 34% 26% at 30% 24%, rgba(255, 255, 255, .95) 0%, rgba(255, 255, 255, .4) 45%, transparent 75%),
+    radial-gradient(ellipse 22% 14% at 72% 82%, rgba(255, 255, 255, .55), transparent 70%),
+    radial-gradient(ellipse at 50% 55%, rgba(230, 242, 255, .5) 0%, rgba(142, 197, 255, .45) 62%, rgba(79, 155, 220, .65) 86%, rgba(31, 95, 168, .8) 100%);
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .75), inset -14px -18px 40px rgba(31, 95, 168, .45), inset 14px 16px 34px rgba(255, 255, 255, .7); }
+.bolha .bolha__card { will-change: transform; }
+
+/* ================= PERGUNTAS EM FOCO (23/11/2026, Victor: texto pequeno + abria uma sem fechar a outra) — src/lib/faqFoco.ts =================
+   Computador: a resposta não abre na lista (a página nunca muda de altura). Clique = círculo escuro nasce do ponto do clique,
+   painel de vidro com a pergunta subindo palavra por palavra e a resposta acendendo; setas ← → entre as perguntas. */
+@media (min-width: 761px) { html.modo-paginas .faq__item summary { cursor: zoom-in; } }
+.faq-foco { position: fixed; inset: 0; z-index: 140; display: grid; place-items: center; }
+.faq-foco__fundo { position: absolute; inset: 0; cursor: zoom-out;
+  background: radial-gradient(ellipse at 50% 40%, rgba(13, 49, 104, .92), rgba(1, 16, 36, .96) 70%); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.faq-foco__painel { position: relative; width: min(980px, 88vw); max-height: 86vh; overflow: hidden; padding: 64px 72px 92px; border-radius: 32px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, .12), rgba(255, 255, 255, .03));
+  border: 1px solid rgba(142, 197, 255, .28);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25), 0 0 0 8px rgba(142, 197, 255, .05), 0 50px 120px -40px rgba(0, 0, 0, .8), 0 0 120px -30px rgba(79, 155, 220, .55); }
+.faq-foco__luz { position: absolute; top: -20%; left: 0; width: 40%; height: 140%; pointer-events: none; transform: skewX(-18deg);
+  background: linear-gradient(90deg, transparent, rgba(142, 197, 255, .16), transparent); }
+.faq-foco__selo { font: 600 .82rem/1 var(--font-mono, monospace); letter-spacing: .18em; text-transform: uppercase; color: #8ec5ff; margin-bottom: 22px; }
+.faq-foco__q { font: 700 clamp(2rem, 3.6vw, 3.2rem)/1.12 var(--font-display); letter-spacing: -.02em; color: #fff; margin-bottom: 28px; }
+.faq-foco__q .ff-w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .08em; }
+.faq-foco__q .ff-w > span { display: inline-block; }
+.faq-foco__r { font-size: clamp(1.15rem, 1.6vw, 1.45rem); line-height: 1.65; color: #dcecff; max-width: 820px; }
+.faq-foco__r .ff-r { display: inline-block; }
+.faq-foco__x { position: absolute; top: 20px; right: 20px; width: 48px; height: 48px; border-radius: 50%; cursor: pointer; z-index: 2;
+  border: 1px solid rgba(142, 197, 255, .35); background: rgba(255, 255, 255, .08); color: #fff; font: 400 2rem/1 system-ui, sans-serif;
+  display: grid; place-items: center; padding-bottom: 3px; transition: scale .2s ease, background .2s ease; }
+.faq-foco__x:hover { scale: 1.1; background: rgba(142, 197, 255, .25); }
+.faq-foco__nav { position: absolute; left: 72px; bottom: 28px; display: flex; gap: 12px; }
+.faq-foco__seta { width: 52px; height: 44px; border-radius: 999px; cursor: pointer; border: 1px solid rgba(142, 197, 255, .35);
+  background: rgba(255, 255, 255, .06); color: #fff; font: 600 1.2rem/1 system-ui, sans-serif; transition: background .2s ease, scale .2s ease; }
+.faq-foco__seta:hover { background: rgba(142, 197, 255, .25); scale: 1.06; }
+/* lista do topo ("/ Diagnóstico & processos…") mais legível em monitor pequeno (Victor, 23/11/2026): +2px e negrito */
+.hero .io-servicos { font-size: calc(.72rem + 2px) !important; font-weight: 700 !important; }
