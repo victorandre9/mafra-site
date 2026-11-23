@@ -101,6 +101,14 @@ export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, le
   };
 
   // pedaços: cada pedaço é uma página inteira — zoom próprio para ocupar a tela e começo exatamente uma tela depois do anterior
+  // posição de LAYOUT (sem a animação de entrada, que desloca o texto com `transform` até ele aparecer)
+  const semAnim = <T,>(e: HTMLElement, f: () => T): T => {
+    const t = e.style.transform, tr = e.style.translate;
+    e.style.transform = "none"; e.style.translate = "none";
+    try { return f(); } finally { e.style.transform = t; e.style.translate = tr; }
+  };
+  const topoLayout = (e: HTMLElement) => semAnim(e, () => topoDoc(e));
+  const baseLayout = (e: HTMLElement) => semAnim(e, () => e.getBoundingClientRect().bottom + window.scrollY);
   const ajustarPedacos = (g: Grupo) => {
     const sec = g.secs[0];
     const els = g.pedacos!.map((sels) => sels.map((x) => sec.querySelector(x) as HTMLElement | null).filter(Boolean) as HTMLElement[]);
@@ -108,18 +116,19 @@ export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, le
     // largura FIXA antes do zoom: assim o conteúdo encolhe por igual (sem isso, com zoom a largura útil cresce,
     // as imagens ficam mais altas e a página nunca cabe). Em tela muito larga, no máximo 1500 px.
     els.flat().forEach((e) => { e.style.width = `${Math.min(e.getBoundingClientRect().width, 1500)}px`; e.style.marginLeft = "auto"; e.style.marginRight = "auto"; });
-    sec.style.paddingTop = "0px"; sec.style.paddingBottom = "0px";
-    const ch = cabecalho(), util = H() - ch - 32;
+    // 1 px (e não 0): sem isso a margem do 1º item "atravessa" a seção e empurra a seção inteira em vez do conteúdo
+    sec.style.paddingTop = "1px"; sec.style.paddingBottom = "0px";
+    const ch = cabecalho(), util = H() - ch - 48; // folga embaixo: o card do fim nunca encosta na borda
     const zs = els.map((lista) => {
       if (!lista.length) return 1;
-      const h = lista[lista.length - 1].getBoundingClientRect().bottom - lista[0].getBoundingClientRect().top;
+      const h = baseLayout(lista[lista.length - 1]) - topoLayout(lista[0]);
       let z = Math.min(1.3, util / Math.max(1, h));
-      const medir = () => lista[lista.length - 1].getBoundingClientRect().bottom - lista[0].getBoundingClientRect().top;
+      const medir = () => baseLayout(lista[lista.length - 1]) - topoLayout(lista[0]);
       lista.forEach((e) => { e.style.zoom = String(z); });
-      for (let k = 0; k < 4; k++) { // zoom muda a largura → imagens mudam de altura: mede de novo e corrige
+      for (let k = 0; k < 8; k++) { // zoom muda a largura → imagens mudam de altura: mede de novo e corrige
         const real = medir();
-        if (Math.abs(real - util) < 6 || (z >= 1.3 && real < util)) break;
-        z = Math.min(1.3, z * (util / real));
+        if ((real <= util && real > util - 12) || (z >= 1.3 && real < util)) break;
+        z = Math.min(1.3, z * ((util - 4) / real));
         lista.forEach((e) => { e.style.zoom = String(z); });
       }
       return z;
@@ -129,8 +138,14 @@ export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, le
     els.forEach((lista, i) => {
       if (!lista.length) return;
       const alvo = topo + i * H() + ch + 16;
-      const delta = alvo - topoDoc(lista[0]);
-      lista[0].style.marginTop = `${delta / zs[i]}px`;
+      // mede e corrige até acertar: margens que se juntam ("colapsam") com o card de cima engoliam parte do deslocamento
+      let mt = 0;
+      for (let k = 0; k < 4; k++) {
+        const d = alvo - topoLayout(lista[0]);
+        if (Math.abs(d) < 1) break;
+        mt += d / zs[i];
+        lista[0].style.marginTop = `${mt}px`;
+      }
       g.tops!.push(i * H()); // relativo ao começo da seção (a posição absoluta é lida depois do refresh)
     });
     const falta = topo + els.length * H() - (topoDoc(sec) + sec.getBoundingClientRect().height);
@@ -380,10 +395,24 @@ export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, le
   window.addEventListener("resize", aoRedimensionar);
   // imagens e fontes mudam alturas depois do carregamento
   window.addEventListener("load", () => { recalcular(); setTimeout(preCarregar, 1200); });
+  // se alguma página MUDAR DE ALTURA sozinha (número que terminou de contar, imagem que carregou, pergunta aberta),
+  // o site se reencaixa — senão todas as páginas abaixo dela ficavam deslocadas (títulos atrás da barra do topo)
+  const alturas = new Map<Element, number>();
+  let roT: ReturnType<typeof setTimeout> | undefined, roCalmoAte = 0;
+  const marcarAlturas = () => grupos.forEach((g) => g.secs.forEach((s2) => alturas.set(s2, Math.round(s2.getBoundingClientRect().height))));
+  const ro = new ResizeObserver(() => {
+    if (performance.now() < roCalmoAte) return;
+    const mudou = grupos.some((g) => g.secs.some((s2) => Math.abs(Math.round(s2.getBoundingClientRect().height) - (alturas.get(s2) ?? 0)) > 2));
+    if (!mudou) return;
+    clearTimeout(roT);
+    roT = setTimeout(() => { recalcular(); roCalmoAte = performance.now() + 600; setTimeout(marcarAlturas, 100); }, 350);
+  });
+  setTimeout(() => { marcarAlturas(); grupos.forEach((g) => g.secs.forEach((s2) => ro.observe(s2))); }, 2500);
   setTimeout(preCarregar, 4000);
   setTimeout(recalcular, 1800);
 
   function desligar() {
+    ro.disconnect(); clearTimeout(roT);
     window.removeEventListener("wheel", roda, { capture: true });
     window.removeEventListener("touchstart", toqueIni);
     window.removeEventListener("touchmove", toqueMove, { capture: true });
