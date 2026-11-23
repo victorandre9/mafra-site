@@ -129,6 +129,11 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   (gerador com semente — servidor e navegador iguais). O anel desenhado virou um COMETA de luz dando a volta + aro aceso.
   Atenção ao `animation-fill-mode`: elementos que começam VISÍVEIS no 0% do keyframe (onda, faíscas) usam `forwards`,
   senão aparecem parados desde o início. Portal: `@property --furo` (inherits: false) animado em CSS.
+  **DUAS FASES (23/11/2026, Victor: "o símbolo demora; estrelas primeiro e a logo em meio segundo"):** FASE 1 é só CSS e
+  começa SOZINHA com a página (sem esperar o JavaScript, que levava 2-3 s): estrelas, e aos ~0,5 s a logo surge com anéis,
+  cometa e raios, e fica viva (aura pulsando) enquanto o site carrega. FASE 2 (`.ab-roda`, quando tudo carregou e a fase 1
+  assentou — `performance.now() ≥ 2,3 s`): brilho, slogan, carga, flash, portal; marcos do JS pelo relógio de `abLogoSai`
+  (1,8 s cliques, 2,35 s intro, 2,96 s fim). A espera pelo carregamento (vídeo, 3D, página) continua como estava.
 - Robô no celular nasce na PARTE BRANCA, EM FRENTE à palavra "movem" (centro da última linha do título, canto direito; vão livre medido pelo layout; sem vão, cai no vídeo); fica parado ali até a 1ª rolagem. Saudação "Clique aqui! 👆" em balão compacto de 2 linhas, só se couber sem cobrir texto.
 - iPhone em economia de bateria (vídeo bloqueado): esconde o vídeo e o botão de play, fica a imagem parada (`.video-bloqueado`).
 - Malha de pontos/setas: somem só com o topo quase inteiro na tela (`com-video` termina em `bottom 85%`); o vídeo usa `video-na-tela`.
