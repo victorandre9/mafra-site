@@ -1724,3 +1724,7 @@ html.bolha-aberta .drone-layer { opacity: 0 !important; }
 .faq-foco__seta:hover { background: rgba(127, 227, 173, .25); scale: 1.06; }
 /* lista do topo ("/ Diagnóstico & processos…") mais legível em monitor pequeno (Victor, 23/11/2026): +2px e negrito */
 .hero .io-servicos { font-size: calc(.72rem + 2px) !important; font-weight: 700 !important; }
+/* texto do topo ("Entendo a rotina…") +1px e negrito; menu do topo em negrito (Victor, 23/11/2026, monitor pequeno) */
+.hero .hero__sub { font-size: calc(1.22rem + 1px) !important; font-weight: 700 !important; }
+@media (min-width: 761px) { html.modo-paginas .hero .hero__sub { font-size: calc(clamp(1.1rem, 2.3vh, 1.45rem) + 1px) !important; } }
+.nav__link { font-weight: 700 !important; }
