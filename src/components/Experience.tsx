@@ -114,12 +114,25 @@ export default function Experience() {
         };
         requestAnimationFrame(passo);
       }
-      const fimAbertura = () => { ceuVivo = false; if (pre) pre.style.display = "none"; };
+      // (o CSS da abertura usa display com !important: a saída precisa de !important também, senão a tela da abertura
+      // fica invisível POR CIMA do site e engole os cliques)
+      const fimAbertura = () => { ceuVivo = false; if (pre) { pre.style.setProperty("display", "none", "important"); pre.style.pointerEvents = "none"; } };
       if (reduce || !pre) {
         gsap.timeline({ onComplete: () => { fimAbertura(); intro(); } })
           .set(".ab-logo", { opacity: 1 }).to(".preloader", { opacity: 0, duration: 0.4, delay: 0.6 });
       } else {
-        const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
+        // ESPERA o site carregar antes de começar (Victor, 23/11/2026: "segurar ~2 s"): sem isso a abertura rodava
+        // junto com o carregamento e engasgava/pulava partes. Começa quando a página terminou de carregar E o vídeo do
+        // topo já pode tocar, nunca antes de 2 s; se algo demorar demais, começa assim mesmo aos 6 s.
+        const tl = gsap.timeline({ defaults: { ease: "expo.out" }, paused: true });
+        const espera = (ms: number) => new Promise<void>((ok) => setTimeout(ok, ms));
+        const carregou = new Promise<void>((ok) => { if (document.readyState === "complete") ok(); else window.addEventListener("load", () => ok(), { once: true }); });
+        const videoPronto = new Promise<void>((ok) => {
+          const v = $(".hero video") as HTMLVideoElement | null;
+          if (!v || v.readyState >= 3) { ok(); return; }
+          v.addEventListener("canplay", () => ok(), { once: true });
+        });
+        Promise.race([Promise.all([carregou, videoPronto, espera(2000)]), espera(6000)]).then(() => tl.play(0));
         tl.set(".ab-logo", { scale: 0.35, rotate: -120, filter: "blur(22px) brightness(1.8)" })
           .set(".ab-palavra > span", { y: 0, yPercent: 115 }, 0) // zera o deslocamento do CSS (senão soma com o da animação)
           .to(".ab-aura", { opacity: 1, scale: 1, duration: 1.4, ease: "power2.out" }, 0.05)
@@ -143,6 +156,7 @@ export default function Experience() {
           .to(".ab-flash", { opacity: 0, duration: 0.55, ease: "power2.out" }, 2.76)
           // PORTAL: o furo cresce do centro e revela o site; a logo voa em direção à tela
           .set(".ab-portal", { opacity: 1 }, 2.8)
+          .set(".preloader", { pointerEvents: "none" }, 2.8) // o site já aparece pelo portal: os cliques passam
           .fromTo(".preloader", { "--furo": "0px" }, { "--furo": `${Math.ceil(Math.hypot(window.innerWidth, window.innerHeight) / 2 + 80)}px`, duration: 1.15, ease: "power3.in" }, 2.8)
           .to(".ab-logo", { scale: 4.2, opacity: 0, filter: "blur(10px) brightness(2)", duration: 1.0, ease: "power2.in" }, 2.78)
           .add(() => intro(), 3.35)
