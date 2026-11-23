@@ -1,11 +1,12 @@
 import gsap from "gsap";
 
 /**
- * CARDS DE SERVIÇOS EM BOLHA (Victor, 23/11/2026: em monitor de 15,6" os cards ficavam pequenos demais para ler).
- * Só no computador. Ao passar o mouse o card "balança" como bolha (CSS, `scale` — não briga com o tilt, que usa
- * `transform`) e mostra "Clique para ampliar". Ao clicar, uma CÓPIA do card sai do lugar dele e vem em BOLHA (mola
- * elástica) até o centro da tela, em tamanho de leitura e com as etiquetas. Fecha clicando fora, no × ou com Esc.
- * A cópia mora no <body> (fora da seção, que tem `zoom` das páginas): é ela que garante o tamanho real da letra.
+ * CARDS AMPLIÁVEIS (Victor, 23/11/2026: em monitor de 15,6" os cards de Serviços e Cases ficavam pequenos demais).
+ * Só no computador. Mouse em cima: o card balança como bolha (CSS, `scale` — não briga com o tilt) e o cursor vira uma
+ * LUPA 3D. Clique: uma CÓPIA do card cresce do lugar dele até o centro (estilo App Store / layout compartilhado):
+ * escala uniforme + recorte com cantos redondos que se abre, mola no fim, aro iridescente de bolha de sabão e reflexo.
+ * Fundo CLARO desfocado (o azul-escuro e a "gota" foram recusados: "cubo de gelo"). Fecha no ×, clicando fora ou Esc,
+ * voltando exatamente para o card. A cópia mora no <body> (fora do `zoom` das páginas) e rola com o mouse por dentro.
  * Enquanto aberta, `html.bolha-aberta` segura a troca de páginas (paginas.ts).
  */
 export function iniciarBolha(): () => void {
@@ -49,54 +50,56 @@ export function iniciarBolha(): () => void {
     html.classList.add("bolha-aberta");
     card.classList.add("bolha-origem");
 
-    // GOTA D'ÁGUA (Victor: "bolha com efeito molhado, com desenvolvimento até ficar no tamanho grande"):
-    // o card vira uma gota redonda e brilhante no lugar dele, viaja crescendo até o centro e se DESENVOLVE até o
-    // card grande, balançando como gelatina; o texto aparece quando ela assenta e o brilho molhado vai sumindo
-    const gota = document.createElement("span");
-    gota.className = "bolha__gota";
-    gota.setAttribute("aria-hidden", "true");
-    copia.appendChild(gota);
-    const conteudo = Array.from(copia.children).filter((e) => e !== gota) as HTMLElement[];
+    // ABERTURA "CARTÃO QUE CRESCE" (refino de 23/11/2026, Victor: a gota parecia "cubo de gelo" e o fundo azul, feio).
+    // Referência: a expansão de cartões da App Store / animações de layout compartilhado (Framer Motion `layoutId`):
+    // a cópia começa EXATAMENTE em cima do card (escala uniforme — a letra nunca deforma — e um recorte com cantos
+    // redondos na altura do card) e cresce com mola até o painel grande, enquanto o recorte se abre. Um aro de bolha de
+    // sabão (iridescente, transparente) brilha durante o voo e some; um reflexo de luz atravessa no fim.
+    const aro = document.createElement("span");
+    aro.className = "bolha__aro";
+    const reflexo = document.createElement("span");
+    reflexo.className = "bolha__reflexo";
+    aro.setAttribute("aria-hidden", "true"); reflexo.setAttribute("aria-hidden", "true");
+    copia.append(aro, reflexo);
+    copia.setAttribute("data-lenis-prevent", ""); // a rolagem do mouse rola o card ampliado (não a página)
     const f = copia.getBoundingClientRect();
-    const cxDe = r.left + r.width / 2 - (f.left + f.width / 2), cyDe = r.top + r.height / 2 - (f.top + f.height / 2);
-    const redondo = (d: number) => ({ scaleX: d / f.width, scaleY: d / f.height, borderRadius: `${f.width / 2}px / ${f.height / 2}px` });
-    const dPeq = Math.min(r.width, r.height) * 0.55, dMed = Math.min(f.width, f.height) * 0.62;
-    gsap.set(copia, { x: cxDe, y: cyDe, ...redondo(dPeq) });
-    gsap.set(conteudo, { opacity: 0 });
-    gsap.set(gota, { opacity: 1 });
+    const raio = parseFloat(getComputedStyle(card).borderTopLeftRadius) || 24;
+    const posCard = (rc: DOMRect) => {
+      const s = rc.width / f.width;
+      const corte = Math.max(0, f.height - rc.height / s);
+      return { x: rc.left - f.left, y: rc.top - f.top, scale: s, clipPath: `inset(0px 0px ${corte}px 0px round ${raio / s}px)` };
+    };
+    const aberto = { x: 0, y: 0, scale: 1, clipPath: "inset(0px 0px 0px 0px round 28px)" };
+    gsap.set(copia, { transformOrigin: "0 0", ...posCard(r) });
+    gsap.set(x, { opacity: 0, scale: 0.6 });
+    gsap.set(aro, { opacity: 0 });
     gsap.fromTo(fundo, { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.out" });
     gsap.timeline()
-      // 1) a gota se solta do card e viaja crescendo até o centro (estica um pouco no caminho, como líquido)
-      .to(copia, { x: 0, y: 0, duration: 0.6, ease: "power2.inOut" }, 0)
-      .to(copia, { ...redondo(dMed), duration: 0.6, ease: "power1.inOut" }, 0)
-      .to(copia, { scaleX: (dMed * 1.08) / f.width, scaleY: (dMed * 0.9) / f.height, duration: 0.18, ease: "sine.inOut", yoyo: true, repeat: 1 }, 0.22)
-      // 2) desenvolve: a gota abre até o card grande, balançando
-      .to(copia, { scaleX: 1, scaleY: 1, duration: 1.15, ease: "elastic.out(1, 0.45)" }, 0.6)
-      .to(copia, { borderRadius: "28px / 28px", duration: 0.7, ease: "power3.out" }, 0.62)
-      // 3) o texto aparece e o molhado vai secando
-      .to(conteudo, { opacity: 1, duration: 0.45, stagger: 0.05, ease: "power2.out" }, 0.95)
-      .to(gota, { opacity: 0.18, duration: 1.1, ease: "power2.out" }, 0.95);
+      .to(copia, { x: 0, y: 0, duration: 0.62, ease: "expo.out" }, 0)
+      .to(copia, { scale: 1, duration: 0.85, ease: "back.out(1.25)" }, 0)
+      .to(copia, { clipPath: aberto.clipPath, duration: 0.6, ease: "power3.out" }, 0.04)
+      .to(aro, { opacity: 1, duration: 0.25, ease: "power1.out" }, 0)
+      .to(aro, { opacity: 0, duration: 0.7, ease: "power2.inOut" }, 0.55)
+      .fromTo(reflexo, { xPercent: -160, opacity: 1 }, { xPercent: 260, duration: 0.9, ease: "power2.inOut" }, 0.35)
+      .to(x, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2)" }, 0.5);
     x.focus({ preventScroll: true });
 
     let fechando = false;
     const fechar = () => {
       if (fechando) return;
       fechando = true;
-      const r2 = card.getBoundingClientRect();
-      gsap.killTweensOf([copia, gota, ...conteudo]);
-      gsap.to(fundo, { opacity: 0, duration: 0.5, delay: 0.2, ease: "power2.in" });
+      gsap.killTweensOf([copia, x, aro, reflexo]);
+      copia.scrollTop = 0;
+      gsap.to(fundo, { opacity: 0, duration: 0.45, ease: "power2.inOut" });
       gsap.timeline({ onComplete: () => {
         card.classList.remove("bolha-origem");
         capa.remove();
         html.classList.remove("bolha-aberta");
         fecharAtual = null;
       } })
-        // volta a ser gota, viaja de volta ao card e ESTOURA (cresce um pouco e some)
-        .to(conteudo, { opacity: 0, duration: 0.18 }, 0)
-        .to(gota, { opacity: 1, duration: 0.2 }, 0)
-        .to(copia, { ...redondo(dMed), duration: 0.32, ease: "power2.in" }, 0)
-        .to(copia, { x: r2.left + r2.width / 2 - (f.left + f.width / 2), y: r2.top + r2.height / 2 - (f.top + f.height / 2), ...redondo(dPeq), duration: 0.42, ease: "power2.inOut" }, 0.3)
-        .to(copia, { ...redondo(dPeq * 1.35), opacity: 0, duration: 0.2, ease: "power1.out" }, 0.72);
+        .to(x, { opacity: 0, scale: 0.6, duration: 0.15 }, 0)
+        .to(aro, { opacity: 0.8, duration: 0.2 }, 0)
+        .to(copia, { ...posCard(card.getBoundingClientRect()), duration: 0.5, ease: "power3.inOut" }, 0.02);
     };
     fecharAtual = fechar;
     fundo.addEventListener("click", fechar);
