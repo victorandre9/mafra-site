@@ -1333,3 +1333,12 @@ html.modo-paginas .header.is-hidden { transform: none !important; }
 html.modo-paginas .services { background: transparent !important; }
 @media (min-width: 761px) { html.modo-paginas .work__fecho { margin-top: 72px !important; } } /* card "A solução da sua empresa" um pouco mais abaixo */
 @media (min-width: 761px) { html.modo-paginas .stat__n { white-space: nowrap !important; font-variant-numeric: tabular-nums; } } /* contar 0→30 não quebra a linha */
+@media (min-width: 761px) {
+  /* faixa do topo NÍTIDA (Victor, 23/11/2026): sem a ampliação de 5% (borrava), sem halo de sombra, letra um pouco
+     mais firme e desenhada direto (sem "foto" da camada) — mesmo tamanho */
+  html.modo-paginas .marquee { transform: rotate(-2deg) !important; }
+  html.modo-paginas .marquee__group { will-change: auto !important; }
+  html.modo-paginas .marquee span { font-weight: 600 !important; text-shadow: 0 1px 0 rgba(1, 12, 26, .35) !important;
+    -webkit-font-smoothing: antialiased; text-rendering: geometricPrecision; }
+  html.modo-paginas section.marquee { max-width: none !important; width: calc(100% + 60px); margin-left: -30px !important; } /* cobre as pontas inclinadas */
+}
