@@ -20,6 +20,8 @@ type Grupo = { secs: HTMLElement[]; cor: Cor; ajustar: "auto" | "metodo"; modo?:
 type Parada = { y: number; grupo: number; primeira: boolean };
 
 export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, lenis: Lenis | null): () => void {
+  // CELULAR: rolagem contínua normal, tudo para baixo, sem páginas e sem lateral (pedido do Victor, 23/11/2026)
+  if (window.innerWidth <= 760) return () => {};
   const q = (s: string) => document.querySelector(s) as HTMLElement | null;
   const def: Array<[string[], Cor, Grupo["ajustar"]]> = [
     [[".hero", ".marquee"], "claro", "auto"],
