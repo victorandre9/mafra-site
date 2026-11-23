@@ -301,9 +301,13 @@ export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, le
     const dir: 1 | -1 = n > atual ? 1 : -1;
     try {
       const mudaGrupo = de.grupo !== para.grupo;
-      // COMPUTADOR: acabou o bloco → a página seguinte entra INTEIRA pela direita (qualquer troca de bloco);
-      // dentro do mesmo bloco as páginas descem. CELULAR: tudo em linha reta, sem troca lateral (pedido do Victor).
-      const lado = mudaGrupo && window.innerWidth > 760;
+      // REGRA DO VICTOR (23/11/2026): tela CLARA → AZUL = a página entra pela DIREITA; AZUL → CLARA = entra DE BAIXO
+      // PARA CIMA; mesmo tema (e azul → azul) desce. Voltando, o caminho inverso. Salto pelo mapa do site (pula
+      // vários temas) = sempre de lado, para não passar rolando por todas as telas do meio. CELULAR: tudo em linha reta.
+      const [ga, gb] = de.grupo < para.grupo ? [de.grupo, para.grupo] : [para.grupo, de.grupo];
+      const vizinho = gb - ga === 1;
+      const claroParaAzul = grupos[ga].cor === "claro" && grupos[gb].cor === "azul";
+      const lado = mudaGrupo && window.innerWidth > 760 && (!vizinho || claroParaAzul);
       atual = n; // decidido ANTES de andar: nenhum evento de rolagem no caminho muda a página
       nossoAte = performance.now() + 5000;
       if (lado) await deslizar(de, para, dir);
@@ -389,6 +393,44 @@ export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, le
 
   calcular();
   atual = maisPerto();
+
+  // ---------- 5) NAVEGAÇÃO SEM ROLAGEM (Victor, 23/11/2026): mapa do site na lateral + setas ----------
+  // Para quem não tem roda/trackpad à mão (ou não percebe que o site anda por rolagem). O mapa tem uma bolinha por
+  // tema (o nome aparece ao passar o mouse); a do tema atual fica alongada. As setas passam para a tela anterior/próxima.
+  // Tudo usa o MESMO ir() da rolagem: mesma transição, mesma regra de uma tela por vez.
+  const NOMES: Array<[string, string]> = [[".hero", "Início"], [".manifesto", "Propósito"], [".services", "Serviços"], ["#metodo", "Método"],
+    [".stats", "Números"], ["#cases", "Cases"], ["#sobre", "Sobre"], [".bigtext", "Perguntas"], ["#contato", "Contato"], [".footer", "Fim"]];
+  const nomeDo = (g: Grupo) => NOMES.find(([sel]) => g.secs[0].matches(sel))?.[1] ?? "";
+  const mapa = document.createElement("nav");
+  mapa.className = "pg-mapa"; mapa.setAttribute("aria-label", "Mapa do site");
+  const pontos = grupos.map((g, gi) => {
+    const b = document.createElement("button");
+    b.type = "button"; b.dataset.nome = nomeDo(g); b.setAttribute("aria-label", `Ir para ${nomeDo(g)}`);
+    b.addEventListener("click", () => { const k = paradas.findIndex((p2) => p2.grupo === gi); if (k >= 0) ir(k); });
+    mapa.appendChild(b);
+    return b;
+  });
+  const setas = document.createElement("div");
+  setas.className = "pg-setas";
+  const seta = (dir: 1 | -1, rotulo: string) => {
+    const b = document.createElement("button");
+    b.type = "button"; b.setAttribute("aria-label", rotulo); b.dataset.nome = rotulo;
+    b.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${dir > 0 ? "M6 9l6 6 6-6" : "M6 15l6-6 6 6"}"/></svg>`;
+    b.addEventListener("click", () => gesto(dir));
+    setas.appendChild(b);
+    return b;
+  };
+  const setaSobe = seta(-1, "Tela anterior"), setaDesce = seta(1, "Próxima tela");
+  document.body.append(mapa, setas);
+  const marcarNav = () => {
+    const g = paradas[atual]?.grupo ?? 0;
+    pontos.forEach((b, i) => { b.classList.toggle("is-on", i === g); if (i === g) b.setAttribute("aria-current", "true"); else b.removeAttribute("aria-current"); });
+    setaSobe.disabled = atual <= 0; setaDesce.disabled = atual >= paradas.length - 1;
+    // fundo do tema atual (claro/azul): o mapa e as setas trocam de cor para continuar visíveis
+    html.classList.toggle("pg-no-azul", grupos[g]?.cor === "azul");
+  };
+  marcarNav();
+  const vigiaNav = setInterval(marcarNav, 300); // (barato: só troca classes) — pega também o voo do menu e a volta ao topo
   lenis?.stop();
   window.addEventListener("wheel", roda, { passive: false, capture: true });
   window.addEventListener("touchstart", toqueIni, { passive: true });
@@ -418,6 +460,7 @@ export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, le
   setTimeout(recalcular, 1800);
 
   function desligar() {
+    clearInterval(vigiaNav); mapa.remove(); setas.remove(); html.classList.remove("pg-no-azul");
     ro.disconnect(); clearTimeout(roT);
     window.removeEventListener("wheel", roda, { capture: true });
     window.removeEventListener("touchstart", toqueIni);

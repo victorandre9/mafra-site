@@ -118,6 +118,9 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   `ScrollTrigger.refresh()` do intro só depois da abertura, imagens pré-carregadas na espera, letras do título sem blur.
   Medido: travadas de ~3 s → ~0,2 s (computador) e ~2-4 s → ~0,4 s (celular). Extras: anel de luz que se desenha (SVG),
   faíscas e risco de luz horizontal no flash, brilho correndo pelo slogan.
+  SITE CONGELADO durante a abertura (`html.abrindo-quieto`, Victor: "congele todo o site"): vídeo pausado, animações de CSS
+  do site pausadas, faixas gigantes (gsap repeat -1) pausadas, robô/setas/malha escondidos e tickers do robô parados;
+  tudo volta só NO FIM da apresentação (3,99 s).
 - Robô no celular nasce na PARTE BRANCA, EM FRENTE à palavra "movem" (centro da última linha do título, canto direito; vão livre medido pelo layout; sem vão, cai no vídeo); fica parado ali até a 1ª rolagem. Saudação "Clique aqui! 👆" em balão compacto de 2 linhas, só se couber sem cobrir texto.
 - iPhone em economia de bateria (vídeo bloqueado): esconde o vídeo e o botão de play, fica a imagem parada (`.video-bloqueado`).
 - Malha de pontos/setas: somem só com o topo quase inteiro na tela (`com-video` termina em `bottom 85%`); o vídeo usa `video-na-tela`.
@@ -155,6 +158,10 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   um ResizeObserver reencaixa tudo. `.stat__n` sem quebra de linha. Card "A solução da sua empresa" 72px mais abaixo.
   Cases LEGÍVEIS: a largura na TELA é fixa (90%, até 1800 px) e a de layout é ela ÷ zoom (cards largos = menos linhas);
   imagens com altura fixa (30vh/19vh, `contain`); letras dos cards maiores. No 1920×694 do Victor: zoom 0,49 → 0,60.
+- **Direção das trocas (regra do Victor, 23/11/2026)**: tela CLARA → AZUL = página entra pela DIREITA; AZUL → CLARA = entra
+  DE BAIXO PARA CIMA; mesmo tema e azul → azul = desce; voltando, o inverso. Salto pelo mapa (pula temas) = de lado.
+- **Navegação sem rolagem (computador)**: MAPA DO SITE na lateral direita (`.pg-mapa`, uma bolinha por tema, nome ao passar
+  o mouse, a atual alongada; vidro escuro sobre os temas azuis) + SETAS ↑ ↓ no canto (`.pg-setas`). Usam o mesmo `ir()`.
 - **Robô no computador (páginas, 23/11/2026)**: NÃO segue mais a rolagem. A cada troca (`mafra:pagina`, avisado por
   `paginas.ts`) ele escolhe um lugar LIVRE na página que está chegando (vagas laterais alternadas, `VAGAS`) e voa até lá
   com uma MOLA amortecida (arco para cima quando vai longe; inclina na direção do voo). Não fala enquanto voa.
