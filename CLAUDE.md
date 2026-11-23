@@ -154,6 +154,8 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   (`.bt-vazado`), repetido 4x para o letreiro nunca ficar vazio (23/11/2026).
 - **Malha de pontos no computador (páginas)**: dança pela tela inteira sozinha (caminho em "oito", ~40 s), sem depender
   da rolagem; a cada troca de página gira mais rápido por um instante. Celular: paradas pela rolagem, como antes.
+- **Faixa do topo (computador, páginas)**: nítida — sem `scale(1.05)`, sem `will-change`, sem halo de sombra, peso 600,
+  sem o "entortar" pela velocidade da rolagem (só no celular). Mesmo tamanho (Victor não quer maior).
 - **Barra do topo justa na logo** (23/11/2026): só 3px acima e 3px abaixo da logo (computador e celular).
 - **Telas do celular 3D** (23/11/2026): cada tela é ampliada com `zoom` até o conteúdo ocupar o espaço útil (`ajustarTelas`).
 - Botões verdes: flash claro passando da esquerda para a direita a cada 3 s (`verde-varre`).

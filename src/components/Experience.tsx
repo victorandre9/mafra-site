@@ -510,7 +510,8 @@ export default function Experience() {
       let skewRest: ReturnType<typeof setTimeout> | undefined;
       cleanups.push(() => clearTimeout(skewRest));
       const skewTo = gsap.quickTo(".marquee__group, .bigtext__row", "skewX", { duration: 0.6, ease: "power3" });
-      ScrollTrigger.create({
+      // computador (páginas): a rolagem dá SALTOS na troca de página — a faixa entortava e perdia a nitidez; só no celular
+      if (window.innerWidth <= 760) ScrollTrigger.create({
         start: 0, end: "max",
         onUpdate: (self) => {
           skewTo(gsap.utils.clamp(-12, 12, self.getVelocity() / -250));
