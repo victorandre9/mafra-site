@@ -121,6 +121,14 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   SITE CONGELADO durante a abertura (`html.abrindo-quieto`, Victor: "congele todo o site"): vídeo pausado, animações de CSS
   do site pausadas, faixas gigantes (gsap repeat -1) pausadas, robô/setas/malha escondidos e tickers do robô parados;
   tudo volta só NO FIM da apresentação (3,99 s).
+  **ROTEIRO NO COMPOSITOR (23/11/2026, Victor: "precisa rodar 100% lisa", travava no PC e no celular):** a varredura mostrou o
+  navegador ocupado 2,6 s com o 3D bem na espera, e a apresentação (GSAP + canvas, quadro a quadro em JavaScript) congelava junto.
+  Agora é TUDO animação de CSS só com `transform`/`opacity` (`src/components/Abertura.tsx` + bloco `.ab-*` no `theme-claro.css`),
+  que o navegador roda no compositor e NÃO trava com o resto ocupado. O JS só liga `.ab-roda` e marca 2,8 s (cliques),
+  3,35 s (intro) e 3,97 s (fim) pelo RELÓGIO da animação `abLogo`. Estrelas e faíscas são elementos com valores fixos
+  (gerador com semente — servidor e navegador iguais). O anel desenhado virou um COMETA de luz dando a volta + aro aceso.
+  Atenção ao `animation-fill-mode`: elementos que começam VISÍVEIS no 0% do keyframe (onda, faíscas) usam `forwards`,
+  senão aparecem parados desde o início. Portal: `@property --furo` (inherits: false) animado em CSS.
 - Robô no celular nasce na PARTE BRANCA, EM FRENTE à palavra "movem" (centro da última linha do título, canto direito; vão livre medido pelo layout; sem vão, cai no vídeo); fica parado ali até a 1ª rolagem. Saudação "Clique aqui! 👆" em balão compacto de 2 linhas, só se couber sem cobrir texto.
 - iPhone em economia de bateria (vídeo bloqueado): esconde o vídeo e o botão de play, fica a imagem parada (`.video-bloqueado`).
 - Malha de pontos/setas: somem só com o topo quase inteiro na tela (`com-video` termina em `bottom 85%`); o vídeo usa `video-na-tela`.
