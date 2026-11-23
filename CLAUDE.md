@@ -141,7 +141,11 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
 - **Robô no computador (páginas, 23/11/2026)**: NÃO segue mais a rolagem. A cada troca (`mafra:pagina`, avisado por
   `paginas.ts`) ele escolhe um lugar LIVRE na página que está chegando (vagas laterais alternadas, `VAGAS`) e voa até lá
   com uma MOLA amortecida (arco para cima quando vai longe; inclina na direção do voo). Não fala enquanto voa.
-  Orbe 10% menor no computador (133 px). Celular: tudo como antes.
+  Orbe 10% menor no computador (133 px). Celular: tudo como antes. Victor aprovou o robô assim ("ficou ótimo, pode manter").
+- **Faixa gigante (Perguntas)**: UMA linha — "processos ✦ gestão ✦ tecnologia ✦" + no fim o trecho VAZADO
+  (`.bt-vazado`), repetido 4x para o letreiro nunca ficar vazio (23/11/2026).
+- **Malha de pontos no computador (páginas)**: dança pela tela inteira sozinha (caminho em "oito", ~40 s), sem depender
+  da rolagem; a cada troca de página gira mais rápido por um instante. Celular: paradas pela rolagem, como antes.
 - **Barra do topo justa na logo** (23/11/2026): só 3px acima e 3px abaixo da logo (computador e celular).
 - **Telas do celular 3D** (23/11/2026): cada tela é ampliada com `zoom` até o conteúdo ocupar o espaço útil (`ajustarTelas`).
 - Botões verdes: flash claro passando da esquerda para a direita a cada 3 s (`verde-varre`).

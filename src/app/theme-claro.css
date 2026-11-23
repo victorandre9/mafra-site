@@ -1304,7 +1304,6 @@ html.modo-paginas .header.is-hidden { transform: none !important; }
   html.modo-paginas .manifesto { display: flex !important; align-items: center; justify-content: center; text-align: center; padding: 90px 6vw 40px !important; }
   html.modo-paginas .manifesto__text { font-size: clamp(1.8rem, min(5.2vh, 3vw), 3.4rem) !important; max-width: 1100px; margin: 0 auto; }
   /* Perguntas: a faixa que passa em UMA linha, para tudo caber sem cortar */
-  html.modo-paginas .bigtext__row.outline { display: none !important; }
   html.modo-paginas .bigtext__row { font-size: clamp(2rem, 4.2vw, 4.4rem) !important; }
 }
 @media (min-width: 761px) {
@@ -1324,3 +1323,5 @@ html.modo-paginas .header.is-hidden { transform: none !important; }
   .drone__beam { left: 66.5px !important; top: 86px !important; width: 171px !important; height: 270px !important; }
   .drone__glow { left: 66.5px !important; }
 }
+/* faixa gigante: o trecho vazado vem no fim da parte colorida, na mesma linha */
+.bigtext__row .bt-vazado { -webkit-text-stroke: 1.5px rgba(2, 37, 79, .45); color: transparent; }
