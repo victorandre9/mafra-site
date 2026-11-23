@@ -1324,4 +1324,4 @@ html.modo-paginas .header.is-hidden { transform: none !important; }
   .drone__glow { left: 66.5px !important; }
 }
 /* faixa gigante: o trecho vazado vem no fim da parte colorida, na mesma linha */
-.bigtext__row .bt-vazado { -webkit-text-stroke: 1.5px rgba(2, 37, 79, .45); color: transparent; }
+.bigtext__row .bt-vazado { -webkit-text-stroke: 1.5px rgba(24, 160, 87, .45); color: transparent; }
