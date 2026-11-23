@@ -78,7 +78,9 @@ export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, le
       // --inv-zoom: o fundo de largura total (100vw) encolheria junto com o zoom; o CSS compensa com ele
       const aplicar = (v: number) => {
         g.secs.forEach((s) => { s.style.zoom = String(v); s.style.setProperty("--inv-zoom", String(1 / v)); });
-        primeira.style.setProperty("padding-top", `${Math.max(respiro0, (ch + 12) / v)}px`, "important");
+        // Serviços: o título fica a ~10px do menu (Victor, 23/11/2026) — sem o respiro original da seção
+        const respiroMin = primeira.matches(".services") ? 0 : respiro0;
+        primeira.style.setProperty("padding-top", `${Math.max(respiroMin, (ch + (primeira.matches(".services") ? 0 : 12)) / v)}px`, "important");
       };
       aplicar(z);
       // com zoom a largura útil muda (imagens com proporção ficam mais altas/baixas): corrige medindo de novo
