@@ -337,7 +337,8 @@ export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, le
   let ultimoEv = 0, ultimoSinal = 0, ultimoAbs = 0;
   const gesto = (d: 1 | -1) => { if (!trocando) ir(atual + d); };
   const roda = (ev: WheelEvent) => {
-    if (html.classList.contains("bolha-aberta")) { ev.preventDefault(); return; } // card ampliado: a página fica parada
+    // card ampliado / pergunta em foco: a rolagem do mouse rola SÓ o painel aberto; a página fica parada
+    if (html.classList.contains("bolha-aberta")) { if (!(ev.target as Element | null)?.closest?.(".bolha__card, .faq-foco__painel")) ev.preventDefault(); return; }
     if (html.classList.contains("historia-travada") || document.body.classList.contains("em-voo")) return;
     // segura a página: o navegador E a rolagem suave do site (a abertura religa a rolagem suave depois do início)
     ev.preventDefault(); ev.stopPropagation(); lenis?.stop();
