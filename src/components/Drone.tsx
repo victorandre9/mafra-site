@@ -10,10 +10,11 @@ export function Drone() {
   return (
     <div className="drone-layer">
       <div className="drone" aria-hidden="true">
-        <div className="drone__beam"><span className="drone__scan" /></div>
         <div className="drone__dodge">
           <div className="drone__body" title="Clique em mim!">
             <div className="drone__float">
+              {/* a luz mora DENTRO do corpo: flutua, inclina e desvia junto, sempre saindo da pontinha de baixo (Victor, 23/11/2026) */}
+              <div className="drone__beam"><span className="drone__scan" /></div>
               <div className="drone__roll">
                 <DroneOrb />
               </div>
