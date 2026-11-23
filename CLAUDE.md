@@ -209,7 +209,7 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   círculo escuro nasce do ponto do clique, pergunta sobe palavra por palavra, resposta acende, luz passa; ← → navegam.
   `html.bolha-aberta` segura a troca de páginas enquanto bolha/foco estão abertos.
 - **"Voltar ao topo"** no computador usa `__paginas.ir(0)` (a rolagem suave fica desligada no modo páginas).
-- Lista do topo ("/ Diagnóstico & processos…"): +2px e negrito; texto do topo ("Entendo a rotina…") +1px e negrito; menu do topo em negrito (monitor pequeno). Bloco de texto do topo 40px mais à esquerda no computador (`translate`, o vídeo NÃO muda).
+- Lista do topo ("/ Diagnóstico & processos…"): +2px e negrito; texto do topo ("Entendo a rotina…") +1px e negrito; menu do topo em negrito (monitor pequeno). Bloco de texto do topo 80px mais à esquerda no computador (`translate`, o vídeo NÃO muda).
 - Botões verdes: flash claro passando da esquerda para a direita a cada 3 s (`verde-varre`).
 
 ## Pendências conhecidas
