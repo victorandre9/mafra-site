@@ -111,6 +111,13 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   raios, brilho atravessa, slogan "Sua operação no controle." (escolhido pelo Victor, 23/11/2026; também no rodapé), CARGA (estrelas em dobra), FLASH + onda de
   choque, e o PORTAL (`--furo`, máscara circular na própria abertura) abre e revela o site com o vídeo rodando. Tudo em código
   (`.ab-*` no fim do `theme-claro.css`, timeline em `Experience.tsx`). Saída com `display:none !important` (o CSS usa !important).
+  REFINO de desempenho (23/11/2026, "travando demais" no Windows/Chrome): a espera também aguarda as DUAS cenas 3D ficarem
+  prontas (`src/lib/abertura.ts`) e o 3D PARA de desenhar durante a abertura (`<PausaAbertura/>` via `setFrameloop` — trocar
+  a prop `frameloop` recriava a cena e travava 1,5 s). Recorte da logo com `clip-path` e filtro só na imagem (no iPhone o
+  filtro em elemento redondo desenhava um QUADRADO). Raios menores sem máscara, céu a 1x, anel do portal com `transform`,
+  `ScrollTrigger.refresh()` do intro só depois da abertura, imagens pré-carregadas na espera, letras do título sem blur.
+  Medido: travadas de ~3 s → ~0,2 s (computador) e ~2-4 s → ~0,4 s (celular). Extras: anel de luz que se desenha (SVG),
+  faíscas e risco de luz horizontal no flash, brilho correndo pelo slogan.
 - Robô no celular nasce na PARTE BRANCA, EM FRENTE à palavra "movem" (centro da última linha do título, canto direito; vão livre medido pelo layout; sem vão, cai no vídeo); fica parado ali até a 1ª rolagem. Saudação "Clique aqui! 👆" em balão compacto de 2 linhas, só se couber sem cobrir texto.
 - iPhone em economia de bateria (vídeo bloqueado): esconde o vídeo e o botão de play, fica a imagem parada (`.video-bloqueado`).
 - Malha de pontos/setas: somem só com o topo quase inteiro na tela (`com-video` termina em `bottom 85%`); o vídeo usa `video-na-tela`.

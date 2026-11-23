@@ -1,6 +1,8 @@
 "use client";
 
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { avisar3DPronto } from "@/lib/abertura";
+import PausaAbertura from "./PausaAbertura";
 import { PerformanceMonitor } from "@react-three/drei";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
@@ -297,6 +299,8 @@ export default function Background3D() {
   const wrap = useRef<HTMLDivElement>(null);
   const [mobile, setMobile] = useState(false);
   const [dpr, setDpr] = useState(1.5);
+  // durante a abertura a malha não desenha (<PausaAbertura/>, ver src/lib/abertura.ts)
+
 
   useEffect(() => {
     const m = window.matchMedia("(max-width: 760px), (pointer: coarse)").matches;
@@ -309,12 +313,14 @@ export default function Background3D() {
       <Canvas
         dpr={dpr}
         frameloop="always"
+        onCreated={() => requestAnimationFrame(() => requestAnimationFrame(() => avisar3DPronto("fundo")))}
         camera={{ position: [0, 0, 7], fov: 45 }}
         gl={{ antialias: !mobile, powerPreference: "high-performance", alpha: true }}
         eventSource={typeof document !== "undefined" ? document.body : undefined}
         eventPrefix="client"
       >
         <PerformanceMonitor onDecline={() => setDpr(1)} />
+        <PausaAbertura />
         <ambientLight intensity={0.55} />
         <directionalLight position={[4, 5, 5]} intensity={1.8} />
         <pointLight position={[-4, -2, 3]} intensity={34} color="#033777" />

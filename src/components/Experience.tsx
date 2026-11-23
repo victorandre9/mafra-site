@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 import Lenis from "lenis";
 import { iniciarPaginas } from "@/lib/paginas";
+import { EV_ABERTURA, esperar3D } from "@/lib/abertura";
 
 
 /**
@@ -73,22 +74,25 @@ export default function Experience() {
         });
       });
 
-      /* ---------- ABERTURA "PORTAL" → intro (Victor, 23/11/2026) ----------
-         1) estrelas de luz saindo do centro; 2) a logo ORIGINAL surge grande (desfoque → nítida, girando até assentar),
-         anéis e raios atrás; 3) brilho atravessa a logo e entra a frase; 4) CARGA: a logo encolhe um pouco, as
-         estrelas entram em dobra, os anéis apertam; 5) FLASH + onda de choque; 6) PORTAL: um furo de luz abre do
-         centro (--furo) e revela o site com o vídeo já rodando, enquanto a logo voa em direção à tela e some. */
+      /* ---------- ABERTURA "PORTAL" → intro (Victor, 23/11/2026; refinada) ----------
+         ESPERA: fundo com estrelas calmas enquanto a página, o vídeo do topo e as DUAS cenas 3D ficam prontos (mín. 2 s,
+         máx. 7 s) — o 3D montando no meio da apresentação era o que travava no Windows/Chrome. Durante a abertura o 3D
+         para de desenhar (src/lib/abertura.ts). SEQUÊNCIA (~3,9 s): logo ORIGINAL surge grande (desfoque → nítida, girando),
+         anéis, anel de luz que se desenha e raios → brilho atravessa e sobe o slogan → CARGA (estrelas em dobra) → FLASH
+         com risco de luz e faíscas + onda de choque → PORTAL (--furo) revela o site com o vídeo rodando. */
       const pre = $(".preloader");
       const ceu = $(".ab-estrelas") as HTMLCanvasElement | null;
       const warp = { v: 0.35, a: 1 };
       let ceuVivo = true;
       if (ceu) {
-        const ctx2 = ceu.getContext("2d");
-        const dpr = Math.min(window.devicePixelRatio || 1, 2);
-        const n = window.innerWidth <= 760 ? 140 : 260;
-        type Est = { ang: number; d: number; vel: number; cor: string; larg: number };
+        const ctx2 = ceu.getContext("2d", { alpha: true });
+        // 1x no computador comum: o céu é traço fino em movimento, não precisa de retina (e pesava 4x)
+        const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+        const n = window.innerWidth <= 760 ? 110 : 190;
+        const CORES = ["255,255,255", "142,197,255", "79,155,220"];
+        type Est = { ang: number; d: number; vel: number; c: number; larg: number };
         const nova = (longe = false): Est => ({ ang: Math.random() * Math.PI * 2, d: longe ? Math.random() * 0.9 : Math.random() * 0.08, vel: 0.35 + Math.random() * 0.9,
-          cor: Math.random() < 0.25 ? "255,255,255" : Math.random() < 0.6 ? "142,197,255" : "79,155,220", larg: 0.6 + Math.random() * 1.4 });
+          c: Math.random() < 0.25 ? 0 : Math.random() < 0.6 ? 1 : 2, larg: 0.6 + Math.random() * 1.4 });
         const est: Est[] = Array.from({ length: n }, () => nova(true));
         let ult = performance.now();
         const passo = (agora: number) => {
@@ -98,17 +102,27 @@ export default function Experience() {
           if (ceu.width !== Math.round(W * dpr)) { ceu.width = Math.round(W * dpr); ceu.height = Math.round(H * dpr); }
           ctx2.setTransform(dpr, 0, 0, dpr, 0, 0);
           ctx2.clearRect(0, 0, W, H);
-          const R = Math.hypot(W, H) / 2;
-          for (const e of est) {
-            const d0 = e.d;
-            e.d += dt * e.vel * warp.v * (0.12 + e.d * 1.6);
-            if (e.d > 1.05) Object.assign(e, nova());
-            const c = Math.cos(e.ang), sn = Math.sin(e.ang);
-            const x1 = W / 2 + c * d0 * R, y1 = H / 2 + sn * d0 * R, x2 = W / 2 + c * e.d * R, y2 = H / 2 + sn * e.d * R;
-            const al = Math.min(1, e.d * 3) * warp.a;
-            ctx2.strokeStyle = `rgba(${e.cor},${al})`;
-            ctx2.lineWidth = e.larg * (0.6 + e.d * 1.6);
-            ctx2.beginPath(); ctx2.moveTo(x1, y1); ctx2.lineTo(x2 + c * 1.2, y2 + sn * 1.2); ctx2.stroke();
+          if (warp.a > 0.01) {
+            const R = Math.hypot(W, H) / 2;
+            ctx2.lineCap = "round";
+            // desenha por cor (poucas trocas de estilo = barato)
+            for (let ci = 0; ci < 3; ci++) {
+              ctx2.strokeStyle = `rgb(${CORES[ci]})`;
+              for (const e of est) {
+                if (e.c !== ci) continue;
+                const d0 = e.d;
+                e.d += dt * e.vel * warp.v * (0.12 + e.d * 1.6);
+                if (e.d > 1.05) { Object.assign(e, nova()); continue; }
+                const c = Math.cos(e.ang), sn = Math.sin(e.ang);
+                ctx2.globalAlpha = Math.min(1, e.d * 3) * warp.a;
+                ctx2.lineWidth = e.larg * (0.6 + e.d * 1.6);
+                ctx2.beginPath();
+                ctx2.moveTo(W / 2 + c * d0 * R, H / 2 + sn * d0 * R);
+                ctx2.lineTo(W / 2 + c * (e.d * R + 1.2), H / 2 + sn * (e.d * R + 1.2));
+                ctx2.stroke();
+              }
+            }
+            ctx2.globalAlpha = 1;
           }
           requestAnimationFrame(passo);
         };
@@ -116,14 +130,16 @@ export default function Experience() {
       }
       // (o CSS da abertura usa display com !important: a saída precisa de !important também, senão a tela da abertura
       // fica invisível POR CIMA do site e engole os cliques)
-      const fimAbertura = () => { ceuVivo = false; if (pre) { pre.style.setProperty("display", "none", "important"); pre.style.pointerEvents = "none"; } };
+      const fimAbertura = () => {
+        ceuVivo = false;
+        if (pre) { pre.style.setProperty("display", "none", "important"); pre.style.pointerEvents = "none"; }
+        document.documentElement.classList.remove("abrindo");
+        window.dispatchEvent(new CustomEvent(EV_ABERTURA, { detail: "fim" }));
+      };
       if (reduce || !pre) {
         gsap.timeline({ onComplete: () => { fimAbertura(); intro(); } })
           .set(".ab-logo", { opacity: 1 }).to(".preloader", { opacity: 0, duration: 0.4, delay: 0.6 });
       } else {
-        // ESPERA o site carregar antes de começar (Victor, 23/11/2026: "segurar ~2 s"): sem isso a abertura rodava
-        // junto com o carregamento e engasgava/pulava partes. Começa quando a página terminou de carregar E o vídeo do
-        // topo já pode tocar, nunca antes de 2 s; se algo demorar demais, começa assim mesmo aos 6 s.
         const tl = gsap.timeline({ defaults: { ease: "expo.out" }, paused: true });
         const espera = (ms: number) => new Promise<void>((ok) => setTimeout(ok, ms));
         const carregou = new Promise<void>((ok) => { if (document.readyState === "complete") ok(); else window.addEventListener("load", () => ok(), { once: true }); });
@@ -132,33 +148,62 @@ export default function Experience() {
           if (!v || v.readyState >= 3) { ok(); return; }
           v.addEventListener("canplay", () => ok(), { once: true });
         });
-        Promise.race([Promise.all([carregou, videoPronto, espera(2000)]), espera(6000)]).then(() => tl.play(0));
-        tl.set(".ab-logo", { scale: 0.35, rotate: -120, filter: "blur(22px) brightness(1.8)" })
+        Promise.race([Promise.all([carregou, videoPronto, esperar3D("orbe", 6500), esperar3D("fundo", 6500), espera(2000)]), espera(7000)])
+          // mais um respiro curto: o navegador termina o que estava fazendo antes do 1º quadro da apresentação
+          .then(() => new Promise<void>((ok) => requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(ok, 120)))))
+          .then(() => {
+            document.documentElement.classList.add("abrindo");
+            window.dispatchEvent(new CustomEvent(EV_ABERTURA, { detail: "inicio" }));
+            tl.play(0);
+          });
+
+        // faíscas: cada uma sai da borda da logo numa direção, em velocidades diferentes
+        const faiscas = $$(".ab-faiscas i");
+        const raioLogo = () => Math.min(window.innerWidth * (window.innerWidth <= 760 ? 0.62 : 0.5), window.innerHeight * 0.5, window.innerWidth <= 760 ? 280 : 420) / 2;
+        tl.set(".ab-logo", { scale: 0.35, rotate: -120 })
+          .set(".ab-logo .logo-img", { filter: "blur(10px) brightness(1.7)" }, 0)
           .set(".ab-palavra > span", { y: 0, yPercent: 115 }, 0) // zera o deslocamento do CSS (senão soma com o da animação)
           .to(".ab-aura", { opacity: 1, scale: 1, duration: 1.4, ease: "power2.out" }, 0.05)
           .fromTo(".ab-anel", { opacity: 0, scale: 1.7 }, { opacity: 1, scale: 1, duration: 1.2, stagger: 0.12 }, 0.12)
-          .to(".ab-logo", { opacity: 1, scale: 1, rotate: 0, filter: "blur(0px) brightness(1)", duration: 1.35 }, 0.2)
-          .to(".ab-raios", { opacity: 0.75, duration: 1.2, ease: "power2.out" }, 0.6)
+          .to(".ab-logo", { opacity: 1, scale: 1, rotate: 0, duration: 1.35 }, 0.2)
+          .to(".ab-logo .logo-img", { filter: "blur(0px) brightness(1)", duration: 1.1, ease: "power2.out" }, 0.25)
+          // o anel de luz se desenha em volta da logo
+          .set(".ab-traco", { opacity: 1 }, 0.45)
+          .fromTo(".ab-traco circle", { strokeDashoffset: 100 }, { strokeDashoffset: 0, duration: 1.25, ease: "power2.inOut" }, 0.45)
+          .to(".ab-raios", { opacity: 0.8, duration: 1.2, ease: "power2.out" }, 0.6)
           .to(".ab-reflexo", { x: "260%", duration: 0.9, ease: "power2.inOut" }, 1.05)
-          .to(".ab-palavra > span", { yPercent: 0, duration: 0.75, stagger: 0.05 }, 1.15)
-          // CARGA: encolhe (antecipação), as estrelas aceleram, anéis apertam e giram mais rápido
+          .to(".ab-palavra > span", { yPercent: 0, duration: 0.75, stagger: 0.07 }, 1.15)
+          // CARGA: encolhe (antecipação), as estrelas aceleram, anéis apertam
           .to(".ab-logo", { scale: 0.9, duration: 0.42, ease: "power2.in" }, 2.25)
-          .to(".ab-anel", { scale: 0.92, duration: 0.42, ease: "power2.in" }, 2.25)
+          .to(".ab-anel, .ab-traco", { scale: 0.92, duration: 0.42, ease: "power2.in" }, 2.25)
           .to(warp, { v: 7, duration: 0.6, ease: "power2.in" }, 2.15)
-          .to(".ab-raios", { opacity: 1, scale: 1.15, duration: 0.5, ease: "power2.in" }, 2.2)
-          .to(".ab-palavra > span", { yPercent: -115, duration: 0.4, stagger: 0.02, ease: "power2.in" }, 2.3)
+          .to(".ab-raios", { opacity: 1, scale: 1.12, duration: 0.5, ease: "power2.in" }, 2.2)
+          .to(".ab-palavra > span", { yPercent: -115, duration: 0.4, stagger: 0.03, ease: "power2.in" }, 2.3)
           .to(".ab-frase", { opacity: 0, duration: 0.2 }, 2.5)
-          // FLASH + onda de choque
+          // FLASH: clarão + risco de luz horizontal (flare de cinema) + faíscas + onda de choque
           .to(".ab-flash", { opacity: 1, duration: 0.09, ease: "none" }, 2.67)
+          .fromTo(".ab-risco", { opacity: 0, scaleX: 0.05 }, { opacity: 1, scaleX: 1, duration: 0.35, ease: "power3.out" }, 2.64)
+          .to(".ab-risco", { opacity: 0, scaleY: 0.3, duration: 0.38, ease: "power2.in" }, 2.84)
           .fromTo(".ab-onda", { opacity: 1, scale: 0.9 }, { opacity: 0, scale: 7, duration: 1.0, ease: "power2.out" }, 2.67)
-          .set(".ab-anel, .ab-raios, .ab-aura", { opacity: 0 }, 2.76)
+          .add(() => {
+            const r = raioLogo();
+            faiscas.forEach((f, k) => {
+              const a = (k / faiscas.length) * Math.PI * 2 + Math.random() * 0.2, d = r * (2.2 + Math.random() * 2.6);
+              gsap.fromTo(f, { x: Math.cos(a) * r, y: Math.sin(a) * r, opacity: 1, scale: 1 + Math.random() * 1.4 },
+                { x: Math.cos(a) * d, y: Math.sin(a) * d, opacity: 0, scale: 0.2, duration: 0.7 + Math.random() * 0.5, ease: "power3.out" });
+            });
+          }, 2.68)
+          .set(".ab-anel, .ab-raios, .ab-aura, .ab-traco", { opacity: 0 }, 2.76)
           .to(warp, { a: 0, duration: 0.5 }, 2.76)
           .to(".ab-flash", { opacity: 0, duration: 0.55, ease: "power2.out" }, 2.76)
           // PORTAL: o furo cresce do centro e revela o site; a logo voa em direção à tela
           .set(".ab-portal", { opacity: 1 }, 2.8)
           .set(".preloader", { pointerEvents: "none" }, 2.8) // o site já aparece pelo portal: os cliques passam
           .fromTo(".preloader", { "--furo": "0px" }, { "--furo": `${Math.ceil(Math.hypot(window.innerWidth, window.innerHeight) / 2 + 80)}px`, duration: 1.15, ease: "power3.in" }, 2.8)
-          .to(".ab-logo", { scale: 4.2, opacity: 0, filter: "blur(10px) brightness(2)", duration: 1.0, ease: "power2.in" }, 2.78)
+          // o anel acompanha a borda do furo (raio = metade de 200px × escala)
+          .fromTo(".ab-portal", { scale: 0 }, { scale: (Math.hypot(window.innerWidth, window.innerHeight) / 2 + 80) / 100, duration: 1.15, ease: "power3.in" }, 2.8)
+          .to(".ab-logo", { scale: 4.2, opacity: 0, duration: 1.0, ease: "power2.in" }, 2.78)
+          .to(".ab-logo .logo-img", { filter: "blur(8px) brightness(1.8)", duration: 1.0, ease: "power2.in" }, 2.78)
           .add(() => intro(), 3.35)
           .add(fimAbertura, 3.98);
         (window as unknown as { __abertura?: gsap.core.Timeline }).__abertura = tl; // (teste quadro a quadro)
@@ -169,7 +214,8 @@ export default function Experience() {
         lenis?.start();
         gsap
           .timeline()
-          .from(".hero__title .char", { yPercent: 120, rotate: 10, filter: "blur(10px)", opacity: 0, duration: 1.3, ease: "expo.out", stagger: 0.028 })
+          // (sem desfoque nas letras: dezenas de letras com filtro entrando junto com o portal pesavam demais)
+          .from(".hero__title .char", { yPercent: 120, rotate: 10, opacity: 0, duration: 1.3, ease: "expo.out", stagger: 0.028 })
           .from(".hero__title .rotator", { yPercent: 120, duration: 1, ease: "expo.out" }, 0.3)
           .from(".reveal-up", { y: 40, opacity: 0, duration: 1, ease: "expo.out", stagger: 0.1 }, 0.4)
           .from(".header > *", { y: -60, opacity: 0, duration: 1, ease: "expo.out", stagger: 0.08 }, 0.3)
@@ -178,7 +224,10 @@ export default function Experience() {
           // no celular ela sai colada no Orbe (que nasce logo abaixo do vídeo); no computador, no vão de sempre
           // celular: espera o título terminar de entrar (as letras ainda animando enganam a medida do texto)
           .add(() => droneSay(window.innerWidth <= 760 ? "Clique\naqui! 👆" : "Clique aqui! 👆", 3.4, window.innerWidth <= 760 ? undefined : [".hero__sub", ".hero__ctas"]), window.innerWidth <= 760 ? 2.4 : 0.8);
-        ScrollTrigger.refresh();
+        // o recálculo das animações é pesado (no celular travava 1,3 s bem no PORTAL): fica para depois da abertura,
+        // quando o navegador está livre
+        const ric = (window as unknown as { requestIdleCallback?: (f: () => void, o?: { timeout: number }) => void }).requestIdleCallback;
+        setTimeout(() => (ric ? ric(() => ScrollTrigger.refresh(), { timeout: 2500 }) : ScrollTrigger.refresh()), 1600);
       }
 
       on(window, "mafra:goto", (e: CustomEvent<string>) => {
