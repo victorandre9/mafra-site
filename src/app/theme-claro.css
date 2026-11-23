@@ -1325,7 +1325,6 @@ html.modo-paginas .header.is-hidden { transform: none !important; }
 }
 /* faixa gigante: o trecho vazado vem no fim da parte colorida, na mesma linha */
 .bigtext__row .bt-vazado { -webkit-text-stroke: 1.5px rgba(24, 160, 87, .45); color: transparent; }
-.bigtext__row .bt-vazado { -webkit-text-stroke: 1.5px rgba(2, 37, 79, .45); color: transparent; }
 /* área de desenho do Orbe 1,5x maior que o quadro dele (o aro girando era cortado na borda); não recebe clique */
 .drone__orb { position: relative; overflow: visible !important; }
 .drone__orb > div { position: absolute !important; left: -25% !important; top: -25% !important; width: 150% !important; height: 150% !important; overflow: visible !important; pointer-events: none !important; }
