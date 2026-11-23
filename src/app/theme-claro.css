@@ -1738,3 +1738,14 @@ html .bolha .project.bolha__card .project__media .project__logo { position: abso
 .bolha .project.bolha__card .project__info p { font-size: clamp(1rem, 2.1vh, 1.12rem) !important; }
 /* bloco de texto do topo (selo, título, texto, botões) 40px mais para a esquerda (Victor, 23/11/2026; só computador) */
 @media (min-width: 761px) { .hero .hero__content { translate: calc(-1 * min(80px, 6vw)) 0; } } /* 80px (2º pedido); em janela estreita recua menos */
+/* lupa automática: a dica mostra a carga (750 ms) enquanto o mouse está parado no card */
+@media (min-width: 761px) {
+  .card__dica { overflow: hidden; }
+  .card__dica::after { content: ""; position: absolute; left: 0; bottom: 0; height: 3px; width: 100%; transform-origin: 0 50%; transform: scaleX(0);
+    background: linear-gradient(90deg, #8ec5ff, #ffffff); }
+  .card--bolha.armando .card__dica::after { animation: dicaCarga .75s linear forwards; }
+  @keyframes dicaCarga { to { transform: scaleX(1); } }
+}
+/* card aberto: cursor NORMAL em tudo (Victor: a lupa continuava depois de abrir, ficava feio) */
+html.bolha-aberta, html.bolha-aberta * { cursor: default !important; }
+html.bolha-aberta a, html.bolha-aberta button, html.bolha-aberta button * { cursor: pointer !important; }
