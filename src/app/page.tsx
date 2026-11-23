@@ -2,10 +2,11 @@ import Experience from "@/components/Experience";
 import { LINK_INSTAGRAM, LINK_LINKEDIN, LINK_WHATSAPP } from "@/lib/contato";
 import Hero3DLazy from "@/components/Hero3DLazy";
 import { Drone } from "@/components/Drone";
+import Abertura from "@/components/Abertura";
 import OrbMenu from "@/components/OrbMenu";
 import { HoloCards, Phone } from "@/components/Phone";
 import { SplitChars, SplitWords } from "@/components/Split";
-import { Chevron, Logo, LogoImage } from "@/components/Logo";
+import { Chevron, Logo } from "@/components/Logo";
 import { LogoZoom } from "@/components/LogoZoom";
 
 const TECH = [
@@ -188,47 +189,8 @@ export default function Home() {
     <>
       <Experience />
 
-      {/* PRELOADER */}
-      <div className="preloader" aria-hidden="true">
-        {/* ABERTURA "PORTAL" (Victor, 23/11/2026): logo ORIGINAL grande → brilho → carga → flash → portal que abre
-            mostrando o vídeo do topo. Tudo em código (sem vídeo gerado): a logo é sempre o arquivo original. */}
-        <canvas className="ab-estrelas" />
-        <div className="ab-raios" />
-        <div className="ab-vinheta" />
-        <div className="ab-palco">
-          <span className="ab-aura" />
-          <span className="ab-onda" />
-          <span className="ab-anel ab-anel--1" />
-          <span className="ab-anel ab-anel--2" />
-          <span className="ab-anel ab-anel--3" />
-          {/* anel de luz que se DESENHA em volta da logo */}
-          <svg className="ab-traco" viewBox="0 0 200 200" aria-hidden="true">
-            <defs>
-              <linearGradient id="abTraco" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0" stopColor="#ffffff" />
-                <stop offset=".5" stopColor="#7fe3ad" />
-                <stop offset="1" stopColor="#18a057" />
-              </linearGradient>
-            </defs>
-            <circle cx="100" cy="100" r="96" pathLength="100" />
-          </svg>
-          <div className="ab-logo">
-            <LogoImage size={420} priority />
-            <span className="ab-reflexo" />
-          </div>
-          {/* faíscas que saem da borda da logo no flash */}
-          <div className="ab-faiscas">{Array.from({ length: 28 }, (_, k) => <i key={k} />)}</div>
-        </div>
-        <p className="ab-frase">
-          {"Sua operação no controle.".split(" ").map((w, k) => (
-            <span key={k} className="ab-palavra"><span>{w}</span></span>
-          ))}
-        </p>
-        <span className="ab-portal" />
-        {/* "risco" de luz horizontal de cinema (flare anamórfico) no flash */}
-        <span className="ab-risco" />
-        <div className="ab-flash" />
-      </div>
+      {/* ABERTURA "PORTAL" — roda no compositor do navegador (ver src/components/Abertura.tsx) */}
+      <Abertura />
 
       {/* CURSOR */}
       <div className="cursor" aria-hidden="true">
