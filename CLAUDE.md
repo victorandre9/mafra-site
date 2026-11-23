@@ -204,12 +204,15 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   RECUSADOS: a "gota d'água" (parecia cubo de gelo) e o fundo azul-escuro. Fecha (×, fora, Esc) voltando para o card.
   A cópia mora no <body> (fora do zoom das páginas) e rola com o mouse por dentro (`data-lenis-prevent`; paginas.ts só
   segura a rolagem FORA do painel). Vo$: logo centralizada (80% da altura da mídia), sem esticar.
+  LUPA AUTOMÁTICA (Victor, 23/11/2026): mouse PARADO no card 750 ms = amplia sozinho (a dica "Ampliando…" mostra a carga;
+  passar rápido não abre; o clique continua valendo). Aberto sozinho, fecha quando o mouse sai do card ampliado (ou se
+  afasta 220px sem entrar); só arma de novo depois que o mouse sai do card. Com o card aberto o cursor é o NORMAL.
 - **Perguntas em FOCO** (23/11/2026, `src/lib/faqFoco.ts`): sanfona (abriu uma, fecha as outras). No computador a resposta
   NÃO abre na lista (a página mudava de altura e o encaixe encolhia/crescia tudo): o clique abre um painel em tela cheia —
   círculo escuro nasce do ponto do clique, pergunta sobe palavra por palavra, resposta acende, luz passa; ← → navegam.
   `html.bolha-aberta` segura a troca de páginas enquanto bolha/foco estão abertos.
 - **"Voltar ao topo"** no computador usa `__paginas.ir(0)` (a rolagem suave fica desligada no modo páginas).
-- Lista do topo ("/ Diagnóstico & processos…"): +2px e negrito; texto do topo ("Entendo a rotina…") +1px e negrito; menu do topo em negrito (monitor pequeno). Bloco de texto do topo 40px mais à esquerda no computador (`translate`, o vídeo NÃO muda).
+- Lista do topo ("/ Diagnóstico & processos…"): +2px e negrito; texto do topo ("Entendo a rotina…") +1px e negrito; menu do topo em negrito (monitor pequeno). Bloco de texto do topo 80px mais à esquerda no computador (`translate`, o vídeo NÃO muda).
 - Botões verdes: flash claro passando da esquerda para a direita a cada 3 s (`verde-varre`).
 
 ## Pendências conhecidas
