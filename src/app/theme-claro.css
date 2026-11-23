@@ -1292,3 +1292,36 @@ html.modo-paginas .services__track .card { min-height: 0 !important; }
 /* páginas de tela cheia: a barra do topo fica SEMPRE na tela (sumir ao descer era um "reajuste" depois de cada troca) */
 html.modo-paginas .header.is-hidden { transform: none !important; }
 @media (min-width: 761px) { html.modo-paginas .bigtext { padding-top: 64px !important; } } /* a faixa não fica atrás da barra do topo */
+@media (min-width: 761px) {
+  /* páginas de tela cheia — TOPO: título em 2 linhas largas e maior; texto e card "Fale com o Victor" maiores */
+  html.modo-paginas .hero { min-height: calc(100vh - 90px) !important; padding-top: 70px !important; padding-bottom: 16px !important; }
+  html.modo-paginas .hero__content { max-width: min(1240px, 92vw) !important; margin-top: 0 !important; }
+  html.modo-paginas .hero__title { font-size: clamp(3rem, min(9vh, 5.4vw), 7rem) !important; line-height: .98 !important; }
+  html.modo-paginas .hero__title .line { display: inline-block !important; margin-right: .22em; }
+  html.modo-paginas .hero__sub { font-size: clamp(1.1rem, 2.3vh, 1.45rem) !important; max-width: 46em !important; }
+  html.modo-paginas .hero .io-card { zoom: 1.35; }
+  html.modo-paginas .marquee { padding-block: 14px !important; }
+  /* 2ª página (manifesto): texto menor e CENTRALIZADO na tela */
+  html.modo-paginas .manifesto { display: flex !important; align-items: center; justify-content: center; text-align: center; padding: 90px 6vw 40px !important; }
+  html.modo-paginas .manifesto__text { font-size: clamp(1.8rem, min(5.2vh, 3vw), 3.4rem) !important; max-width: 1100px; margin: 0 auto; }
+  /* Perguntas: a faixa que passa em UMA linha, para tudo caber sem cortar */
+  html.modo-paginas .bigtext__row.outline { display: none !important; }
+  html.modo-paginas .bigtext__row { font-size: clamp(2rem, 4.2vw, 4.4rem) !important; }
+}
+@media (min-width: 761px) {
+  html.modo-paginas .hero { min-height: 0 !important; }
+  html.modo-paginas .hero__linha { flex-wrap: nowrap !important; }
+  html.modo-paginas .marquee span { font-size: clamp(1rem, 1.6vw, 1.5rem) !important; }
+  html.modo-paginas .marquee { padding-block: 10px !important; }
+  html.modo-paginas .manifesto__text { font-size: clamp(1.9rem, min(6vh, 3.2vw), 3.6rem) !important; }
+}
+@media (min-width: 761px) {
+  html.modo-paginas .hero__sub { max-width: 36em !important; }
+  html.modo-paginas .hero__ctas { flex-direction: row !important; flex-wrap: nowrap !important; }
+}
+/* robô 10% menor no computador (pedido do Victor, 23/11/2026): Orbe 148 → 133 px; luz reancorada no novo centro */
+@media (min-width: 761px) {
+  .drone__roll, .drone__orb { width: 133px !important; height: 133px !important; }
+  .drone__beam { left: 66.5px !important; top: 86px !important; width: 171px !important; height: 270px !important; }
+  .drone__glow { left: 66.5px !important; }
+}

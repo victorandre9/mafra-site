@@ -136,6 +136,12 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   cópia/clone: a cópia piscava e a página "se reajustava" na chegada (Victor, 23/11/2026). A página de destino chega PRONTA
   (`prepararDestino`: animações de entrada terminadas). Nada de esconder a barra de rolagem na troca (no Windows alargava a
   página). `ScrollTrigger.refresh()` sempre DEPOIS do encaixe (`ajustarTamanhos`). A barra do topo não some ao rolar.
+  Gesto novo = mão parada 220 ms OU mudou de direção OU o embalo do trackpad voltou a crescer (hora do evento, `ev.timeStamp`).
+  Topo: título em 2 linhas largas, card "Fale com o Victor" 1,35x na linha dos botões. Manifesto: menor e centralizado.
+- **Robô no computador (páginas, 23/11/2026)**: NÃO segue mais a rolagem. A cada troca (`mafra:pagina`, avisado por
+  `paginas.ts`) ele escolhe um lugar LIVRE na página que está chegando (vagas laterais alternadas, `VAGAS`) e voa até lá
+  com uma MOLA amortecida (arco para cima quando vai longe; inclina na direção do voo). Não fala enquanto voa.
+  Orbe 10% menor no computador (133 px). Celular: tudo como antes.
 - **Barra do topo justa na logo** (23/11/2026): só 3px acima e 3px abaixo da logo (computador e celular).
 - **Telas do celular 3D** (23/11/2026): cada tela é ampliada com `zoom` até o conteúdo ocupar o espaço útil (`ajustarTelas`).
 - Botões verdes: flash claro passando da esquerda para a direita a cada 3 s (`verde-varre`).

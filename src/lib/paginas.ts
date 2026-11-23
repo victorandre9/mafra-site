@@ -59,25 +59,33 @@ export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, le
     const cel = window.innerWidth <= 760;
     grupos.forEach((g) => {
       if (g.ajustar !== "auto") return;
-      g.secs.forEach((s) => { s.style.zoom = ""; s.style.minHeight = ""; s.style.removeProperty("--inv-zoom"); });
+      g.secs.forEach((s) => { s.style.zoom = ""; s.style.minHeight = ""; s.style.removeProperty("--inv-zoom"); s.style.removeProperty("padding-top"); });
       if (g.pedacos) { ajustarPedacos(g); return; }
       const altura = g.secs.reduce((a, s) => a + s.getBoundingClientRect().height, 0);
-      const util = H() - cabecalho() - 24;
-      let z = util / Math.max(1, altura);
+      // o começo do conteúdo nunca fica atrás da barra do topo: o respiro de cima da 1ª seção é, no mínimo, a barra + 12 px
+      const ch = cabecalho(), primeira = g.secs[0];
+      const respiro0 = parseFloat(getComputedStyle(primeira).paddingTop) || 0;
+      const util = H() - 12;
+      let z = (util - Math.max(0, ch + 12 - respiro0)) / Math.max(1, altura); // estimativa; o laço abaixo corrige medindo
       // Serviços (6 cards) é sempre UMA página no computador (pedido do Victor): aceita encolher até 60%
       // computador: toda página cabe na tela (aceita encolher até 60%); celular nem usa este modo
-      const minimo = cel ? 0.7 : g.secs.some((x) => x.matches(".hero")) ? 0.5 : 0.6;
+      // computador: SEMPRE uma página só (aceita encolher até 50%); o manifesto não cresce além do tamanho normal
+      const minimo = cel ? 0.7 : 0.5;
+      const teto = cel ? 1.15 : g.secs.some((x) => x.matches(".manifesto")) ? 1 : g.secs.some((x) => x.matches(".hero")) ? 1.25 : 1.5;
       if (z < minimo) { g.modo = "dividir"; return; }
       g.modo = "caber";
-      z = Math.min(z, cel ? 1.15 : 1.5);
+      z = Math.min(z, teto);
       // --inv-zoom: o fundo de largura total (100vw) encolheria junto com o zoom; o CSS compensa com ele
-      const aplicar = (v: number) => g.secs.forEach((s) => { s.style.zoom = String(v); s.style.setProperty("--inv-zoom", String(1 / v)); });
+      const aplicar = (v: number) => {
+        g.secs.forEach((s) => { s.style.zoom = String(v); s.style.setProperty("--inv-zoom", String(1 / v)); });
+        primeira.style.setProperty("padding-top", `${Math.max(respiro0, (ch + 12) / v)}px`, "important");
+      };
       aplicar(z);
       // com zoom a largura útil muda (imagens com proporção ficam mais altas/baixas): corrige medindo de novo
       for (let k = 0; k < 4; k++) {
         const real = g.secs.reduce((a2, s) => a2 + s.getBoundingClientRect().height, 0);
-        if (Math.abs(real - util) < 6 || (z >= (cel ? 1.15 : 1.5) && real < util)) break;
-        z = Math.min(z * (util / real), cel ? 1.15 : 1.5);
+        if (Math.abs(real - util) < 6 || (z >= teto && real < util)) break;
+        z = Math.min(z * (util / real), teto);
         aplicar(z);
       }
       // ampliando: se algo passar da largura da tela (texto quebrando para fora), recua até caber
@@ -86,7 +94,9 @@ export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, le
       const soma = g.secs.reduce((a, s) => a + s.getBoundingClientRect().height, 0);
       const ultima = g.secs[g.secs.length - 1];
       const falta = H() - soma;
-      if (falta > 0) ultima.style.minHeight = `${(ultima.getBoundingClientRect().height + falta) / z}px`;
+      // a sobra vai para o TOPO (o vídeo cresce e a faixa fica no pé da tela); nos outros grupos, para a última seção
+      const enche = g.secs.find((x) => x.matches(".hero")) ?? ultima;
+      if (falta > 0) enche.style.minHeight = `${(enche.getBoundingClientRect().height + falta) / z}px`;
     });
   };
 
@@ -121,7 +131,7 @@ export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, le
       const alvo = topo + i * H() + ch + 16;
       const delta = alvo - topoDoc(lista[0]);
       lista[0].style.marginTop = `${delta / zs[i]}px`;
-      g.tops!.push(topo + i * H());
+      g.tops!.push(i * H()); // relativo ao começo da seção (a posição absoluta é lida depois do refresh)
     });
     const falta = topo + els.length * H() - (topoDoc(sec) + sec.getBoundingClientRect().height);
     sec.style.paddingBottom = `${Math.max(0, falta)}px`;
@@ -147,7 +157,7 @@ export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, le
           return;
         }
       }
-      if (g.tops) { g.tops.forEach((y, k) => lista.push({ y, grupo: gi, primeira: k === 0 })); return; }
+      if (g.tops) { g.tops.forEach((y, k) => lista.push({ y: ini + y, grupo: gi, primeira: k === 0 })); return; }
       if (fim - ini <= H() + 2 || g.modo === "caber") { lista.push({ y: ini, grupo: gi, primeira: true }); return; }
       // grupo maior que a tela: paradas no começo de cards/títulos/parágrafos, cada uma até uma tela depois da outra
       const marcos = Array.from(new Set(
@@ -222,6 +232,9 @@ export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, le
     return f;
   };
 
+  const avisarRobo = (fase: "inicio" | "fim", n: number, secs: HTMLElement[], dx: number, dy: number) =>
+    window.dispatchEvent(new CustomEvent("mafra:pagina", { detail: { fase, n, secs, dx, dy } }));
+
   const deslizar = async (de: Parada, para: Parada, dir: 1 | -1) => {
     const g1 = grupos[de.grupo], g2 = grupos[para.grupo];
     const W = window.innerWidth;
@@ -239,6 +252,8 @@ export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, le
       entra.forEach(({ e, f }) => { e.style.translate = `${(W * dir * (1 - p)) / f}px ${-dy / f}px`; });
     };
     pos(0);
+    // o robô já escolhe o lugar dele na página que está chegando (que agora está deslocada de uma tela para o lado)
+    avisarRobo("inicio", paradas.indexOf(para), g2.secs, -W * dir, 0);
     await new Promise<void>((ok) => {
       const o = { p: 0 };
       gsap.to(o, { p: 1, duration: 0.9, ease: "power3.inOut", onUpdate: () => pos(o.p), onComplete: () => ok() });
@@ -271,26 +286,46 @@ export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, le
       atual = n; // decidido ANTES de andar: nenhum evento de rolagem no caminho muda a página
       nossoAte = performance.now() + 5000;
       if (lado) await deslizar(de, para, dir);
-      else { prepararDestino(grupos[para.grupo], para.y, false); await rolar(para.y, mudaGrupo ? 1.0 : 0.85); }
+      else {
+        const g = grupos[para.grupo];
+        prepararDestino(g, para.y, false);
+        // dentro da parte travada (Metodologia) a tela não anda: as posições ficam onde estão
+        const pino = pinoDo(g);
+        const travado = !!pino && pino.isActive && para.y >= pino.start && para.y <= pino.end;
+        avisarRobo("inicio", n, g.secs, 0, travado ? 0 : -(para.y - window.scrollY));
+        await rolar(para.y, mudaGrupo ? 1.0 : 0.85);
+      }
+      avisarRobo("fim", n, grupos[para.grupo].secs, 0, 0);
       nossoAte = performance.now() + 400;
     } catch {
       desligar();
     } finally {
       html.classList.remove("pagina-andando");
-      setTimeout(() => { trocando = false; }, 450);
+      setTimeout(() => { trocando = false; }, 250);
     }
   };
 
   // ---------- 4) gestos ----------
-  let ultimoGesto = 0;
+  // GESTO NOVO (roda do mouse ou trackpad): 1) a mão parou por 220 ms; 2) mudou de direção; 3) no meio do "embalo"
+  // do trackpad, o movimento voltou a CRESCER (nova passada). Antes eram 650 ms de silêncio obrigatório: quem
+  // continuava rolando (ex.: no fim, querendo voltar) ficava preso até parar ou clicar.
+  let ultimoEv = 0, ultimoSinal = 0, ultimoAbs = 0;
   const gesto = (d: 1 | -1) => { if (!trocando) ir(atual + d); };
   const roda = (ev: WheelEvent) => {
     if (html.classList.contains("historia-travada") || document.body.classList.contains("em-voo")) return;
     // segura a página: o navegador E a rolagem suave do site (a abertura religa a rolagem suave depois do início)
     ev.preventDefault(); ev.stopPropagation(); lenis?.stop();
-    const agora = performance.now(), novo = agora - ultimoGesto > 650; // 650 ms de silêncio = gesto novo (mesmo com a tela pesada no meio da troca)
-    ultimoGesto = agora;
-    if (novo && Math.abs(ev.deltaY) > 2 && !trocando) gesto(ev.deltaY > 0 ? 1 : -1);
+    const d = ev.deltaMode === 1 ? ev.deltaY * 16 : ev.deltaMode === 2 ? ev.deltaY * H() : ev.deltaY;
+    const abs = Math.abs(d), sinal = Math.sign(d);
+    if (abs < 1) return;
+    // hora em que o movimento ACONTECEU (não a hora em que o código rodou: com a tela ocupada na troca, os eventos
+    // chegam atrasados e em bloco, e um "embalo" do trackpad parecia vários gestos)
+    const agora = ev.timeStamp || performance.now();
+    const pausa = agora - ultimoEv > 220;
+    const virou = sinal !== ultimoSinal;
+    const acelerou = abs >= 15 && abs > ultimoAbs * 1.6 + 4;
+    ultimoEv = agora; ultimoSinal = sinal; ultimoAbs = abs;
+    if (!trocando && (pausa || virou || acelerou)) gesto(sinal > 0 ? 1 : -1);
   };
   let y0 = 0, x0 = 0;
   const toqueIni = (ev: TouchEvent) => { y0 = ev.touches[0].clientY; x0 = ev.touches[0].clientX; };
