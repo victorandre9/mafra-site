@@ -1,88 +1,172 @@
 import gsap from "gsap";
 
 /**
- * CARDS AMPLIÁVEIS (Victor, 23/11/2026: em monitor de 15,6" os cards de Serviços e Cases ficavam pequenos demais).
- * Só no computador. Mouse em cima: o card balança como bolha (CSS, `scale` — não briga com o tilt) e o cursor vira uma
- * LUPA 3D. Clique: uma CÓPIA do card cresce do lugar dele até o centro (estilo App Store / layout compartilhado):
- * escala uniforme + recorte com cantos redondos que se abre, mola no fim, aro iridescente de bolha de sabão e reflexo.
- * Fundo CLARO desfocado (o azul-escuro e a "gota" foram recusados: "cubo de gelo"). Fecha no ×, clicando fora ou Esc,
- * voltando exatamente para o card. A cópia mora no <body> (fora do `zoom` das páginas) e rola com o mouse por dentro.
- * Enquanto aberta, `html.bolha-aberta` segura a troca de páginas (paginas.ts).
+ * CARDS DE SERVIÇOS E CASES (Victor, 23/11/2026: em monitor de 15,6" ficavam pequenos demais). Só no computador.
+ *
+ * 1) LUPA (passar o mouse): uma lupa 3D (modelo 2 escolhido pelo Victor: aro azul-ciano aceso, cabo cromado —
+ *    `/public/lupa-moldura.webp`, renderizada em 3D) segue o mouse e AMPLIA só o texto que está embaixo dela.
+ *    O card NÃO sai do lugar ("não quero que o menu venha para frente"). Por dentro da lente vai uma cópia do card,
+ *    dentro da mesma estrutura de classes do original (assim as letras ficam idênticas), ampliada AUMENTO vezes.
+ *
+ * 2) CLIQUE: a cópia sai do lugar do card e vem até o centro como BOLHA DE GELATINA — cresce em 8 balanços
+ *    (achata e estica, cada vez menos, até assentar), com aro furta-cor de bolha de sabão e reflexo de luz; fundo
+ *    claro desfocado. RECUSADOS: a gota azul ("cubo de gelo") e o fundo azul-escuro. Fecha no ×, clicando fora ou
+ *    Esc, voltando para o card. A cópia mora no <body> (fora do `zoom` das páginas) e rola com o mouse por dentro.
+ *    Enquanto aberta, `html.bolha-aberta` segura a troca de páginas (paginas.ts).
  */
+const AUMENTO = 2.2;
+// moldura renderizada: centro da lente e raio interno (px CSS) dentro da imagem de 468×501
+const MOLDURA = { w: 468, h: 501, cx: 212, cy: 220, r: 105 };
+
 export function iniciarBolha(): () => void {
   const html = document.documentElement;
-  // Serviços + Cases (Victor: "Verifica, Vetra Sales, Polar OS… Aplicativos e produtos digitais também, está pequeno")
   const cards = Array.from(document.querySelectorAll<HTMLElement>(".services__track .card:not(.card--cta), #cases .project:not(.project--cta)"));
   const dicas: HTMLElement[] = [];
-  const ESPERA = 750;
   let fecharAtual: (() => void) | null = null;
 
-  const abrir = (card: HTMLElement, auto = false, px = 0, py = 0) => {
-    if (fecharAtual || window.innerWidth <= 760) return;
-    const r = card.getBoundingClientRect();
+  // ---------- cópia limpa do card, dentro da MESMA estrutura de classes do original ----------
+  const copiaDe = (card: HTMLElement) => {
+    const c = card.cloneNode(true) as HTMLElement;
+    c.removeAttribute("style");
+    c.querySelectorAll<HTMLElement>("[style]").forEach((e) => e.removeAttribute("style"));
+    c.querySelectorAll(".card__dica, .reflexo-mouse").forEach((e) => e.remove());
+    c.classList.remove("tilt", "card--bolha");
+    c.removeAttribute("data-cursor");
+    return c;
+  };
+  const contexto = (card: HTMLElement, c: HTMLElement, lente: boolean) => {
+    // (um 1º filho vazio: as regras de `.card:nth-child(1)` do card grande não pegam na cópia)
+    if (card.classList.contains("project")) {
+      const grupo = card.closest(".work__grupo");
+      const raiz = document.createElement("div");
+      if (lente) raiz.id = "cases"; // as letras dos cases são definidas por `#cases …` (só enquanto a lupa está na tela)
+      raiz.className = "lupa-ctx";
+      const g = document.createElement("div");
+      g.className = grupo ? grupo.className : "work__grupo";
+      const grid = document.createElement("div");
+      grid.className = lente ? "work__grid" : "bolha__track bolha__track--case";
+      grid.append(document.createElement("i"), c);
+      if (!lente) return grid;
+      g.appendChild(grid); raiz.appendChild(g);
+      return raiz;
+    }
+    const t = document.createElement("div");
+    t.className = lente ? "services__track lupa-ctx" : "services__track bolha__track";
+    t.append(document.createElement("i"), c);
+    return t;
+  };
+  const zoomAcumulado = (el: HTMLElement) => {
+    let z = 1;
+    for (let e: HTMLElement | null = el; e; e = e.parentElement) { const v = parseFloat(e.style.zoom || "1"); if (v) z *= v; }
+    return z;
+  };
 
+  // ---------- 1) LUPA que segue o mouse ----------
+  const lente = document.createElement("div");
+  lente.className = "lupa-lente";
+  lente.setAttribute("aria-hidden", "true");
+  lente.innerHTML = `<div class="lupa-lente__vidro"><div class="lupa-lente__conteudo"></div><span class="lupa-lente__brilho"></span></div>` +
+    `<img class="lupa-lente__moldura" src="/lupa-moldura.webp" alt="" width="${MOLDURA.w}" height="${MOLDURA.h}" draggable="false">`;
+  document.body.appendChild(lente);
+  const conteudo = lente.querySelector<HTMLElement>(".lupa-lente__conteudo")!;
+  let alvo: HTMLElement | null = null, copiaLupa: HTMLElement | null = null, escala0 = 1;
+  let mx = 0, my = 0, lx = 0, ly = 0, raf = 0, visivel = false;
+
+  const posicionar = () => {
+    raf = 0;
+    if (!alvo || !copiaLupa) return;
+    // a lente acompanha o mouse com um leve atraso (movimento macio)
+    lx += (mx - lx) * 0.38; ly += (my - ly) * 0.38;
+    lente.style.translate = `${lx - MOLDURA.cx}px ${ly - MOLDURA.cy}px`; // (`translate` à parte: o gsap usa `transform` para aparecer)
+    const r = alvo.getBoundingClientRect();
+    const s = escala0 * AUMENTO;
+    const u = (lx - r.left) / escala0, v = (ly - r.top) / escala0;
+    conteudo.style.transform = `translate(${MOLDURA.r - u * s}px, ${MOLDURA.r - v * s}px) scale(${s})`;
+    if (Math.abs(mx - lx) > 0.3 || Math.abs(my - ly) > 0.3) raf = requestAnimationFrame(posicionar);
+  };
+  const mostrarLupa = (card: HTMLElement, e: MouseEvent) => {
+    if (fecharAtual || html.classList.contains("pagina-andando")) return;
+    alvo = card;
+    const r = card.getBoundingClientRect();
+    copiaLupa = copiaDe(card);
+    copiaLupa.style.setProperty("width", `${r.width / zoomAcumulado(card)}px`, "important");
+    conteudo.replaceChildren(contexto(card, copiaLupa, true));
+    conteudo.style.transform = "none";
+    escala0 = r.width / Math.max(1, copiaLupa.offsetWidth); // (offsetWidth: não sofre o `scale` da lente aparecendo)
+    mx = lx = e.clientX; my = ly = e.clientY;
+    card.classList.add("com-lupa");
+    if (!visivel) { visivel = true; gsap.killTweensOf(lente); gsap.fromTo(lente, { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.6)" }); }
+    posicionar();
+  };
+  const esconderLupa = () => {
+    alvo?.classList.remove("com-lupa");
+    alvo = null;
+    if (visivel) { visivel = false; gsap.to(lente, { opacity: 0, scale: 0.8, duration: 0.2, ease: "power2.in", onComplete: () => { if (!visivel) conteudo.replaceChildren(); } }); }
+  };
+  lente.style.transformOrigin = `${MOLDURA.cx}px ${MOLDURA.cy}px`;
+
+  // ---------- 2) CLIQUE: bolha de geleia até o centro ----------
+  const abrir = (card: HTMLElement) => {
+    if (fecharAtual || window.innerWidth <= 760) return;
+    esconderLupa();
+    const r = card.getBoundingClientRect();
     const capa = document.createElement("div");
     capa.className = "bolha";
     capa.setAttribute("role", "dialog");
     capa.setAttribute("aria-modal", "true");
     const fundo = document.createElement("div");
     fundo.className = "bolha__fundo";
-    const trilho = document.createElement("div");
-    const ehCase = card.classList.contains("project");
-    trilho.className = ehCase ? "bolha__track bolha__track--case" : "services__track bolha__track";
-    // (um 1º filho vazio: as regras de `.card:nth-child(1)` do card grande não pegam na cópia)
-    trilho.appendChild(document.createElement("i"));
-    const copia = card.cloneNode(true) as HTMLElement;
-    copia.removeAttribute("style");
-    copia.querySelectorAll<HTMLElement>("[style]").forEach((e) => e.removeAttribute("style"));
-    copia.querySelectorAll(".card__dica").forEach((e) => e.remove());
-    copia.classList.remove("tilt", "card--bolha", "armando"); // (sem a lupa: aberto, o cursor volta ao normal)
+    const copia = copiaDe(card);
     copia.classList.add("bolha__card");
-    copia.removeAttribute("data-cursor");
+    const trilho = contexto(card, copia, false);
     const x = document.createElement("button");
-    x.type = "button";
-    x.className = "bolha__x";
-    x.setAttribute("aria-label", "Fechar");
-    x.textContent = "×";
-    copia.appendChild(x);
-    trilho.appendChild(copia);
+    x.type = "button"; x.className = "bolha__x"; x.setAttribute("aria-label", "Fechar"); x.textContent = "×";
+    const aro = document.createElement("span"); aro.className = "bolha__aro";
+    const reflexo = document.createElement("span"); reflexo.className = "bolha__reflexo";
+    aro.setAttribute("aria-hidden", "true"); reflexo.setAttribute("aria-hidden", "true");
+    copia.append(x, aro, reflexo);
+    copia.setAttribute("data-lenis-prevent", ""); // a rolagem do mouse rola o card ampliado (não a página)
     capa.append(fundo, trilho);
     document.body.appendChild(capa);
     html.classList.add("bolha-aberta");
     card.classList.add("bolha-origem");
 
-    // ABERTURA "CARTÃO QUE CRESCE" (refino de 23/11/2026, Victor: a gota parecia "cubo de gelo" e o fundo azul, feio).
-    // Referência: a expansão de cartões da App Store / animações de layout compartilhado (Framer Motion `layoutId`):
-    // a cópia começa EXATAMENTE em cima do card (escala uniforme — a letra nunca deforma — e um recorte com cantos
-    // redondos na altura do card) e cresce com mola até o painel grande, enquanto o recorte se abre. Um aro de bolha de
-    // sabão (iridescente, transparente) brilha durante o voo e some; um reflexo de luz atravessa no fim.
-    const aro = document.createElement("span");
-    aro.className = "bolha__aro";
-    const reflexo = document.createElement("span");
-    reflexo.className = "bolha__reflexo";
-    aro.setAttribute("aria-hidden", "true"); reflexo.setAttribute("aria-hidden", "true");
-    copia.append(aro, reflexo);
-    copia.setAttribute("data-lenis-prevent", ""); // a rolagem do mouse rola o card ampliado (não a página)
     const f = copia.getBoundingClientRect();
     const raio = parseFloat(getComputedStyle(card).borderTopLeftRadius) || 24;
+    // posição "em cima do card": escala uniforme + recorte na altura do card (as letras nunca deformam no voo)
     const posCard = (rc: DOMRect) => {
       const s = rc.width / f.width;
       const corte = Math.max(0, f.height - rc.height / s);
-      return { x: rc.left - f.left, y: rc.top - f.top, scale: s, clipPath: `inset(0px 0px ${corte}px 0px round ${raio / s}px)` };
+      return { x: rc.left - f.left, y: rc.top - f.top, scaleX: s, scaleY: s, clipPath: `inset(0px 0px ${corte}px 0px round ${raio / s}px)` };
     };
-    const aberto = { x: 0, y: 0, scale: 1, clipPath: "inset(0px 0px 0px 0px round 28px)" };
-    gsap.set(copia, { transformOrigin: "0 0", ...posCard(r) });
+    // origem no CENTRO para a geleia balançar por igual; o deslocamento compensa
+    const centro = (p: ReturnType<typeof posCard>) => ({ ...p, x: p.x - (f.width * (1 - p.scaleX)) / 2, y: p.y - (f.height * (1 - p.scaleY)) / 2 });
+    gsap.set(copia, { transformOrigin: "50% 50%", ...centro(posCard(r)) });
     gsap.set(x, { opacity: 0, scale: 0.6 });
     gsap.set(aro, { opacity: 0 });
-    gsap.fromTo(fundo, { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.out" });
+    gsap.fromTo(fundo, { opacity: 0 }, { opacity: 1, duration: 0.55, ease: "power2.out" });
+    // GELATINA (Victor: "se movendo várias vezes até abrir"): chega ao centro ainda menor e vai crescendo em
+    // balanços — achata/estica 8 vezes, cada balanço menor que o anterior, até assentar no tamanho grande
+    const balancos: gsap.TweenVars[] = [];
+    const N = 8;
+    for (let k = 0; k < N; k++) {
+      const base = 0.7 + (0.3 * (k + 1)) / N;          // cresce a cada balanço
+      const amp = 0.13 * Math.pow(0.72, k);            // e balança cada vez menos
+      const lado = k % 2 === 0 ? 1 : -1;
+      balancos.push({ scaleX: base * (1 + amp * lado), scaleY: base * (1 - amp * lado), duration: 0.13 + k * 0.012, ease: "sine.inOut" });
+    }
+    balancos.push({ scaleX: 1, scaleY: 1, duration: 0.18, ease: "sine.out" });
     gsap.timeline()
-      .to(copia, { x: 0, y: 0, duration: 0.62, ease: "expo.out" }, 0)
-      .to(copia, { scale: 1, duration: 0.85, ease: "back.out(1.25)" }, 0)
-      .to(copia, { clipPath: aberto.clipPath, duration: 0.6, ease: "power3.out" }, 0.04)
+      // voo: sai do card e vai ao centro, esticando como líquido em movimento
+      .to(copia, { x: 0, y: 0, duration: 0.5, ease: "power3.out" }, 0)
+      .to(copia, { scaleX: 0.62, scaleY: 0.74, duration: 0.45, ease: "power2.out" }, 0)
+      .to(copia, { clipPath: "inset(0px 0px 0px 0px round 28px)", duration: 0.45, ease: "power3.out" }, 0.05)
+      // chegou: gelatina crescendo em balanços até abrir
+      .to(copia, { keyframes: balancos }, 0.45)
       .to(aro, { opacity: 1, duration: 0.25, ease: "power1.out" }, 0)
-      .to(aro, { opacity: 0, duration: 0.7, ease: "power2.inOut" }, 0.55)
-      .fromTo(reflexo, { xPercent: -160, opacity: 1 }, { xPercent: 260, duration: 0.9, ease: "power2.inOut" }, 0.35)
-      .to(x, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2)" }, 0.5);
+      .to(aro, { opacity: 0, duration: 0.8, ease: "power2.inOut" }, 1.55)
+      .fromTo(reflexo, { xPercent: -160, opacity: 1 }, { xPercent: 260, duration: 0.95, ease: "power2.inOut" }, 1.2)
+      .to(x, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2)" }, 1.5);
     x.focus({ preventScroll: true });
 
     let fechando = false;
@@ -91,72 +175,61 @@ export function iniciarBolha(): () => void {
       fechando = true;
       gsap.killTweensOf([copia, x, aro, reflexo]);
       copia.scrollTop = 0;
-      gsap.to(fundo, { opacity: 0, duration: 0.45, ease: "power2.inOut" });
+      gsap.to(fundo, { opacity: 0, duration: 0.5, delay: 0.1, ease: "power2.inOut" });
       gsap.timeline({ onComplete: () => {
         card.classList.remove("bolha-origem");
         capa.remove();
         html.classList.remove("bolha-aberta");
         fecharAtual = null;
-        card.dataset.desarmado = "1"; // só amplia sozinho de novo depois que o mouse sair do card
       } })
         .to(x, { opacity: 0, scale: 0.6, duration: 0.15 }, 0)
-        .to(aro, { opacity: 0.8, duration: 0.2 }, 0)
-        .to(copia, { ...posCard(card.getBoundingClientRect()), duration: 0.5, ease: "power3.inOut" }, 0.02);
+        .to(aro, { opacity: 0.9, duration: 0.2 }, 0)
+        // encolhe (uma última balançada) e volta para o lugar do card
+        .to(copia, { scaleX: 1.04, scaleY: 0.95, duration: 0.12, ease: "sine.out" }, 0)
+        .to(copia, { ...centro(posCard(card.getBoundingClientRect())), duration: 0.48, ease: "power3.inOut" }, 0.12);
     };
     fecharAtual = fechar;
-    // aberto SOZINHO (mouse parado no card): fecha quando o mouse sai do card ampliado — ou, se nunca entrou nele,
-    // quando o mouse se afasta do ponto onde estava
-    if (auto) {
-      let entrou = false, saida: ReturnType<typeof setTimeout> | undefined;
-      const mexe = (e: MouseEvent) => {
-        const dentro = !!(e.target as Element | null)?.closest?.(".bolha__card");
-        if (dentro) { entrou = true; clearTimeout(saida); saida = undefined; return; }
-        const longe = Math.hypot(e.clientX - px, e.clientY - py) > 220;
-        if ((entrou || longe) && !saida) saida = setTimeout(fechar, 320);
-      };
-      capa.addEventListener("mousemove", mexe);
-    }
     fundo.addEventListener("click", fechar);
     trilho.addEventListener("click", (e) => { if (e.target === trilho) fechar(); });
     x.addEventListener("click", fechar);
   };
 
-  const cliques = cards.map((card) => {
+  const limpezas = cards.map((card) => {
     const dica = document.createElement("span");
     dica.className = "card__dica";
     dica.setAttribute("aria-hidden", "true");
-    dica.textContent = "Ampliando…";
+    dica.textContent = "Clique para abrir";
     card.appendChild(dica);
     dicas.push(dica);
     card.classList.add("card--bolha");
-    const f = (e: MouseEvent) => { if ((e.target as HTMLElement).closest("a, button")) return; parar(); abrir(card); };
-    // LUPA AUTOMÁTICA (Victor, 23/11/2026): mouse parado no card por ESPERA ms = amplia sozinho (o clique continua
-    // valendo). A dica mostra a carga. Passar rápido por cima não abre nada.
-    let timer: ReturnType<typeof setTimeout> | undefined, mx = 0, my = 0;
-    const parar = () => { clearTimeout(timer); timer = undefined; card.classList.remove("armando"); };
-    const entra = (e: MouseEvent) => {
+    const clique = (e: MouseEvent) => { if ((e.target as HTMLElement).closest("a, button")) return; abrir(card); };
+    const entra = (e: MouseEvent) => mostrarLupa(card, e);
+    const move = (e: MouseEvent) => {
       mx = e.clientX; my = e.clientY;
-      if (card.dataset.desarmado || fecharAtual || html.classList.contains("pagina-andando")) return;
-      card.classList.add("armando");
-      timer = setTimeout(() => { card.classList.remove("armando"); abrir(card, true, mx, my); }, ESPERA);
+      if (alvo !== card) { mostrarLupa(card, e); return; }
+      if (!raf) raf = requestAnimationFrame(posicionar);
     };
-    const move = (e: MouseEvent) => { mx = e.clientX; my = e.clientY; };
-    const sai = () => { parar(); delete card.dataset.desarmado; };
-    card.addEventListener("click", f);
+    const sai = () => { if (alvo === card) esconderLupa(); };
+    card.addEventListener("click", clique);
     card.addEventListener("mouseenter", entra);
     card.addEventListener("mousemove", move);
     card.addEventListener("mouseleave", sai);
-    window.addEventListener("wheel", parar, { passive: true });
-    return () => { parar(); card.removeEventListener("click", f); card.removeEventListener("mouseenter", entra); card.removeEventListener("mousemove", move); card.removeEventListener("mouseleave", sai); window.removeEventListener("wheel", parar); };
+    return () => { card.removeEventListener("click", clique); card.removeEventListener("mouseenter", entra); card.removeEventListener("mousemove", move); card.removeEventListener("mouseleave", sai); };
   });
+  // troca de página com a lupa aberta: ela some (o card sai da tela)
+  const roda = () => esconderLupa();
+  window.addEventListener("wheel", roda, { passive: true });
   const esc = (e: KeyboardEvent) => { if (e.key === "Escape" && fecharAtual) { e.stopPropagation(); fecharAtual(); } };
   window.addEventListener("keydown", esc, { capture: true });
 
   return () => {
-    cliques.forEach((f) => f());
+    limpezas.forEach((f) => f());
     dicas.forEach((d) => d.remove());
-    cards.forEach((c) => c.classList.remove("card--bolha", "bolha-origem"));
+    cards.forEach((c) => c.classList.remove("card--bolha", "bolha-origem", "com-lupa"));
+    window.removeEventListener("wheel", roda);
     window.removeEventListener("keydown", esc, { capture: true });
+    cancelAnimationFrame(raf);
+    lente.remove();
     document.querySelectorAll(".bolha").forEach((b) => b.remove());
     html.classList.remove("bolha-aberta");
   };
