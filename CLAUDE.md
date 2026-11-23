@@ -137,7 +137,9 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   (`prepararDestino`: animações de entrada terminadas). Nada de esconder a barra de rolagem na troca (no Windows alargava a
   página). `ScrollTrigger.refresh()` sempre DEPOIS do encaixe (`ajustarTamanhos`). A barra do topo não some ao rolar.
   Gesto novo = mão parada 220 ms OU mudou de direção OU o embalo do trackpad voltou a crescer (hora do evento, `ev.timeStamp`).
-  Topo: título em 2 linhas largas, card "Fale com o Victor" 1,35x na linha dos botões. Manifesto: menor e centralizado.
+  Topo: título em 2 linhas largas, card "Fale com o Victor" 1,15x na linha dos botões (1,35 ficou grande demais), com a
+  foto GRANDE (`victor-mafra-retrato.jpg`, 1122×1402; a de 720 px ficava sem qualidade). Manifesto: menor e centralizado.
+  Serviços sem o véu branco (a malha de pontos aparece igual à dos Cases).
 - **Robô no computador (páginas, 23/11/2026)**: NÃO segue mais a rolagem. A cada troca (`mafra:pagina`, avisado por
   `paginas.ts`) ele escolhe um lugar LIVRE na página que está chegando (vagas laterais alternadas, `VAGAS`) e voa até lá
   com uma MOLA amortecida (arco para cima quando vai longe; inclina na direção do voo). Não fala enquanto voa.
