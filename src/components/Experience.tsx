@@ -503,7 +503,8 @@ export default function Experience() {
 
       /* ---------- Sobre ---------- */
       gsap.from(".about__badge", { scale: 0.6, rotation: -90, opacity: 0, duration: 1.4, ease: "expo.out", scrollTrigger: { trigger: ".about", start: "top 75%" } });
-      gsap.from(".about__item", { y: 70, opacity: 0, stagger: 0.12, duration: 1.1, ease: "expo.out", scrollTrigger: { trigger: ".about__grid", start: "top 85%" } });
+      if (window.innerWidth <= 760) $$(".about__item").forEach((it) => gsap.from(it, { y: 50, opacity: 0, ease: "power2.out", scrollTrigger: { trigger: it, start: "top 100%", end: "top 70%", scrub: 0.5 } }));
+      else gsap.from(".about__item", { y: 70, opacity: 0, stagger: 0.12, duration: 1.1, ease: "expo.out", scrollTrigger: { trigger: ".about__grid", start: "top 85%" } });
 
       /* ---------- Contadores ---------- */
       $$(".js-counter").forEach((el) => {
@@ -562,8 +563,16 @@ export default function Experience() {
       }
       // dentro de um bloco que acabou de trocar de cor, o texto espera a transição terminar para aparecer
       const inicioTexto = (el: Element) => (el.closest(".pos-azul, .bloco-azul--abre, .cta-vidro") ? "top 45%" : "top 85%");
+      // CELULAR, bloco "Quem está por trás" (Victor, 23/11/2026: "as letras demoram muito"): o texto vai aparecendo
+      // JUNTO com a rolagem — começa quando a foto está no meio da tela e completa conforme o texto sobe
+      const sobeComRolagem = (el: Element) => window.innerWidth <= 760 && !!el.closest(".about");
+      const rolagemSobre = (el: Element, fim = "top 62%") => ({ trigger: el, start: "top 100%", end: fim, scrub: 0.5 });
       $$(".section-title").forEach((t) => {
         maskWords(t);
+        if (sobeComRolagem(t)) {
+          gsap.from(t.querySelectorAll(".wm__i"), { yPercent: 115, rotate: 5, ease: "power2.out", stagger: 0.15, scrollTrigger: rolagemSobre(t) });
+          return;
+        }
         gsap.from(t.querySelectorAll(".wm__i"), {
           yPercent: 115, rotate: 5, duration: 1.2, ease: "expo.out", stagger: 0.07,
           scrollTrigger: { trigger: t, start: inicioTexto(t) },
@@ -572,6 +581,7 @@ export default function Experience() {
 
       // Textos de apoio: sobem saindo do desfoque
       $$(".work__lead, .about__lead, .contact__sub, .process__note, .eyebrow:not(.reveal-up)").forEach((p) => {
+        if (sobeComRolagem(p)) { gsap.from(p, { y: 24, opacity: 0, ease: "power2.out", scrollTrigger: rolagemSobre(p, "top 70%") }); return; }
         gsap.from(p, { y: 24, opacity: 0, filter: "blur(4px)", duration: 1.4, ease: "power3.out", scrollTrigger: { trigger: p, start: inicioTexto(p) === "top 45%" ? "top 55%" : "top 90%" } });
       });
 
