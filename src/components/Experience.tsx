@@ -25,6 +25,9 @@ export default function Experience() {
     const $$ = <T extends HTMLElement = HTMLElement>(s: string, c: ParentNode = document) => [...c.querySelectorAll<T>(s)];
 
     const cleanups: Array<() => void> = [];
+    // ABERTURA rodando: o site por trás fica "congelado" (vídeo, animações, robô) e só volta quando o portal abre —
+    // tudo isso rodando escondido atrás da apresentação era o que ainda a fazia travar no computador (23/11/2026)
+    const quieto = () => document.documentElement.classList.contains("abrindo-quieto");
     const on = <K extends keyof WindowEventMap>(
       target: Window | HTMLElement | Document,
       type: K | string,
@@ -133,7 +136,7 @@ export default function Experience() {
       const fimAbertura = () => {
         ceuVivo = false;
         if (pre) { pre.style.setProperty("display", "none", "important"); pre.style.pointerEvents = "none"; }
-        document.documentElement.classList.remove("abrindo");
+        document.documentElement.classList.remove("abrindo", "abrindo-quieto");
         window.dispatchEvent(new CustomEvent(EV_ABERTURA, { detail: "fim" }));
       };
       if (reduce || !pre) {
@@ -141,6 +144,7 @@ export default function Experience() {
           .set(".ab-logo", { opacity: 1 }).to(".preloader", { opacity: 0, duration: 0.4, delay: 0.6 });
       } else {
         const tl = gsap.timeline({ defaults: { ease: "expo.out" }, paused: true });
+        let pausadas: gsap.core.Animation[] = []; // animações sem fim (faixas gigantes…) paradas durante a abertura
         const espera = (ms: number) => new Promise<void>((ok) => setTimeout(ok, ms));
         const carregou = new Promise<void>((ok) => { if (document.readyState === "complete") ok(); else window.addEventListener("load", () => ok(), { once: true }); });
         const videoPronto = new Promise<void>((ok) => {
@@ -152,7 +156,10 @@ export default function Experience() {
           // mais um respiro curto: o navegador termina o que estava fazendo antes do 1º quadro da apresentação
           .then(() => new Promise<void>((ok) => requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(ok, 120)))))
           .then(() => {
-            document.documentElement.classList.add("abrindo");
+            document.documentElement.classList.add("abrindo", "abrindo-quieto");
+            ($(".video-topo video") as HTMLVideoElement | null)?.pause();
+            pausadas = gsap.globalTimeline.getChildren(false, true, true).filter((t) => (t as gsap.core.Tween).vars?.repeat === -1 && !t.paused());
+            pausadas.forEach((t) => t.pause());
             window.dispatchEvent(new CustomEvent(EV_ABERTURA, { detail: "inicio" }));
             tl.play(0);
           });
@@ -196,6 +203,7 @@ export default function Experience() {
           .set(".ab-anel, .ab-raios, .ab-aura, .ab-traco", { opacity: 0 }, 2.76)
           .to(warp, { a: 0, duration: 0.5 }, 2.76)
           .to(".ab-flash", { opacity: 0, duration: 0.55, ease: "power2.out" }, 2.76)
+
           // PORTAL: o furo cresce do centro e revela o site; a logo voa em direção à tela
           .set(".ab-portal", { opacity: 1 }, 2.8)
           .set(".preloader", { pointerEvents: "none" }, 2.8) // o site já aparece pelo portal: os cliques passam
@@ -205,7 +213,13 @@ export default function Experience() {
           .to(".ab-logo", { scale: 4.2, opacity: 0, duration: 1.0, ease: "power2.in" }, 2.78)
           .to(".ab-logo .logo-img", { filter: "blur(8px) brightness(1.8)", duration: 1.0, ease: "power2.in" }, 2.78)
           .add(() => intro(), 3.35)
-          .add(fimAbertura, 3.98);
+          .add(fimAbertura, 3.98)
+          // o site só volta a viver DEPOIS da apresentação (Victor, 23/11/2026: "congele todo o site")
+          .add(() => {
+            const v = $(".video-topo video") as HTMLVideoElement | null;
+            v?.play().catch(() => {});
+            pausadas.forEach((t) => t.resume()); pausadas = [];
+          }, 3.99);
         (window as unknown as { __abertura?: gsap.core.Timeline }).__abertura = tl; // (teste quadro a quadro)
       }
 
@@ -278,7 +292,7 @@ export default function Experience() {
           // iPhone em modo de economia de bateria bloqueia o vídeo automático e desenha um botão de play por cima:
           // nesse caso o vídeo fica escondido e aparece a IMAGEM PARADA do topo (sem botão); ao primeiro toque ele tenta de novo
           const caixaVideo = v.closest(".video-topo");
-          const tocar = () => { if (v.paused) v.play().then(() => caixaVideo?.classList.remove("video-bloqueado")).catch(() => caixaVideo?.classList.add("video-bloqueado")); };
+          const tocar = () => { if (quieto()) return; if (v.paused) v.play().then(() => caixaVideo?.classList.remove("video-bloqueado")).catch(() => caixaVideo?.classList.add("video-bloqueado")); };
           v.addEventListener("playing", () => caixaVideo?.classList.remove("video-bloqueado"));
           tocar();
           v.addEventListener("canplay", tocar, { once: true });
@@ -296,7 +310,7 @@ export default function Experience() {
           window.addEventListener("focus", voltar);
           let ultimoT = -1, parado = 0;
           const vigia = setInterval(() => {
-            if (!document.body.classList.contains("video-na-tela") || document.visibilityState !== "visible") return;
+            if (quieto() || !document.body.classList.contains("video-na-tela") || document.visibilityState !== "visible") return;
             if (v.paused) { tocar(); return; }
             if (Math.abs(v.currentTime - ultimoT) < 0.05) { if (++parado >= 2) { parado = 0; reiniciar(); } } else parado = 0;
             ultimoT = v.currentTime;
@@ -1123,6 +1137,7 @@ export default function Experience() {
       const orbTrava = $(".drone__orb") as HTMLElement | null;
       let travaX = 0, travaY = 0;
       const travar = () => {
+        if (quieto()) return;
         const alvo = (orbTrava && orbTrava.isConnected ? orbTrava : ($(".drone__orb") as HTMLElement | null)) ?? droneBody;
         const r = alvo.getBoundingClientRect();
         if (!r.width) return;
@@ -1334,6 +1349,7 @@ export default function Experience() {
         const inclinar = gsap.quickTo(droneBody, "rotation", { duration: 0.5, ease: "power2.out" });
         let ultimaConf = 0;
         const mola = () => {
+          if (quieto()) return;
           if (voando) { velX = velY = 0; posX = Number(gsap.getProperty(drone, "x")); posY = Number(gsap.getProperty(drone, "y")); return; }
           // depois do voo do menu: o deslocamento que ele deixou na camada passa para a posição (sem mexer na tela)
           const lx = Number(gsap.getProperty(layer, "x")), ly = Number(gsap.getProperty(layer, "y"));
@@ -1365,6 +1381,7 @@ export default function Experience() {
       }
 
       const sparks = () => {
+        if (quieto()) return;
         const x = Number(gsap.getProperty(drone, "x")), y = Number(gsap.getProperty(drone, "y"));
         const now = performance.now();
         if (Math.hypot(x - px, y - py) > 2 && now - lastSpark > sparkEvery) {
@@ -1411,6 +1428,7 @@ export default function Experience() {
         gsap.to(bubble, { opacity: 0, scale: 0.85, duration: 0.18, overwrite: true });
       };
       const vigiaRolagem = () => {
+        if (quieto()) return;
         const y = window.scrollY;
         if (Math.abs(y - ultimoY) > 1) { ultimaRolagem = performance.now(); calar(); }
         ultimoY = y;
