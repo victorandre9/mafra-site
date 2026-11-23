@@ -296,7 +296,9 @@ export default function Experience() {
       const mobileLayout = window.matchMedia("(max-width: 760px)").matches;
       const sTrack = $(".services__track");
       const sDist = () => Math.max(0, sTrack.scrollWidth - window.innerWidth);
-      if (!mobileLayout) {
+      // no computador os 6 cards ficam em grade (cabem na tela): sem trava. A trava vazia deixava uma "caixa" de altura
+      // fixa em volta de Serviços que empurrava as páginas de baixo (títulos cortados no alto)
+      if (!mobileLayout && sDist() > 0) {
         gsap.to(sTrack, {
           x: () => -sDist(), ease: "none",
           scrollTrigger: { trigger: ".services", pin: ".services__pin", start: "top top", end: () => "+=" + sDist(), scrub: 1, invalidateOnRefresh: true, anticipatePin: 1 },
@@ -733,7 +735,11 @@ export default function Experience() {
       };
       let lastX = 0;
       let flyTween: gsap.core.Tween | undefined;
+      // COMPUTADOR (site em páginas de tela cheia): o robô NÃO segue a rolagem — a cada troca de página ele voa,
+      // numa curva suave, até um lugar livre da página que está chegando (controle no fim deste bloco: `voarPara`)
+      const paginado = window.innerWidth > 760;
       const buildFlight = () => {
+        if (paginado) { flyTween?.scrollTrigger?.kill(); flyTween?.kill(); flyTween = undefined; return; }
         const prog = flyTween?.scrollTrigger?.progress ?? 0;
         flyTween?.scrollTrigger?.kill();
         flyTween?.kill();
@@ -836,7 +842,7 @@ export default function Experience() {
       const inicioVoo = performance.now();
       const avoid = () => {
         const agora = performance.now();
-        if (voando) return;
+        if (voando || paginado) return;
         // abertura no celular: o ponto de nascimento já foi medido livre com a página pronta; enquanto as letras
         // ainda animam (e antes da primeira rolagem) o desvio enxergaria "texto" onde não há — fica parado ali
         if (window.scrollY > 30) jaRolou = true;
@@ -1121,6 +1127,116 @@ export default function Experience() {
       cleanups.push(() => { gsap.ticker.remove(travar); layer.style.translate = ""; });
       cleanups.push(() => gsap.ticker.remove(avoid));
 
+      // ===== ROBÔ NO SITE EM PÁGINAS (computador, 23/11/2026, pedido do Victor: "mais fluido, ele está perdido") =====
+      // Uma MOLA amortecida leva o robô até o alvo: sai devagar, acelera, desacelera e assenta sem tranco, e um novo
+      // alvo no meio do caminho só curva a rota (nunca um "pulo"). Longe do alvo na horizontal, ele sobe um pouco:
+      // o caminho vira um ARCO. O alvo é escolhido quando a troca começa, já olhando a página que está chegando
+      // (onde os textos e cards vão ficar), num lugar livre perto de uma vaga da vez (laterais alternadas).
+      let alvoX = window.innerWidth * 0.86, alvoY = window.innerHeight * 0.66, velX = 0, velY = 0;
+      let posX = alvoX, posY = alvoY, trocandoPag = false;
+      const velRobo = () => Math.hypot(velX, velY);
+      if (paginado) {
+        const VAGAS: Array<[number, number]> = [[0.86, 0.68], [0.12, 0.72], [0.88, 0.32], [0.1, 0.34], [0.86, 0.78], [0.13, 0.52], [0.9, 0.52], [0.11, 0.8]];
+        type Ret = { l: number; t: number; r: number; b: number };
+        const orbP = () => (corpo.querySelector(".drone__orb") as HTMLElement | null);
+        const medidas = () => {
+          const W = window.innerWidth, H = window.innerHeight;
+          const tam = Math.max(orbP()?.offsetWidth ?? 0, 100);
+          const hw = tam / 2 + 14, hh = tam / 2 + 20;
+          const topo = ($(".header")?.getBoundingClientRect().bottom ?? 70) + hh + 26;
+          return { W, H, tam, hw, hh, topo, base: H - hh - 14, esq: hw + 10, dir: W - hw - 10 };
+        };
+        // retângulos dos textos/cards de um conjunto de seções, deslocados para onde vão ficar na chegada
+        const obstaculos = (secs: Element[] | null, dx = 0, dy = 0): Ret[] => {
+          const H = window.innerHeight, W = window.innerWidth;
+          const extras = Array.from(document.querySelectorAll(".bigtext__row, .marquee")); // faixas que passam também são "texto"
+          return [...obst, ...extras].filter((e) => !secs || secs.some((sc) => sc.contains(e)))
+            .map((e) => e.getBoundingClientRect())
+            .filter((r) => r.width > 0 && r.height > 0)
+            .map((r) => ({ l: r.left + dx, t: r.top + dy, r: r.right + dx, b: r.bottom + dy }))
+            .filter((r) => r.b > 0 && r.t < H && r.r > 0 && r.l < W);
+        };
+        const acharLugar = (cx: number, cy: number, rs: Ret[]): [number, number] => {
+          const m = medidas();
+          const livre = (x: number, y: number) => x >= m.esq && x <= m.dir && y >= m.topo && y <= m.base &&
+            !rs.some((r) => x + m.hw > r.l - 10 && x - m.hw < r.r + 10 && y + m.hh > r.t - 10 && y - m.hh < r.b + 10);
+          cx = gsap.utils.clamp(m.esq, m.dir, cx); cy = gsap.utils.clamp(m.topo, m.base, cy);
+          for (let raio = 0; raio <= 900; raio += 30) {
+            for (let k = 0; k < (raio ? 24 : 1); k++) {
+              const a = (k / 24) * Math.PI * 2, x = cx + Math.cos(a) * raio, y = cy + Math.sin(a) * raio * 0.75;
+              if (livre(x, y)) return [x, y];
+            }
+          }
+          // sem lugar 100% livre: o ponto que menos cobre texto
+          let melhor = Infinity, best: [number, number] = [cx, cy];
+          for (let y = m.topo; y <= m.base; y += 24) for (let x = m.esq; x <= m.dir; x += 24) {
+            let c = 0;
+            for (const r of rs) { const w = Math.min(x + m.hw, r.r) - Math.max(x - m.hw, r.l), h = Math.min(y + m.hh, r.b) - Math.max(y - m.hh, r.t); if (w > 0 && h > 0) c += w * h; }
+            c += Math.hypot(x - cx, y - cy) * 0.5; // perto da vaga desempata
+            if (c < melhor) { melhor = c; best = [x, y]; }
+          }
+          return best;
+        };
+        const voarPara = (n: number, secs: Element[] | null, dx = 0, dy = 0) => {
+          const { W, H } = medidas();
+          const [fx, fy] = VAGAS[((n % VAGAS.length) + VAGAS.length) % VAGAS.length];
+          [alvoX, alvoY] = acharLugar(fx * W, fy * H, obstaculos(secs, dx, dy));
+          altEl.textContent = String(120 + n * 60).padStart(3, "0");
+        };
+        // começo: lugar livre na 1ª página
+        coletar();
+        voarPara(0, null);
+        posX = alvoX; posY = alvoY;
+        gsap.set(drone, { x: posX, y: posY });
+        on(window, "mafra:pagina", (e: CustomEvent<{ fase: "inicio" | "fim"; n: number; secs: Element[]; dx: number; dy: number }>) => {
+          const d = e.detail;
+          if (d.fase === "inicio") {
+            trocandoPag = true;
+            calar(); ultimaRolagem = performance.now(); // nada de fala no meio da troca
+            coletar();
+            voarPara(d.n, d.secs, d.dx, d.dy);
+          } else {
+            trocandoPag = false;
+            ultimaRolagem = performance.now();
+            // chegou: confere com a página já no lugar; só muda o alvo se ele ficou em cima de algum texto
+            const m = medidas(), rs = obstaculos(null);
+            const cobre = rs.some((r) => alvoX + m.hw > r.l && alvoX - m.hw < r.r && alvoY + m.hh > r.t && alvoY - m.hh < r.b);
+            if (cobre) [alvoX, alvoY] = acharLugar(alvoX, alvoY, rs);
+          }
+        });
+        const inclinar = gsap.quickTo(droneBody, "rotation", { duration: 0.5, ease: "power2.out" });
+        let ultimaConf = 0;
+        const mola = () => {
+          if (voando) { velX = velY = 0; posX = Number(gsap.getProperty(drone, "x")); posY = Number(gsap.getProperty(drone, "y")); return; }
+          // depois do voo do menu: o deslocamento que ele deixou na camada passa para a posição (sem mexer na tela)
+          const lx = Number(gsap.getProperty(layer, "x")), ly = Number(gsap.getProperty(layer, "y"));
+          if (lx || ly) { posX += lx; posY += ly; alvoX = posX; alvoY = posY; gsap.set(layer, { x: 0, y: 0 }); }
+          const dt = Math.min(0.1, gsap.ticker.deltaRatio(60) / 60); // relógio real (tela lenta não deixa o robô lento)
+          const w = 2.4; // "rigidez" da mola: ~2 s para atravessar a tela, assentando sem balançar
+          const arco = Math.min(160, Math.abs(alvoX - posX) * 0.16); // longe na horizontal → sobe um pouco (arco)
+          const ty = Math.max(medidas().topo, alvoY - arco);
+          velX += (w * w * (alvoX - posX) - 2 * w * velX) * dt;
+          velY += (w * w * (ty - posY) - 2 * w * velY) * dt;
+          const v = Math.hypot(velX, velY), vmax = 820;
+          if (v > vmax) { velX *= vmax / v; velY *= vmax / v; }
+          posX += velX * dt; posY += velY * dt;
+          gsap.set(drone, { x: posX, y: posY });
+          inclinar(gsap.utils.clamp(-14, 14, velX * 0.018));
+          drone.classList.toggle("is-right", alvoX > window.innerWidth * 0.5);
+          // parado: se algo passou a cobrir (pergunta aberta, card que cresceu), procura um lugar livre perto
+          const agora = performance.now();
+          if (!trocandoPag && v < 20 && agora - ultimaConf > 700) {
+            ultimaConf = agora;
+            const m = medidas(), rs = obstaculos(null);
+            const cobre = rs.some((r) => alvoX + m.hw > r.l && alvoX - m.hw < r.r && alvoY + m.hh > r.t && alvoY - m.hh < r.b);
+            if (cobre) [alvoX, alvoY] = acharLugar(alvoX, alvoY, rs);
+          }
+        };
+        gsap.ticker.add(mola);
+        cleanups.push(() => gsap.ticker.remove(mola));
+        on(window, "resize", () => { const m = medidas(); alvoX = gsap.utils.clamp(m.esq, m.dir, alvoX); alvoY = gsap.utils.clamp(m.topo, m.base, alvoY); });
+      }
+
       const sparks = () => {
         const x = Number(gsap.getProperty(drone, "x")), y = Number(gsap.getProperty(drone, "y"));
         const now = performance.now();
@@ -1181,6 +1297,7 @@ export default function Experience() {
         if (ultimaFala < 0 || document.hidden || menuAberto() || voando) return; // começa só depois da saudação de abertura
         const agora = performance.now();
         if (agora - ultimaRolagem < PARADA) return; // tela em movimento: não fala
+        if (paginado && (trocandoPag || velRobo() > 25)) return; // robô ainda voando para a página nova
         if (agora - ultimaFala < INTERVALO) return; // a cada 10 s
         const ehToque = passo % 2 === 0;
         const texto = ehToque ? TOQUE[iToque % TOQUE.length] : OUTRAS[iOutra % OUTRAS.length];
