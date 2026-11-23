@@ -55,10 +55,17 @@ const FAISCAS = Array.from({ length: 30 }, (_, k): Estilo => ({
 export default function Abertura() {
   return (
     <div className="preloader" aria-hidden="true">
-      <div className="ab-ceu">{ESTRELAS.map((st, k) => <i key={k} style={st}><b /></i>)}</div>
-      <div className="ab-dobra">{DOBRA.map((st, k) => <i key={k} style={st}><b /></i>)}</div>
-      <div className="ab-raios-vida"><div className="ab-raios" /></div>
-      <div className="ab-vinheta" />
+      {/* o FUNDO (céu, dobra, raios) some de uma vez no flash; daí em diante o escuro é a ÍRIS */}
+      <div className="ab-fundo">
+        <div className="ab-ceu">{ESTRELAS.map((st, k) => <i key={k} style={st}><b /></i>)}</div>
+        <div className="ab-dobra">{DOBRA.map((st, k) => <i key={k} style={st}><b /></i>)}</div>
+        <div className="ab-raios-vida"><div className="ab-raios" /></div>
+        <div className="ab-vinheta" />
+      </div>
+      {/* PORTAL no compositor (23/11/2026, Victor: "travadinha na hora que abre o portal"): um anel com furo que só
+          CRESCE (transform) + 4 placas escuras que se afastam junto. Antes era uma máscara redesenhada a cada quadro
+          pelo navegador, que engasgava quando o site acordava por trás */}
+      <div className="ab-iris"><i className="ab-iris__anel" /><i className="ab-iris__c" /><i className="ab-iris__b" /><i className="ab-iris__e" /><i className="ab-iris__d" /></div>
       <div className="ab-palco">
         <span className="ab-aura" />
         <span className="ab-onda" />

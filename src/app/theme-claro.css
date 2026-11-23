@@ -1372,20 +1372,40 @@ html.modo-paginas .services { background: transparent !important; }
    FASE 1 (só CSS: começa SOZINHA com a página, sem esperar o JavaScript — que leva 2-3 s para chegar): 0,05 aura · 0,12 anéis · 0,2 logo surge da
    luz girando · 0,45 cometa dá a volta e acende o aro · 0,6 raios; depois fica "viva" (anéis/raios/estrelas girando).
    `.ab-roda` (quando TUDO carregou): 0,05 brilho atravessa · 0,15 slogan sobe · 1,15 CARGA (dobra) · 1,67 FLASH + risco +
-   onda + faíscas · 1,8 PORTAL abre (--furo) e a logo voa para a tela · 2,97 fim.
+   onda + faíscas · 1,8 PORTAL abre (íris: anel + 4 placas, só transform) e a logo voa para a tela · 2,97 fim.
    Sem filtro em elemento recortado (no iPhone isso desenhava um QUADRADO em volta da logo). */
-@property --furo { syntax: "<length>"; inherits: false; initial-value: 0px; } /* não herda: só a abertura recalcula */
 .preloader {
   display: block !important; overflow: hidden; contain: strict;
-  background: radial-gradient(ellipse at 50% 50%, #0b3a24 0%, #062a17 52%, #03140c 100%) !important;
+  background: transparent !important;
   --t: min(50vmin, 420px);
-  -webkit-mask: radial-gradient(circle at 50% 50%, transparent var(--furo), #000 calc(var(--furo) + 1.5px));
-  mask: radial-gradient(circle at 50% 50%, transparent var(--furo), #000 calc(var(--furo) + 1.5px));
 }
 .preloader * { box-sizing: border-box; }
-/* PORTAL: o furo cresce do centro (80vmax cobre a diagonal de qualquer tela) */
-.preloader.ab-roda { animation: abFuro 1.15s cubic-bezier(.55, .06, .68, .19) 1.8s both; }
-@keyframes abFuro { to { --furo: 80vmax; } }
+.ab-fundo { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 50%, #0b3a24 0%, #062a17 52%, #03140c 100%); }
+/* PORTAL (íris): no flash (1,8 s, tela branca) o fundo some e a íris assume o escuro. Furo = 48vmax × escala do anel;
+   as 4 placas andam 50vmax × a MESMA escala, com a MESMA curva — ficam sempre coladas no quadrado do anel.
+   Escala final 1,667 → furo de 80vmax (cobre a diagonal de qualquer tela). Só transform/opacity: roda no compositor. */
+.ab-iris { position: absolute; inset: 0; pointer-events: none; opacity: 0; }
+.ab-iris i { position: absolute; left: 50%; top: 50%; background: #062a17; will-change: transform; }
+.ab-iris .ab-iris__anel { width: 100vmax; height: 100vmax; margin: -50vmax 0 0 -50vmax; transform: scale(0);
+  background: radial-gradient(circle closest-side, rgba(6, 42, 23, 0) 95.6%, #062a17 96%); }
+.ab-iris__c { width: 400vmax; height: 200vmax; margin: -200vmax 0 0 -200vmax; transform: translateY(1px); }
+.ab-iris__b { width: 400vmax; height: 200vmax; margin: 0 0 0 -200vmax; transform: translateY(-1px); }
+.ab-iris__e { width: 200vmax; height: 400vmax; margin: -200vmax 0 0 -200vmax; transform: translateX(1px); }
+.ab-iris__d { width: 200vmax; height: 400vmax; margin: -200vmax 0 0 0; transform: translateX(-1px); }
+.ab-roda .ab-fundo { animation: abApaga 1ms 1.8s both; }
+.ab-roda .ab-iris { animation: abAcende 1ms 1.8s both; }
+.ab-roda .ab-iris__anel { animation: abIrisAnel 1.15s cubic-bezier(.55, .06, .68, .19) 1.8s both; }
+.ab-roda .ab-iris__c { animation: abIrisC 1.15s cubic-bezier(.55, .06, .68, .19) 1.8s both; }
+.ab-roda .ab-iris__b { animation: abIrisB 1.15s cubic-bezier(.55, .06, .68, .19) 1.8s both; }
+.ab-roda .ab-iris__e { animation: abIrisE 1.15s cubic-bezier(.55, .06, .68, .19) 1.8s both; }
+.ab-roda .ab-iris__d { animation: abIrisD 1.15s cubic-bezier(.55, .06, .68, .19) 1.8s both; }
+@keyframes abApaga { from { opacity: 1; } to { opacity: 0; } }
+@keyframes abAcende { from { opacity: 0; } to { opacity: 1; } }
+@keyframes abIrisAnel { from { transform: scale(0); } to { transform: scale(1.6667); } }
+@keyframes abIrisC { from { transform: translateY(1px); } to { transform: translateY(calc(1px - 83.333vmax)); } }
+@keyframes abIrisB { from { transform: translateY(-1px); } to { transform: translateY(calc(83.333vmax - 1px)); } }
+@keyframes abIrisE { from { transform: translateX(1px); } to { transform: translateX(calc(1px - 83.333vmax)); } }
+@keyframes abIrisD { from { transform: translateX(-1px); } to { transform: translateX(calc(83.333vmax - 1px)); } }
 
 /* ---- céu: estrelas saindo do centro (já correm na espera) ---- */
 .ab-ceu, .ab-dobra { position: absolute; left: 50%; top: 50%; width: 0; height: 0; }
@@ -1543,7 +1563,7 @@ html.modo-paginas .services { background: transparent !important; }
 }
 .ab-roda .ab-frase { animation: abSome .2s 1.5s both; }
 
-/* anel do portal: acompanha a borda do furo (raio 20vmax × escala; o furo vai a 80vmax = escala 4) */
+/* anel do portal: acompanha a borda do furo (raio 20vmax × escala; o furo vai a 80vmax = escala 4, mesma curva da íris) */
 .ab-portal { position: absolute; left: 50%; top: 50%; width: 40vmax; height: 40vmax; margin: -20vmax 0 0 -20vmax; border-radius: 50%;
   opacity: 0; transform: scale(0); pointer-events: none;
   box-shadow: 0 0 0 2px #e8f9ef, 0 0 22px 6px rgba(127, 227, 173, .95), 0 0 90px 30px rgba(52, 210, 122, .6); }

@@ -86,13 +86,22 @@ export default function Experience() {
       let pausadas: gsap.core.Animation[] = []; // animações sem fim (faixas gigantes…) paradas durante a abertura
       // (o CSS da abertura usa display com !important: a saída precisa de !important também, senão a tela da abertura
       // fica invisível POR CIMA do site e engole os cliques)
-      const fimAbertura = () => {
-        if (pre) { pre.style.setProperty("display", "none", "important"); pre.style.pointerEvents = "none"; }
-        document.documentElement.classList.remove("abrindo", "abrindo-quieto");
+      // ACORDAR o site (3D, vídeo, animações) só DEPOIS que o portal terminou (Victor, 23/11/2026: "acabou o portal,
+      // inicia os vídeos do site"); o portal em si é só transform (íris) e não depende do navegador livre
+      let acordado = false;
+      const acordar = () => {
+        if (acordado) return;
+        acordado = true;
+        document.documentElement.classList.remove("abrindo-quieto"); // ("abrindo" fica até o fim: o mapa/setas não vão por cima)
         window.dispatchEvent(new CustomEvent(EV_ABERTURA, { detail: "fim" }));
-        // o site só volta a viver DEPOIS da apresentação (Victor: "congele todo o site")
+        // durante a apresentação o site fica congelado ("congele todo o site"); volta a viver escondido, antes do portal
         ($(".video-topo video") as HTMLVideoElement | null)?.play().catch(() => {});
         pausadas.forEach((t) => t.resume()); pausadas = [];
+      };
+      const fimAbertura = () => {
+        acordar();
+        document.documentElement.classList.remove("abrindo");
+        if (pre) { pre.style.setProperty("display", "none", "important"); pre.style.pointerEvents = "none"; }
       };
       if (reduce || !pre) {
         gsap.timeline({ onComplete: () => { fimAbertura(); intro(); } }).to(".preloader", { opacity: 0, duration: 0.4, delay: 0.6 });
@@ -142,8 +151,8 @@ export default function Experience() {
             };
             requestAnimationFrame(tique);
           };
+          quando(2350, () => intro()); // o título entra enquanto o portal abre (o portal é compositor: não sente o JS)
           quando(1800, () => { pre.style.pointerEvents = "none"; }); // o site já aparece pelo portal: os cliques passam
-          quando(2350, () => intro());
           quando(2960, fimAbertura);
         };
         Promise.all([Promise.race([Promise.all([carregou, videoPronto, esperar3D("orbe", 6500), esperar3D("fundo", 6500), espera(2000)]), espera(7000)]), faseUmPronta()])
