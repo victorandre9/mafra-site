@@ -142,6 +142,7 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   `paginas.ts`) ele escolhe um lugar LIVRE na página que está chegando (vagas laterais alternadas, `VAGAS`) e voa até lá
   com uma MOLA amortecida (arco para cima quando vai longe; inclina na direção do voo). Não fala enquanto voa.
   Orbe 10% menor no computador (133 px). Celular: tudo como antes. Victor aprovou o robô assim ("ficou ótimo, pode manter").
+  A área de desenho do Orbe é 1,5x o quadro dele (`.drone__orb > div`, câmera fov 54,6°): o ARO girando não é cortado.
 - **Faixa gigante (Perguntas)**: UMA linha — "processos ✦ gestão ✦ tecnologia ✦" + no fim o trecho VAZADO
   (`.bt-vazado`), repetido 4x para o letreiro nunca ficar vazio (23/11/2026).
 - **Malha de pontos no computador (páginas)**: dança pela tela inteira sozinha (caminho em "oito", ~40 s), sem depender
