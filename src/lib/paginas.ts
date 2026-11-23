@@ -337,6 +337,7 @@ export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, le
   let ultimoEv = 0, ultimoSinal = 0, ultimoAbs = 0;
   const gesto = (d: 1 | -1) => { if (!trocando) ir(atual + d); };
   const roda = (ev: WheelEvent) => {
+    if (html.classList.contains("bolha-aberta")) { ev.preventDefault(); return; } // card ampliado: a página fica parada
     if (html.classList.contains("historia-travada") || document.body.classList.contains("em-voo")) return;
     // segura a página: o navegador E a rolagem suave do site (a abertura religa a rolagem suave depois do início)
     ev.preventDefault(); ev.stopPropagation(); lenis?.stop();
@@ -367,6 +368,7 @@ export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, le
     if (Math.abs(dy) > 30 && Math.abs(dy) > Math.abs(dx)) gesto(dy > 0 ? 1 : -1);
   };
   const tecla = (ev: KeyboardEvent) => {
+    if (html.classList.contains("bolha-aberta")) return;
     const alvo = ev.target as HTMLElement | null;
     if (alvo && /input|textarea|select/i.test(alvo.tagName)) return;
     if (["ArrowDown", "PageDown", " "].includes(ev.key)) { ev.preventDefault(); gesto(1); }
