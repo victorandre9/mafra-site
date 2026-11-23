@@ -387,6 +387,27 @@ export default function Experience() {
         $$<HTMLElement>(".holo.hc-a").forEach((h) => { h.style.left = "auto"; h.style.right = `${(s.right - f.left + folga) / z}px`; h.style.width = `${wE / z}px`; });
         $$<HTMLElement>(".holo.hc-b").forEach((h) => { h.style.right = "auto"; h.style.left = `${(f.right - s.left + folga) / z}px`; h.style.width = `${wD / z}px`; });
       };
+      // TELAS DO CELULAR 3D: o texto ocupa TODO o espaço útil da tela (pedido do Victor, 23/11/2026).
+      // Cada tela é ampliada (zoom) até o conteúdo encostar no pé da tela, com uma pequena margem. Mede de novo
+      // quando a janela muda de tamanho.
+      const ajustarTelas = () => {
+        $$<HTMLElement>(".phone .screen").forEach((sc) => {
+          const fundo = (z: number) => {
+            sc.style.zoom = String(z);
+            const top = sc.getBoundingClientRect().top;
+            let b = 0;
+            sc.querySelectorAll<HTMLElement>("*").forEach((el) => { const r = el.getBoundingClientRect(); if (r.height > 0 && r.width > 0) b = Math.max(b, r.bottom - top); });
+            return b;
+          };
+          sc.style.zoom = "1";
+          const alto = sc.getBoundingClientRect().height;
+          let lo = 1, hi = 1.8;
+          for (let k = 0; k < 8; k++) { const m = (lo + hi) / 2; if (fundo(m) <= alto * 0.94) lo = m; else hi = m; }
+          sc.style.zoom = String(lo);
+        });
+      };
+      setTimeout(ajustarTelas, 300);
+      on(window, "resize", () => setTimeout(ajustarTelas, 350));
       posHolosRef = posHolos;
       posHolos();
       setTimeout(posHolos, 600);
@@ -461,29 +482,45 @@ export default function Experience() {
         };
         walk(el, false);
       };
-      /* ---------- TRANSIÇÕES ENTRE OS BLOCOS CLARO/AZUL (ideia do Victor, 22/11/2026) ----------
-         Branco → azul: o fundo azul ENTRA PELA DIREITA, como uma cortina deslizando com a rolagem.
-         Azul → branco: o branco DESCE por cima do azul (uma "cauda" azul embaixo do bloco vai sendo coberta de cima
-         para baixo). O texto do bloco seguinte só aparece DEPOIS da transição. */
+      /* ---------- TRANSIÇÃO DE PÁGINA ENTRE OS BLOCOS CLARO/AZUL (Victor, 22/11/2026: "a página vai para o lado") ----------
+         Branco → azul: a PÁGINA INTEIRA sai para a ESQUERDA e a página azul entra pela DIREITA, como trocar de página.
+         Azul → branco: a página DESCE (sai para cima e a branca sobe de baixo).
+         Funciona com o próprio site: a tela sai, a rolagem é levada para o começo do bloco seguinte e a tela volta pelo
+         outro lado. Para cima, o caminho inverso. Durante a troca a rolagem fica segura (nada de "pular" duas). */
       if (!reduce) {
-        $$<HTMLElement>("section.bloco-azul--abre, section.cta-vidro").forEach((sec) => {
-          gsap.fromTo(sec, { "--azul-entra": "100%" }, { "--azul-entra": "0%", ease: "none",
-            scrollTrigger: { trigger: sec, start: "top bottom", end: "top 30%", scrub: 0.6 } });
-          // o texto do bloco azul só aparece quando a cortina já cobriu a tela (antes ficava branco sobre branco)
-          gsap.fromTo(sec, { "--conteudo": 0 }, { "--conteudo": 1, ease: "power1.in",
-            scrollTrigger: { trigger: sec, start: "top 55%", end: "top 25%", scrub: 0.6 } });
-        });
-        const pares: Array<[string, string]> = [[".manifesto", ".services"], [".stats", "#cases"], ["#sobre", ".bigtext"]];
-        pares.forEach(([azul, claro]) => {
-          const a2 = $(azul), c2 = $(claro);
-          if (!a2 || !c2) return;
-          const cauda = document.createElement("div");
-          cauda.className = "cauda-azul"; cauda.setAttribute("aria-hidden", "true");
-          a2.appendChild(cauda);
-          c2.classList.add("pos-azul");
-          gsap.fromTo(cauda, { clipPath: "inset(0% 0% 0% 0%)" }, { clipPath: "inset(100% 0% 0% 0%)", ease: "none",
-            scrollTrigger: { trigger: c2, start: "top bottom", end: "top 30%", scrub: 0.6 } });
-          cleanups.push(() => cauda.remove());
+        const pagina = [$("main"), $(".footer")].filter(Boolean) as HTMLElement[];
+        const fronteiras: Array<[string, "lado" | "desce"]> = [
+          [".manifesto", "lado"], [".services", "desce"], ["#metodo", "lado"], ["#cases", "desce"],
+          ["#sobre", "lado"], [".bigtext", "desce"], ["#contato", "lado"], [".footer", "desce"],
+        ];
+        let trocando = false;
+        const trocar = (destino: number, tipo: "lado" | "desce", dir: 1 | -1) => {
+          if (trocando) return;
+          trocando = true;
+          lenis?.stop();
+          document.documentElement.classList.add("trocando-pagina");
+          // o deslocamento é do tamanho da TELA (não da página inteira, que tem milhares de pixels de altura)
+          const eixo = tipo === "lado" ? "x" : "y";
+          const passo = tipo === "lado" ? window.innerWidth : window.innerHeight;
+          const sai = -passo * dir, entra = passo * dir; // para baixo: sai à esquerda/para cima e entra pela direita/de baixo
+          gsap.timeline({ onComplete: () => { gsap.set(pagina, { clearProps: "transform" }); document.documentElement.classList.remove("trocando-pagina"); lenis?.start(); setTimeout(() => { trocando = false; }, 250); } })
+            .to(pagina, { [eixo]: sai, duration: 0.55, ease: "power3.in" })
+            .add(() => { if (lenis) lenis.scrollTo(destino, { immediate: true, force: true }); else window.scrollTo(0, destino); })
+            .set(pagina, { [eixo]: entra })
+            .to(pagina, { [eixo]: 0, duration: 0.7, ease: "power3.out" });
+        };
+        fronteiras.forEach(([sel, tipo]) => {
+          const bloco = $(sel);
+          if (!bloco) return;
+          if (tipo === "desce") bloco.classList.add("pos-azul");
+          ScrollTrigger.create({
+            // "desce" dispara mais tarde: depois de um bloco curto (a frase azul), a fronteira seguinte já nasce perto
+            trigger: bloco, start: tipo === "lado" ? "top 72%" : "top 40%",
+            // descendo: leva ao começo do bloco (2 px antes, para não ligar a trava da Metodologia no meio da troca)
+            onEnter: () => trocar(Math.max(0, bloco.getBoundingClientRect().top + window.scrollY - 2), tipo, 1),
+            // subindo: volta para o fim do bloco anterior
+            onLeaveBack: () => trocar(Math.max(0, bloco.getBoundingClientRect().top + window.scrollY - window.innerHeight), tipo, -1),
+          });
         });
       }
       // dentro de um bloco que acabou de trocar de cor, o texto espera a transição terminar para aparecer
