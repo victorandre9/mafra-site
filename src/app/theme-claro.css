@@ -623,7 +623,7 @@ body { background-image: none !important; }
 }
 .marquee span { text-shadow: 0 1px 2px rgba(1, 12, 26, .45) !important; }
 
-/* frase "Da necessidade operacional à solução digital": fonte de texto em itálico leve, mais refinada que a de código */
+/* slogan "Sua operação no controle.": fonte de texto em itálico leve, mais refinada que a de código */
 .hero .hero__tagline {
   font-family: var(--font-body) !important; font-style: italic !important; font-weight: 400;
   font-size: 1.02rem !important; letter-spacing: .01em !important; color: #4f6078 !important; line-height: 1.5;
@@ -1400,7 +1400,7 @@ html.modo-paginas .services { background: transparent !important; }
 .ab-onda { --t: min(50vmin, 420px); position: absolute; width: var(--t); height: var(--t); left: calc(var(--t) / -2); top: calc(var(--t) / -2);
   border-radius: 50%; opacity: 0; box-shadow: 0 0 0 3px rgba(207, 230, 255, .9), 0 0 50px 14px rgba(79, 155, 220, .7), inset 0 0 50px 10px rgba(142, 197, 255, .6); }
 .ab-frase { position: absolute; left: 0; right: 0; top: calc(50% + min(25vmin, 210px) + clamp(46px, 7vh, 86px)); margin: 0; text-align: center;
-  font: 500 clamp(1rem, 2.2vw, 1.5rem)/1.3 var(--font-display); letter-spacing: .01em; color: #e8f2ff; padding: 0 20px; }
+  font: 500 clamp(1.25rem, 2.8vw, 2rem)/1.3 var(--font-display); letter-spacing: .01em; color: #e8f2ff; padding: 0 20px; }
 .ab-palavra { display: inline-block; overflow: hidden; vertical-align: bottom; margin: 0 .16em; padding-bottom: .08em; }
 .ab-palavra > span { display: inline-block; transform: translateY(115%); }
 .ab-portal { position: absolute; left: 50%; top: 50%; width: calc(var(--furo) * 2); height: calc(var(--furo) * 2); transform: translate(-50%, -50%);

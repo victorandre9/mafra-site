@@ -108,7 +108,7 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
 - Robô: obstáculos incluem CARDS inteiros; cobrindo texto/botão/card > 12% fica translúcido (0,28) no computador e no celular.
 - **Abertura "PORTAL"** (23/11/2026, aprovada pelo Victor; substitui a de 21/11): espera o site CARREGAR (página + vídeo do
   topo, mínimo 2 s, máximo 6 s) com estrelas calmas; depois ~3,8 s: logo ORIGINAL grande surge do desfoque girando, anéis e
-  raios, brilho atravessa, frase "Da necessidade operacional à solução digital.", CARGA (estrelas em dobra), FLASH + onda de
+  raios, brilho atravessa, slogan "Sua operação no controle." (escolhido pelo Victor, 23/11/2026; também no rodapé), CARGA (estrelas em dobra), FLASH + onda de
   choque, e o PORTAL (`--furo`, máscara circular na própria abertura) abre e revela o site com o vídeo rodando. Tudo em código
   (`.ab-*` no fim do `theme-claro.css`, timeline em `Experience.tsx`). Saída com `display:none !important` (o CSS usa !important).
 - Robô no celular nasce na PARTE BRANCA, EM FRENTE à palavra "movem" (centro da última linha do título, canto direito; vão livre medido pelo layout; sem vão, cai no vídeo); fica parado ali até a 1ª rolagem. Saudação "Clique aqui! 👆" em balão compacto de 2 linhas, só se couber sem cobrir texto.
