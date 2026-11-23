@@ -200,7 +200,8 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
 - **Cards de Serviços e Cases** (23/11/2026, Victor: monitor de 15,6" não dava para ler; `src/lib/bolha.ts`, só computador):
   1) PASSAR O MOUSE = LUPA 3D que segue o mouse e AMPLIA (2,2x) só o texto embaixo dela; o card NÃO sai do lugar
   ("não quero que o menu venha para frente"). Modelo 2 escolhido pelo Victor (aro azul-ciano aceso, cabo cromado),
-  renderizado em 3D com three.js: `/public/lupa-moldura.webp` (aro vazado; centro 212,220, raio 105 em 468×501) e
+  renderizado em 3D com three.js: `/public/lupa-moldura.webp` (2ª versão "proporcional": aro fino, cabo curto; centro 97,5/102,
+  raio 66 em 211×227 — a 1ª era grande demais) e
   `/public/lupa-cursor.png` (ícone do cursor nas Perguntas e na dica). Dentro da lente vai uma cópia do card na MESMA
   estrutura de classes (inclusive um `#cases` temporário) para as letras ficarem idênticas.
   2) CLIQUE = a cópia sai do card e vem ao centro como GELATINA: cresce em 8 balanços (achata/estica, cada vez menos)
@@ -211,6 +212,9 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   NÃO abre na lista (a página mudava de altura e o encaixe encolhia/crescia tudo): o clique abre um painel em tela cheia —
   círculo escuro nasce do ponto do clique, pergunta sobe palavra por palavra, resposta acende, luz passa; ← → navegam.
   `html.bolha-aberta` segura a troca de páginas enquanto bolha/foco estão abertos.
+- **Serviços no computador** (23/11/2026): título encostado no menu (respiro = altura do menu, em `paginas.ts`), cards e
+  cabeçalho com 90% da LARGURA DA TELA (`calc(90vw * var(--inv-zoom))`), letras maiores (h3 1,75rem, texto 1,22rem).
+  Em 1366×650 o texto dos cards foi de ~8px para ~13px na tela.
 - **"Voltar ao topo"** no computador usa `__paginas.ir(0)` (a rolagem suave fica desligada no modo páginas).
 - Lista do topo ("/ Diagnóstico & processos…"): +2px e negrito; texto do topo ("Entendo a rotina…") +1px e negrito; menu do topo em negrito (monitor pequeno). Bloco de texto do topo 160px mais à esquerda no computador (`translate`, o vídeo NÃO muda).
 - Botões verdes: flash claro passando da esquerda para a direita a cada 3 s (`verde-varre`).
