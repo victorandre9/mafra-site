@@ -30,7 +30,7 @@ const ESTRELAS = Array.from({ length: 64 }, (_, k): Estilo => {
     "--v": `${v.toFixed(2)}s`,
     "--d": `${(-r1() * v).toFixed(2)}s`,
     "--l": `${Math.round(14 + r1() * 46)}px`,
-    "--c": r1() < 0.3 ? "#ffffff" : r1() < 0.6 ? "#8ec5ff" : "#4f9bdc",
+    "--c": r1() < 0.3 ? "#ffffff" : r1() < 0.6 ? "#7fe3ad" : "#34d27a",
   };
 });
 // estrelas da DOBRA (carga): longas e rápidas
@@ -41,7 +41,7 @@ const DOBRA = Array.from({ length: 48 }, (_, k): Estilo => {
     "--v": `${v.toFixed(2)}s`,
     "--d": `${(-r1() * v).toFixed(2)}s`,
     "--l": `${Math.round(110 + r1() * 220)}px`,
-    "--c": r1() < 0.5 ? "#ffffff" : "#8ec5ff",
+    "--c": r1() < 0.5 ? "#ffffff" : "#7fe3ad",
   };
 });
 // faíscas do flash (3 alcances diferentes)

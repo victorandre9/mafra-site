@@ -1372,7 +1372,7 @@ html.modo-paginas .services { background: transparent !important; }
 @property --furo { syntax: "<length>"; inherits: false; initial-value: 0px; } /* não herda: só a abertura recalcula */
 .preloader {
   display: block !important; overflow: hidden; contain: strict;
-  background: radial-gradient(ellipse at 50% 50%, #0d3168 0%, #011834 52%, #000b19 100%) !important;
+  background: radial-gradient(ellipse at 50% 50%, #0b3a24 0%, #062a17 52%, #03140c 100%) !important;
   --t: min(50vmin, 420px);
   -webkit-mask: radial-gradient(circle at 50% 50%, transparent var(--furo), #000 calc(var(--furo) + 1.5px));
   mask: radial-gradient(circle at 50% 50%, transparent var(--furo), #000 calc(var(--furo) + 1.5px));
@@ -1404,7 +1404,7 @@ html.modo-paginas .services { background: transparent !important; }
 /* ---- raios girando (o invólucro cuida de aparecer/sumir; o de dentro gira) ---- */
 .ab-raios-vida { position: absolute; left: 50%; top: 50%; width: 150vmax; height: 150vmax; margin: -75vmax 0 0 -75vmax; opacity: 0; }
 .ab-raios { width: 100%; height: 100%;
-  background: repeating-conic-gradient(from 0deg, rgba(142, 197, 255, 0) 0deg 7deg, rgba(142, 197, 255, .13) 8.5deg, rgba(142, 197, 255, 0) 10deg);
+  background: repeating-conic-gradient(from 0deg, rgba(127, 227, 173, 0) 0deg 7deg, rgba(127, 227, 173, .13) 8.5deg, rgba(127, 227, 173, 0) 10deg);
   animation: abGira 30s linear infinite; }
 .ab-roda .ab-raios-vida { animation: abRaiosVida 2.76s linear both; }
 @keyframes abRaiosVida {
@@ -1414,14 +1414,14 @@ html.modo-paginas .services { background: transparent !important; }
   100% { opacity: 0; transform: scale(1.12); }
 }
 .ab-vinheta { position: absolute; inset: 0; pointer-events: none;
-  background: radial-gradient(circle at 50% 50%, rgba(1, 24, 52, 0) 0, rgba(1, 24, 52, 0) 18vmin, rgba(1, 24, 52, .75) 46vmin, #000b19 75vmax); }
+  background: radial-gradient(circle at 50% 50%, rgba(6, 42, 23, 0) 0, rgba(6, 42, 23, 0) 18vmin, rgba(6, 42, 23, .75) 46vmin, #03140c 75vmax); }
 .ab-roda .ab-vinheta { animation: abSome .3s ease-out 2.75s both; }
 
 /* ---- palco (centro da tela) ---- */
 .ab-palco { position: absolute; left: 50%; top: 50%; width: 0; height: 0; }
 .ab-palco > * { position: absolute; }
 .ab-aura { width: calc(var(--t) * 2.4); height: calc(var(--t) * 2.4); left: calc(var(--t) * -1.2); top: calc(var(--t) * -1.2);
-  border-radius: 50%; opacity: 0; background: radial-gradient(circle, rgba(79, 155, 220, .5) 0%, rgba(31, 95, 168, .22) 30%, rgba(1, 24, 52, 0) 62%); }
+  border-radius: 50%; opacity: 0; background: radial-gradient(circle, rgba(52, 210, 122, .5) 0%, rgba(24, 160, 87, .22) 30%, rgba(6, 42, 23, 0) 62%); }
 .ab-roda .ab-aura { animation: abAura 2.76s both; }
 @keyframes abAura {
   0%, 2% { opacity: 0; transform: scale(.6); animation-timing-function: cubic-bezier(.33, 1, .68, 1); }
@@ -1435,15 +1435,15 @@ html.modo-paginas .services { background: transparent !important; }
 .ab-anel { opacity: 0; }
 .ab-anel i { position: absolute; inset: 0; border-radius: 50%; }
 .ab-anel--1 { width: calc(var(--t) + 40px); height: calc(var(--t) + 40px); left: calc((var(--t) + 40px) / -2); top: calc((var(--t) + 40px) / -2); }
-.ab-anel--1 i { background: conic-gradient(from 0deg, transparent 0 58%, #8ec5ff 80%, #fff 88%, transparent 93%);
+.ab-anel--1 i { background: conic-gradient(from 0deg, transparent 0 58%, #7fe3ad 80%, #fff 88%, transparent 93%);
   -webkit-mask: radial-gradient(circle, transparent calc(50% - 3px), #000 calc(50% - 2px)); mask: radial-gradient(circle, transparent calc(50% - 3px), #000 calc(50% - 2px));
   animation: abGira 1.6s linear infinite; }
 .ab-anel--2 { width: calc(var(--t) + 92px); height: calc(var(--t) + 92px); left: calc((var(--t) + 92px) / -2); top: calc((var(--t) + 92px) / -2); }
-.ab-anel--2 i { background: conic-gradient(from 180deg, transparent 0 66%, #4f9bdc 84%, #cfe6ff 90%, transparent 95%);
+.ab-anel--2 i { background: conic-gradient(from 180deg, transparent 0 66%, #34d27a 84%, #d6f5e4 90%, transparent 95%);
   -webkit-mask: radial-gradient(circle, transparent calc(50% - 2px), #000 calc(50% - 1px)); mask: radial-gradient(circle, transparent calc(50% - 2px), #000 calc(50% - 1px));
   animation: abGira 2.6s linear infinite reverse; }
 .ab-anel--3 { width: calc(var(--t) + 170px); height: calc(var(--t) + 170px); left: calc((var(--t) + 170px) / -2); top: calc((var(--t) + 170px) / -2); }
-.ab-anel--3 i { border: 1px dashed rgba(142, 197, 255, .35); animation: abGira 14s linear infinite; }
+.ab-anel--3 i { border: 1px dashed rgba(127, 227, 173, .35); animation: abGira 14s linear infinite; }
 .ab-roda .ab-anel { animation: abAnel 2.76s both; }
 .ab-roda .ab-anel--2 { animation-delay: .06s; }
 .ab-roda .ab-anel--3 { animation-delay: .12s; }
@@ -1457,9 +1457,9 @@ html.modo-paginas .services { background: transparent !important; }
 
 /* cometa de luz que dá a volta na logo e deixa o aro aceso */
 .ab-aro, .ab-cometa { width: calc(var(--t) + 18px); height: calc(var(--t) + 18px); left: calc((var(--t) + 18px) / -2); top: calc((var(--t) + 18px) / -2); border-radius: 50%; opacity: 0; }
-.ab-aro { box-shadow: 0 0 0 1.5px rgba(207, 230, 255, .95), 0 0 14px 2px rgba(142, 197, 255, .55), inset 0 0 12px rgba(142, 197, 255, .35); }
+.ab-aro { box-shadow: 0 0 0 1.5px rgba(214, 245, 228, .95), 0 0 14px 2px rgba(127, 227, 173, .55), inset 0 0 12px rgba(127, 227, 173, .35); }
 .ab-cometa i { position: absolute; inset: -3px; border-radius: 50%;
-  background: conic-gradient(from 0deg, transparent 0 60%, rgba(142, 197, 255, .0) 60%, rgba(142, 197, 255, .9) 92%, #fff 99%, transparent 100%);
+  background: conic-gradient(from 0deg, transparent 0 60%, rgba(127, 227, 173, .0) 60%, rgba(127, 227, 173, .9) 92%, #fff 99%, transparent 100%);
   -webkit-mask: radial-gradient(circle, transparent calc(50% - 4px), #000 calc(50% - 3px), #000 calc(50% - 1px), transparent 50%);
   mask: radial-gradient(circle, transparent calc(50% - 4px), #000 calc(50% - 3px), #000 calc(50% - 1px), transparent 50%); }
 .ab-roda .ab-cometa { animation: abCometa 1.35s cubic-bezier(.45, 0, .55, 1) .45s both; }
@@ -1494,7 +1494,7 @@ html.modo-paginas .services { background: transparent !important; }
 }
 /* "luz" por cima da logo: ela nasce de dentro de um clarão (no lugar do desfoque) e volta a clarear ao voar */
 .ab-logo-luz { position: absolute; inset: 0; pointer-events: none; opacity: 1;
-  background: radial-gradient(circle, #ffffff 0%, rgba(207, 230, 255, .9) 40%, rgba(142, 197, 255, .6) 75%, rgba(79, 155, 220, .3) 100%); }
+  background: radial-gradient(circle, #ffffff 0%, rgba(214, 245, 228, .9) 40%, rgba(127, 227, 173, .6) 75%, rgba(52, 210, 122, .3) 100%); }
 .ab-roda .ab-logo-luz { animation: abLogoLuz 3.98s both; }
 @keyframes abLogoLuz {
   0%, 6% { opacity: 1; animation-timing-function: cubic-bezier(.33, 1, .68, 1); }
@@ -1510,7 +1510,7 @@ html.modo-paginas .services { background: transparent !important; }
 
 /* onda de choque do flash */
 .ab-onda { width: var(--t); height: var(--t); left: calc(var(--t) / -2); top: calc(var(--t) / -2);
-  border-radius: 50%; opacity: 0; box-shadow: 0 0 0 3px rgba(207, 230, 255, .9), 0 0 50px 14px rgba(79, 155, 220, .7), inset 0 0 50px 10px rgba(142, 197, 255, .6); }
+  border-radius: 50%; opacity: 0; box-shadow: 0 0 0 3px rgba(214, 245, 228, .9), 0 0 50px 14px rgba(52, 210, 122, .7), inset 0 0 50px 10px rgba(127, 227, 173, .6); }
 .ab-roda .ab-onda { animation: abOnda 1s cubic-bezier(.33, 1, .68, 1) 2.67s forwards; } /* (forwards: invisível até o flash) */
 @keyframes abOnda { 0% { opacity: 1; transform: scale(.9); } 100% { opacity: 0; transform: scale(7); } }
 
@@ -1518,7 +1518,7 @@ html.modo-paginas .services { background: transparent !important; }
 .ab-faiscas { left: 0; top: 0; }
 .ab-faiscas i { position: absolute; left: 0; top: 0; transform: rotate(var(--a)); }
 .ab-faiscas b { position: absolute; left: -3px; top: -3px; width: 6px; height: 6px; border-radius: 50%; opacity: 0;
-  background: radial-gradient(circle, #fff 0 30%, rgba(142, 197, 255, .9) 55%, rgba(142, 197, 255, 0) 72%); }
+  background: radial-gradient(circle, #fff 0 30%, rgba(127, 227, 173, .9) 55%, rgba(127, 227, 173, 0) 72%); }
 .ab-roda .ab-faiscas b { animation: var(--k) var(--v) cubic-bezier(.22, 1, .36, 1) 2.68s forwards; } /* (forwards: invisíveis até o flash) */
 @keyframes abFaisca1 { 0% { opacity: 1; transform: translateX(calc(var(--t) / 2)) scale(var(--s)); } 100% { opacity: 0; transform: translateX(calc(var(--t) * 1.2)) scale(.2); } }
 @keyframes abFaisca2 { 0% { opacity: 1; transform: translateX(calc(var(--t) / 2)) scale(var(--s)); } 100% { opacity: 0; transform: translateX(calc(var(--t) * 1.7)) scale(.2); } }
@@ -1526,7 +1526,7 @@ html.modo-paginas .services { background: transparent !important; }
 
 /* slogan: cada palavra sobe por uma janelinha e sai por cima na carga */
 .ab-frase { position: absolute; left: 0; right: 0; top: calc(50% + var(--t) / 2 + clamp(46px, 7vh, 86px)); margin: 0; text-align: center;
-  font: 500 clamp(1.25rem, 2.8vw, 2rem)/1.3 var(--font-display); letter-spacing: .01em; color: #e8f2ff; padding: 0 20px; }
+  font: 500 clamp(1.25rem, 2.8vw, 2rem)/1.3 var(--font-display); letter-spacing: .01em; color: #eafaf1; padding: 0 20px; }
 .ab-palavra { display: inline-block; overflow: hidden; vertical-align: bottom; margin: 0 .16em; padding-bottom: .08em; }
 .ab-palavra > span { display: inline-block; transform: translateY(115%); }
 .ab-roda .ab-palavra > span { animation: abPalavra 1.6s both; animation-delay: calc(1.15s + var(--i) * .07s); }
@@ -1541,15 +1541,15 @@ html.modo-paginas .services { background: transparent !important; }
 /* anel do portal: acompanha a borda do furo (raio 20vmax × escala; o furo vai a 80vmax = escala 4) */
 .ab-portal { position: absolute; left: 50%; top: 50%; width: 40vmax; height: 40vmax; margin: -20vmax 0 0 -20vmax; border-radius: 50%;
   opacity: 0; transform: scale(0); pointer-events: none;
-  box-shadow: 0 0 0 2px #e6f2ff, 0 0 22px 6px rgba(142, 197, 255, .95), 0 0 90px 30px rgba(79, 155, 220, .6); }
+  box-shadow: 0 0 0 2px #e8f9ef, 0 0 22px 6px rgba(127, 227, 173, .95), 0 0 90px 30px rgba(52, 210, 122, .6); }
 .ab-roda .ab-portal { animation: abPortal 1.15s cubic-bezier(.55, .06, .68, .19) 2.8s both; }
 @keyframes abPortal { 0% { opacity: 1; transform: scale(0); } 100% { opacity: 1; transform: scale(4); } }
 
 /* risco de luz horizontal (flare de cinema) e clarão */
 .ab-risco { position: absolute; left: 50%; top: 50%; width: 170vw; height: 4px; margin: -2px 0 0 -85vw; opacity: 0; pointer-events: none;
   border-radius: 50%; transform: scaleX(.05);
-  background: radial-gradient(ellipse at 50% 50%, #ffffff 0%, rgba(207, 230, 255, .95) 18%, rgba(79, 155, 220, .55) 45%, rgba(79, 155, 220, 0) 70%);
-  box-shadow: 0 0 18px 4px rgba(142, 197, 255, .55); }
+  background: radial-gradient(ellipse at 50% 50%, #ffffff 0%, rgba(214, 245, 228, .95) 18%, rgba(52, 210, 122, .55) 45%, rgba(52, 210, 122, 0) 70%);
+  box-shadow: 0 0 18px 4px rgba(127, 227, 173, .55); }
 .ab-roda .ab-risco { animation: abRisco .58s 2.64s both; }
 @keyframes abRisco {
   0% { opacity: 0; transform: scaleX(.05) scaleY(1); animation-timing-function: cubic-bezier(.22, 1, .36, 1); }
@@ -1557,7 +1557,7 @@ html.modo-paginas .services { background: transparent !important; }
   100% { opacity: 0; transform: scaleX(1) scaleY(.3); }
 }
 .ab-flash { position: absolute; inset: 0; opacity: 0; pointer-events: none;
-  background: radial-gradient(circle at 50% 50%, #ffffff 0%, #dcecff 30%, #8ec5ff 60%, rgba(79, 155, 220, .9) 100%); }
+  background: radial-gradient(circle at 50% 50%, #ffffff 0%, #dcf7e8 30%, #7fe3ad 60%, rgba(52, 210, 122, .9) 100%); }
 .ab-roda .ab-flash { animation: abFlash .64s 2.67s both; }
 @keyframes abFlash { 0% { opacity: 0; animation-timing-function: linear; } 14% { opacity: 1; animation-timing-function: cubic-bezier(.33, 1, .68, 1); } 100% { opacity: 0; } }
 @keyframes abGira { to { transform: rotate(360deg); } }
