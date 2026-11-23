@@ -400,7 +400,7 @@ export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, le
   const aoRedimensionar = () => { clearTimeout(rz); rz = setTimeout(recalcular, 300); };
   window.addEventListener("resize", aoRedimensionar);
   // imagens e fontes mudam alturas depois do carregamento
-  window.addEventListener("load", () => { recalcular(); setTimeout(preCarregar, 1200); });
+  window.addEventListener("load", () => { recalcular(); preCarregar(); }); // imagens já na espera, não no meio da abertura
   // se alguma página MUDAR DE ALTURA sozinha (número que terminou de contar, imagem que carregou, pergunta aberta),
   // o site se reencaixa — senão todas as páginas abaixo dela ficavam deslocadas (títulos atrás da barra do topo)
   const alturas = new Map<Element, number>();

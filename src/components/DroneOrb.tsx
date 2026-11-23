@@ -4,6 +4,8 @@ import { Canvas } from "@react-three/fiber";
 import { Environment, Lightformer } from "@react-three/drei";
 import { useEffect, useRef, useState } from "react";
 import { Orbe, ESM_CLARO, GELO } from "./robo/ModelosPerola";
+import { avisar3DPronto } from "@/lib/abertura";
+import PausaAbertura from "./PausaAbertura";
 
 /**
  * Orbe Sentinela: o mascote em 3D, na paleta Pérola & Esmeralda (escolha do Victor, 17/11/2026).
@@ -18,6 +20,8 @@ export default function DroneOrb() {
   const olhar = useRef({ x: 0, y: 0 });
   const [dpr, setDpr] = useState(1.5);
   useEffect(() => { setDpr(Math.min(window.devicePixelRatio || 1, 3)); /* quadro pequeno: nitidez total da tela do iPhone */ }, []);
+  // durante a abertura o Orbe não desenha (<PausaAbertura/>, ver src/lib/abertura.ts)
+
   useEffect(() => {
     const move = (e: PointerEvent) => {
       const r = host.current?.getBoundingClientRect();
@@ -33,7 +37,8 @@ export default function DroneOrb() {
     // a área de desenho é 1,5x maior que o quadro do Orbe (CSS `.drone__orb > div`) e o campo de visão abre na mesma
     // proporção (38° → 54,6°): o Orbe fica do mesmo tamanho e o ARO, ao girar, não é mais cortado pela borda (Victor, 23/11/2026)
     <div ref={host} className="drone__orb">
-      <Canvas dpr={dpr} camera={{ position: [0, 0.25, 4.15], fov: 54.6 }} gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}>
+      <Canvas dpr={dpr} frameloop="always" onCreated={() => requestAnimationFrame(() => requestAnimationFrame(() => avisar3DPronto("orbe")))} camera={{ position: [0, 0.25, 4.15], fov: 54.6 }} gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}>
+        <PausaAbertura />
         <ambientLight intensity={0.12} />
         <directionalLight position={[3, 4.5, 2.5]} intensity={3} />
         <pointLight position={[-2.6, 1.2, -2]} intensity={30} color={ESM_CLARO} />
