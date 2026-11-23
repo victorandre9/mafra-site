@@ -16,7 +16,7 @@ import type { ScrollTrigger as STT } from "gsap/ScrollTrigger";
 import type Lenis from "lenis";
 
 type Cor = "claro" | "azul";
-type Grupo = { secs: HTMLElement[]; cor: Cor; ajustar: "auto" | "metodo"; modo?: "caber" | "dividir" };
+type Grupo = { secs: HTMLElement[]; cor: Cor; ajustar: "auto" | "metodo"; modo?: "caber" | "dividir"; pedacos?: string[][]; tops?: number[] };
 type Parada = { y: number; grupo: number; primeira: boolean };
 
 export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, lenis: Lenis | null): () => void {
@@ -38,6 +38,11 @@ export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, le
   const grupos: Grupo[] = def
     .map(([sels, cor, ajustar]) => ({ secs: sels.map(q).filter(Boolean) as HTMLElement[], cor, ajustar }))
     .filter((g) => g.secs.length);
+  // Cases é grande demais para UMA tela: vira DUAS páginas inteiras (cada uma encaixada na tela, letra ajustada)
+  const PEDACOS: Record<string, string[][]> = {
+    cases: [[":scope > .eyebrow", ":scope > .section-title", ":scope > .work__lead", ":scope > .work__grupo--b2b"], [":scope > .work__grupo--b2c", ":scope > .work__fecho"]],
+  };
+  grupos.forEach((g) => { const id = g.secs[0].id; if (g.secs.length === 1 && PEDACOS[id]) g.pedacos = PEDACOS[id]; });
   if (grupos.length < 3) return () => {};
 
   const html = document.documentElement;
@@ -47,7 +52,7 @@ export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, le
   const cabecalho = () => (q(".header")?.getBoundingClientRect().height ?? 0);
 
   // ---------- 1) tamanho: cada grupo "caber" ocupa exatamente a tela, com o conteúdo ampliado/reduzido ----------
-  // REGRA: cabe com pelo menos 70% do tamanho → vira UMA página (encolhe ou amplia até preencher a tela);
+  // REGRA: cabe com pelo menos 60% do tamanho (computador) → vira UMA página (encolhe ou amplia até preencher a tela);
   // precisaria encolher mais que isso → vira várias páginas da mesma cor, sem encolher nada.
   // A ampliação nunca passa de 1,15x no celular / 1,5x no computador e nunca faz o conteúdo passar da largura da tela.
   const ajustarTamanhos = () => {
@@ -55,17 +60,26 @@ export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, le
     grupos.forEach((g) => {
       if (g.ajustar !== "auto") return;
       g.secs.forEach((s) => { s.style.zoom = ""; s.style.minHeight = ""; s.style.removeProperty("--inv-zoom"); });
+      if (g.pedacos) { ajustarPedacos(g); return; }
       const altura = g.secs.reduce((a, s) => a + s.getBoundingClientRect().height, 0);
       const util = H() - cabecalho() - 24;
       let z = util / Math.max(1, altura);
       // Serviços (6 cards) é sempre UMA página no computador (pedido do Victor): aceita encolher até 60%
-      const minimo = !cel && g.secs.some((s) => s.matches(".services")) ? 0.6 : 0.7;
+      // computador: toda página cabe na tela (aceita encolher até 60%); celular nem usa este modo
+      const minimo = cel ? 0.7 : g.secs.some((x) => x.matches(".hero")) ? 0.5 : 0.6;
       if (z < minimo) { g.modo = "dividir"; return; }
       g.modo = "caber";
       z = Math.min(z, cel ? 1.15 : 1.5);
       // --inv-zoom: o fundo de largura total (100vw) encolheria junto com o zoom; o CSS compensa com ele
       const aplicar = (v: number) => g.secs.forEach((s) => { s.style.zoom = String(v); s.style.setProperty("--inv-zoom", String(1 / v)); });
       aplicar(z);
+      // com zoom a largura útil muda (imagens com proporção ficam mais altas/baixas): corrige medindo de novo
+      for (let k = 0; k < 4; k++) {
+        const real = g.secs.reduce((a2, s) => a2 + s.getBoundingClientRect().height, 0);
+        if (Math.abs(real - util) < 6 || (z >= (cel ? 1.15 : 1.5) && real < util)) break;
+        z = Math.min(z * (util / real), cel ? 1.15 : 1.5);
+        aplicar(z);
+      }
       // ampliando: se algo passar da largura da tela (texto quebrando para fora), recua até caber
       const vazou = () => g.secs.some((s) => s.scrollWidth > s.clientWidth + 2);
       while (z > 1 && vazou()) { z = Math.max(1, z - 0.05); aplicar(z); }
@@ -74,6 +88,43 @@ export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, le
       const falta = H() - soma;
       if (falta > 0) ultima.style.minHeight = `${(ultima.getBoundingClientRect().height + falta) / z}px`;
     });
+  };
+
+  // pedaços: cada pedaço é uma página inteira — zoom próprio para ocupar a tela e começo exatamente uma tela depois do anterior
+  const ajustarPedacos = (g: Grupo) => {
+    const sec = g.secs[0];
+    const els = g.pedacos!.map((sels) => sels.map((x) => sec.querySelector(x) as HTMLElement | null).filter(Boolean) as HTMLElement[]);
+    els.flat().forEach((e) => { e.style.zoom = ""; e.style.marginTop = ""; e.style.width = ""; e.style.marginLeft = ""; e.style.marginRight = ""; });
+    // largura FIXA antes do zoom: assim o conteúdo encolhe por igual (sem isso, com zoom a largura útil cresce,
+    // as imagens ficam mais altas e a página nunca cabe). Em tela muito larga, no máximo 1500 px.
+    els.flat().forEach((e) => { e.style.width = `${Math.min(e.getBoundingClientRect().width, 1500)}px`; e.style.marginLeft = "auto"; e.style.marginRight = "auto"; });
+    sec.style.paddingTop = "0px"; sec.style.paddingBottom = "0px";
+    const ch = cabecalho(), util = H() - ch - 32;
+    const zs = els.map((lista) => {
+      if (!lista.length) return 1;
+      const h = lista[lista.length - 1].getBoundingClientRect().bottom - lista[0].getBoundingClientRect().top;
+      let z = Math.min(1.3, util / Math.max(1, h));
+      const medir = () => lista[lista.length - 1].getBoundingClientRect().bottom - lista[0].getBoundingClientRect().top;
+      lista.forEach((e) => { e.style.zoom = String(z); });
+      for (let k = 0; k < 4; k++) { // zoom muda a largura → imagens mudam de altura: mede de novo e corrige
+        const real = medir();
+        if (Math.abs(real - util) < 6 || (z >= 1.3 && real < util)) break;
+        z = Math.min(1.3, z * (util / real));
+        lista.forEach((e) => { e.style.zoom = String(z); });
+      }
+      return z;
+    });
+    const topo = topoDoc(sec);
+    g.tops = [];
+    els.forEach((lista, i) => {
+      if (!lista.length) return;
+      const alvo = topo + i * H() + ch + 16;
+      const delta = alvo - topoDoc(lista[0]);
+      lista[0].style.marginTop = `${delta / zs[i]}px`;
+      g.tops!.push(topo + i * H());
+    });
+    const falta = topo + els.length * H() - (topoDoc(sec) + sec.getBoundingClientRect().height);
+    sec.style.paddingBottom = `${Math.max(0, falta)}px`;
   };
 
   // ---------- 2) paradas ----------
@@ -89,10 +140,12 @@ export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, le
       if (g.ajustar === "metodo") {
         const st = ScrollTrigger.getAll().find((t) => t.pin && (t.trigger as HTMLElement | undefined)?.classList?.contains("process"));
         if (st) {
-          for (let k = 0; k < 4; k++) lista.push({ y: st.start + ((st.end - st.start) * k) / 3, grupo: gi, primeira: k === 0 });
+          // cada parada no MEIO da faixa da etapa (etapa = progresso × 4); nunca no fim da trava, que já solta a tela
+          [0.04, 0.375, 0.625, 0.875].forEach((f, k) => lista.push({ y: st.start + (st.end - st.start) * f, grupo: gi, primeira: k === 0 }));
           return;
         }
       }
+      if (g.tops) { g.tops.forEach((y, k) => lista.push({ y, grupo: gi, primeira: k === 0 })); return; }
       if (fim - ini <= H() + 2 || g.modo === "caber") { lista.push({ y: ini, grupo: gi, primeira: true }); return; }
       // grupo maior que a tela: paradas no começo de cards/títulos/parágrafos, cada uma até uma tela depois da outra
       const marcos = Array.from(new Set(
@@ -142,6 +195,8 @@ export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, le
       c.removeAttribute("id");
       c.querySelectorAll("[id]").forEach((n) => n.removeAttribute("id"));
       c.querySelectorAll("canvas").forEach((n) => n.remove());
+      // a cópia mostra a página PRONTA (texto já no lugar), como no vídeo de referência
+      c.querySelectorAll<HTMLElement>("[style]").forEach((n) => { ["transform", "opacity", "filter", "visibility", "clip-path", "translate", "rotate", "scale"].forEach((k) => n.style.removeProperty(k)); });
       // vídeo na cópia: só a imagem de capa (sem tocar nem baixar de novo)
       c.querySelectorAll("video").forEach((n) => { n.removeAttribute("autoplay"); n.preload = "none"; n.querySelectorAll("source").forEach((x) => x.remove()); });
       dentro.appendChild(c);
@@ -156,8 +211,17 @@ export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, le
         .to(real, { x: -W * dir, duration: 0.9, ease: "power3.inOut" }, 0)
         .to(palco, { x: 0, duration: 0.9, ease: "power3.inOut" }, 0);
     });
+    // a página real também fica PRONTA na chegada (sem o texto "aparecendo" depois da troca)
+    ScrollTrigger.getAll().forEach((st) => {
+      const t = st.trigger as HTMLElement | undefined;
+      if (!t || st.pin || st.vars.scrub || !g.secs.some((s) => s.contains(t))) return;
+      st.animation?.progress(1);
+    });
     window.scrollTo(0, destino.y); lenis?.scrollTo(destino.y, { immediate: true, force: true });
     gsap.set(real, { clearProps: "transform" });
+    // a cópia fica por cima mais um instante enquanto a página real termina de montar (sem piscar em branco)
+    await new Promise<void>((ok) => setTimeout(ok, 700));
+    await new Promise<void>((ok) => { gsap.to(palco, { opacity: 0, duration: 0.25, onComplete: () => ok() }); });
     palco.remove();
   };
 
@@ -260,7 +324,7 @@ export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, le
     window.removeEventListener("scroll", aoRolar);
     window.removeEventListener("resize", aoRedimensionar);
     html.classList.remove("modo-paginas", "trocando-pagina");
-    grupos.forEach((g) => g.secs.forEach((s) => { s.style.zoom = ""; s.style.minHeight = ""; }));
+    grupos.forEach((g) => g.secs.forEach((s) => { s.style.zoom = ""; s.style.minHeight = ""; s.style.paddingTop = ""; s.style.paddingBottom = ""; s.querySelectorAll<HTMLElement>(":scope > *").forEach((e) => { e.style.zoom = ""; e.style.marginTop = ""; e.style.width = ""; e.style.marginLeft = ""; e.style.marginRight = ""; }); }));
     lenis?.start();
   }
   // acesso para depuração/teste

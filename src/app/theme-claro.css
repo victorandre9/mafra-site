@@ -1277,3 +1277,17 @@ html.modo-paginas .services__track .card { min-height: 0 !important; }
   html.modo-paginas .services__track .card .card__icon { position: absolute !important; top: 18px; right: 18px; padding: 10px !important; }
   html.modo-paginas .services__track .card h3 { margin-top: 18px; }
 }
+@media (min-width: 761px) {
+  /* páginas de tela cheia (computador): tudo cabe numa tela */
+  html.modo-paginas .hero { padding-top: 90px !important; padding-bottom: 30px !important; }
+  html.modo-paginas .bigtext { padding-top: 20px !important; padding-bottom: 10px !important; }
+  html.modo-paginas #perguntas { padding-top: 10px !important; padding-bottom: 30px !important; }
+  /* seção encolhida (zoom < 1) continua com a largura da tela inteira */
+  html.modo-paginas :is(.hero, .marquee, .manifesto, .services, .bigtext, #contato, #cases, #sobre, .footer) { max-width: calc(100vw * var(--inv-zoom, 1)) !important; }
+  /* números: página azul cheia, cards maiores e centralizados */
+  html.modo-paginas .stats { max-width: 1200px !important; align-content: center; }
+  html.modo-paginas .stats .stat { padding: 44px 40px !important; }
+  html.modo-paginas .stats .stat__n { font-size: clamp(4.5rem, 7vw, 7.5rem) !important; }
+  html.modo-paginas .stats .stat p { font-size: 1.3rem !important; }
+}
+@media (min-width: 761px) { html.modo-paginas .bigtext__row { font-size: clamp(2.4rem, 6vw, 6rem) !important; } }
