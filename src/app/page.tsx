@@ -190,19 +190,28 @@ export default function Home() {
 
       {/* PRELOADER */}
       <div className="preloader" aria-hidden="true">
-        <div className="preloader__inner">
-          <div className="preloader__logo">
-            {/* abertura com a logo ORIGINAL: dois anéis de luz girando em volta, brilho passando por cima e pulso */}
-            <div className="preloader__orbita">
-              <span className="preloader__aura" />
-              <span className="preloader__anel" />
-              <span className="preloader__anel preloader__anel--2" />
-              <div className="preloader__brilho"><LogoImage size={200} priority /></div>
-            </div>
+        {/* ABERTURA "PORTAL" (Victor, 23/11/2026): logo ORIGINAL grande → brilho → carga → flash → portal que abre
+            mostrando o vídeo do topo. Tudo em código (sem vídeo gerado): a logo é sempre o arquivo original. */}
+        <canvas className="ab-estrelas" />
+        <div className="ab-raios" />
+        <div className="ab-palco">
+          <span className="ab-aura" />
+          <span className="ab-onda" />
+          <span className="ab-anel ab-anel--1" />
+          <span className="ab-anel ab-anel--2" />
+          <span className="ab-anel ab-anel--3" />
+          <div className="ab-logo">
+            <LogoImage size={420} priority />
+            <span className="ab-reflexo" />
           </div>
-          <div className="preloader__bar"><span /></div>
-          <div className="preloader__count"><span className="js-count">0</span>%</div>
         </div>
+        <p className="ab-frase">
+          {"Da necessidade operacional à solução digital.".split(" ").map((w, k) => (
+            <span key={k} className="ab-palavra"><span>{w}</span></span>
+          ))}
+        </p>
+        <span className="ab-portal" />
+        <div className="ab-flash" />
       </div>
 
       {/* CURSOR */}
