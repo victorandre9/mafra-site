@@ -487,7 +487,8 @@ export default function Experience() {
          Azul → branco: a página DESCE (sai para cima e a branca sobe de baixo).
          Funciona com o próprio site: a tela sai, a rolagem é levada para o começo do bloco seguinte e a tela volta pelo
          outro lado. Para cima, o caminho inverso. Durante a troca a rolagem fica segura (nada de "pular" duas). */
-      if (!reduce) {
+      // celular: rolagem contínua, tudo para baixo, sem transição lateral (Victor, 23/11/2026)
+      if (!reduce && window.innerWidth > 760) {
         const pagina = [$("main"), $(".footer")].filter(Boolean) as HTMLElement[];
         const fronteiras: Array<[string, "lado" | "desce"]> = [
           [".manifesto", "lado"], [".services", "desce"], ["#metodo", "lado"], ["#cases", "desce"],
