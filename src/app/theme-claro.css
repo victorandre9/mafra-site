@@ -1331,3 +1331,5 @@ html.modo-paginas .header.is-hidden { transform: none !important; }
 .drone__orb > div { position: absolute !important; left: -25% !important; top: -25% !important; width: 150% !important; height: 150% !important; overflow: visible !important; pointer-events: none !important; }
 /* Serviços: sem o véu branco por cima do fundo — a malha de pontos fica com a mesma força dos Cases (Victor, 23/11/2026) */
 html.modo-paginas .services { background: transparent !important; }
+@media (min-width: 761px) { html.modo-paginas .work__fecho { margin-top: 72px !important; } } /* card "A solução da sua empresa" um pouco mais abaixo */
+@media (min-width: 761px) { html.modo-paginas .stat__n { white-space: nowrap !important; font-variant-numeric: tabular-nums; } } /* contar 0→30 não quebra a linha */
