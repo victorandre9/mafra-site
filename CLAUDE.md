@@ -206,6 +206,9 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   estrutura de classes (inclusive um `#cases` temporário), com o MESMO `zoom` da página e a MESMA largura e ALTURA do card:
   as linhas quebram iguais e a lente nunca passa do fim da cópia. O centro da lente fica preso dentro do card (com mouse
   rápido o atraso deixava a lente fora e ela ficava BRANCA).
+  VIGIA: a cada movimento do mouse (em qualquer lugar) confere se ainda está no card da lupa; senão ela some — o navegador
+  às vezes não avisa a saída rápida e a lente branca ficava TRAVADA na tela. Some também ao sair da janela, trocar de página
+  (`mafra:pagina`), tecla ou rodinha.
   2) CLIQUE = a cópia sai do card e vem ao centro como GELATINA: cresce em 8 balanços (achata/estica, cada vez menos)
   até abrir; aro furta-cor de bolha de sabão e reflexo; fundo claro desfocado; fecha (×, fora, Esc) voltando ao card.
   RECUSADOS: gota azul ("cubo de gelo"), fundo azul-escuro, abrir sozinho ao passar o mouse (trazia o card para frente).

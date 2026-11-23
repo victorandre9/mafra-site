@@ -116,6 +116,7 @@ export function iniciarBolha(): () => void {
     posicionar();
   };
   const esconderLupa = () => {
+    cancelAnimationFrame(raf); raf = 0;
     alvo?.classList.remove("com-lupa");
     alvo = null;
     if (visivel) { visivel = false; gsap.to(lente, { opacity: 0, scale: 0.8, duration: 0.2, ease: "power2.in", onComplete: () => { if (!visivel && !alvo) conteudo.replaceChildren(); } }); }
@@ -236,6 +237,21 @@ export function iniciarBolha(): () => void {
   // troca de página com a lupa aberta: ela some (o card sai da tela)
   const roda = () => esconderLupa();
   window.addEventListener("wheel", roda, { passive: true });
+  // VIGIA (Victor, 23/11/2026: "a lupa branca trava na tela e o mouse continua mexendo em outros lugares"): em alguns
+  // movimentos rápidos o navegador não avisa que o mouse saiu do card. Então a CADA movimento do mouse em qualquer
+  // lugar confere: não está mais em cima do card da lupa → ela some na hora. Vale também ao sair da janela, ao trocar
+  // de página pelo mapa/setas/teclado e se o card sumiu da tela.
+  const vigia = (e: PointerEvent) => {
+    if (!visivel && !alvo) return;
+    const sobre = (e.target as Element | null)?.closest?.(".card--bolha");
+    if (!alvo || sobre !== alvo || !alvo.isConnected) esconderLupa();
+  };
+  const saiuJanela = (e: MouseEvent) => { if (!e.relatedTarget) esconderLupa(); };
+  window.addEventListener("pointermove", vigia, { passive: true });
+  document.addEventListener("mouseout", saiuJanela);
+  window.addEventListener("mafra:pagina", roda);
+  window.addEventListener("keydown", roda);
+  window.addEventListener("blur", roda);
   const esc = (e: KeyboardEvent) => { if (e.key === "Escape" && fecharAtual) { e.stopPropagation(); fecharAtual(); } };
   window.addEventListener("keydown", esc, { capture: true });
 
@@ -244,6 +260,11 @@ export function iniciarBolha(): () => void {
     dicas.forEach((d) => d.remove());
     cards.forEach((c) => c.classList.remove("card--bolha", "bolha-origem", "com-lupa"));
     window.removeEventListener("wheel", roda);
+    window.removeEventListener("pointermove", vigia);
+    document.removeEventListener("mouseout", saiuJanela);
+    window.removeEventListener("mafra:pagina", roda);
+    window.removeEventListener("keydown", roda);
+    window.removeEventListener("blur", roda);
     window.removeEventListener("keydown", esc, { capture: true });
     cancelAnimationFrame(raf);
     lente.remove();
