@@ -88,7 +88,7 @@ export default function Experience() {
         const n = window.innerWidth <= 760 ? 140 : 260;
         type Est = { ang: number; d: number; vel: number; cor: string; larg: number };
         const nova = (longe = false): Est => ({ ang: Math.random() * Math.PI * 2, d: longe ? Math.random() * 0.9 : Math.random() * 0.08, vel: 0.35 + Math.random() * 0.9,
-          cor: Math.random() < 0.25 ? "255,255,255" : Math.random() < 0.6 ? "142,197,255" : "79,155,220", larg: 0.6 + Math.random() * 1.4 });
+          cor: Math.random() < 0.25 ? "255,255,255" : Math.random() < 0.6 ? "127,227,173" : "52,210,122", larg: 0.6 + Math.random() * 1.4 });
         const est: Est[] = Array.from({ length: n }, () => nova(true));
         let ult = performance.now();
         const passo = (agora: number) => {
