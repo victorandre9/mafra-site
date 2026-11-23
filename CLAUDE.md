@@ -143,6 +143,8 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   Pedaços (Cases) medidos SEM a animação de entrada (`topoLayout`), seção com 1px de respiro (margem não atravessa) e
   margem corrigida medindo de novo. Se uma página MUDA de altura sozinha (ex.: números contando 0→30 quebravam a linha),
   um ResizeObserver reencaixa tudo. `.stat__n` sem quebra de linha. Card "A solução da sua empresa" 72px mais abaixo.
+  Cases LEGÍVEIS: a largura na TELA é fixa (90%, até 1800 px) e a de layout é ela ÷ zoom (cards largos = menos linhas);
+  imagens com altura fixa (30vh/19vh, `contain`); letras dos cards maiores. No 1920×694 do Victor: zoom 0,49 → 0,60.
 - **Robô no computador (páginas, 23/11/2026)**: NÃO segue mais a rolagem. A cada troca (`mafra:pagina`, avisado por
   `paginas.ts`) ele escolhe um lugar LIVRE na página que está chegando (vagas laterais alternadas, `VAGAS`) e voa até lá
   com uma MOLA amortecida (arco para cima quando vai longe; inclina na direção do voo). Não fala enquanto voa.

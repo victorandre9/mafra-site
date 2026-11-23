@@ -115,7 +115,11 @@ export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, le
     els.flat().forEach((e) => { e.style.zoom = ""; e.style.marginTop = ""; e.style.width = ""; e.style.marginLeft = ""; e.style.marginRight = ""; });
     // largura FIXA antes do zoom: assim o conteúdo encolhe por igual (sem isso, com zoom a largura útil cresce,
     // as imagens ficam mais altas e a página nunca cabe). Em tela muito larga, no máximo 1500 px.
-    els.flat().forEach((e) => { e.style.width = `${Math.min(e.getBoundingClientRect().width, 1500)}px`; e.style.marginLeft = "auto"; e.style.marginRight = "auto"; });
+    els.flat().forEach((e) => { e.style.marginLeft = "auto"; e.style.marginRight = "auto"; });
+    // LARGURA NA TELA fixa (até 1800 px, 90% da tela): a largura de layout é ela ÷ zoom. Assim, quanto mais a página
+    // precisa encolher, mais largos ficam os cards por dentro — o texto ocupa menos linhas e a letra pode ser MAIOR
+    // (Victor, 23/11/2026: "ilegível de tão pequena"). As imagens têm altura fixa no CSS, então não crescem junto.
+    const largTela = Math.min(window.innerWidth * 0.9, 1800);
     // 1 px (e não 0): sem isso a margem do 1º item "atravessa" a seção e empurra a seção inteira em vez do conteúdo
     sec.style.paddingTop = "1px"; sec.style.paddingBottom = "0px";
     const ch = cabecalho(), util = H() - ch - 48; // folga embaixo: o card do fim nunca encosta na borda
@@ -124,13 +128,15 @@ export function iniciarPaginas(gsap: typeof GsapT, ScrollTrigger: typeof STT, le
       const h = baseLayout(lista[lista.length - 1]) - topoLayout(lista[0]);
       let z = Math.min(1.3, util / Math.max(1, h));
       const medir = () => baseLayout(lista[lista.length - 1]) - topoLayout(lista[0]);
-      lista.forEach((e) => { e.style.zoom = String(z); });
-      for (let k = 0; k < 8; k++) { // zoom muda a largura → imagens mudam de altura: mede de novo e corrige
+      const aplicarZ = (v: number) => lista.forEach((e) => { e.style.zoom = String(v); e.style.width = `${largTela / v}px`; });
+      aplicarZ(z);
+      for (let k = 0; k < 10; k++) { // zoom muda a largura → texto e imagens mudam de altura: mede de novo e corrige
         const real = medir();
         if ((real <= util && real > util - 12) || (z >= 1.3 && real < util)) break;
-        z = Math.min(1.3, z * ((util - 4) / real));
-        lista.forEach((e) => { e.style.zoom = String(z); });
+        z = Math.min(1.3, z * Math.pow((util - 4) / real, 0.7));
+        aplicarZ(z);
       }
+      if (medir() > util) { for (let k = 0; k < 12 && medir() > util; k++) { z *= 0.97; aplicarZ(z); } } // garantia: nunca passa da tela
       return z;
     });
     const topo = topoDoc(sec);
