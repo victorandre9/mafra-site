@@ -15,8 +15,9 @@ import gsap from "gsap";
  *    Enquanto aberta, `html.bolha-aberta` segura a troca de páginas (paginas.ts).
  */
 const AUMENTO = 2.1;
-// moldura renderizada (2ª versão, "mais proporcional": aro fino, cabo curto): centro da lente e raio interno em px CSS
-const MOLDURA = { w: 211, h: 227, cx: 97.5, cy: 102, r: 66 };
+// moldura renderizada (3ª versão: MODELO 3, BOLHA sem cabo, escolhida pelo Victor em 23/11/2026 — borda furta-cor, centro
+// transparente): tamanho, centro e raio da lente em px CSS
+const MOLDURA = { w: 181.3, h: 181.3, cx: 90.65, cy: 90.65, r: 85 };
 
 export function iniciarBolha(): () => void {
   const html = document.documentElement;
@@ -77,24 +78,38 @@ export function iniciarBolha(): () => void {
     if (!alvo || !copiaLupa) return;
     // (proteção: se a cópia sumiu da lente — ex.: uma saída e entrada muito rápidas —, refaz)
     if (!conteudo.firstChild || !copiaLupa.isConnected) { const a = alvo; alvo = null; mostrarLupa(a, { clientX: mx, clientY: my } as MouseEvent); return; }
-    // a lente acompanha o mouse com um leve atraso (movimento macio)
-    lx += (mx - lx) * 0.38; ly += (my - ly) * 0.38;
-    lente.style.translate = `${lx - MOLDURA.cx}px ${ly - MOLDURA.cy}px`; // (`translate` à parte: o gsap usa `transform` para aparecer)
+    // a lente acompanha o mouse com um leve atraso (movimento macio), mas o CENTRO dela nunca sai do card:
+    // com o mouse rápido o atraso deixava a lente fora da cópia e ela ficava BRANCA (Victor, 23/11/2026)
     const r = alvo.getBoundingClientRect();
+    const pres = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
+    lx += (mx - lx) * 0.5; ly += (my - ly) * 0.5;
+    lx = pres(lx, r.left + 2, r.right - 2); ly = pres(ly, r.top + 2, r.bottom - 2);
+    lente.style.translate = `${lx - MOLDURA.cx}px ${ly - MOLDURA.cy}px`; // (`translate` à parte: o gsap usa `transform` para aparecer)
     const s = escala0 * AUMENTO;
     const u = (lx - r.left) / escala0, v = (ly - r.top) / escala0;
     conteudo.style.transform = `translate(${MOLDURA.r - u * s}px, ${MOLDURA.r - v * s}px) scale(${s})`;
-    if (Math.abs(mx - lx) > 0.3 || Math.abs(my - ly) > 0.3) raf = requestAnimationFrame(posicionar);
+    const mxC = pres(mx, r.left + 2, r.right - 2), myC = pres(my, r.top + 2, r.bottom - 2);
+    if (Math.abs(mxC - lx) > 0.3 || Math.abs(myC - ly) > 0.3) raf = requestAnimationFrame(posicionar);
   };
   const mostrarLupa = (card: HTMLElement, e: MouseEvent) => {
     if (fecharAtual || html.classList.contains("pagina-andando")) return;
     alvo = card;
     const r = card.getBoundingClientRect();
     copiaLupa = copiaDe(card);
-    copiaLupa.style.setProperty("width", `${r.width / zoomAcumulado(card)}px`, "important");
-    conteudo.replaceChildren(contexto(card, copiaLupa, true));
+    // a cópia é desenhada com o MESMO zoom e a MESMA largura e altura do card original: assim as linhas quebram
+    // exatamente iguais (antes o texto "descia para a linha de baixo" dentro da lente) e ela nunca é mais curta que o
+    // card (o card de baixo estica até a altura da fileira — a lente passava do fim da cópia e ficava branca)
+    const z = zoomAcumulado(card);
+    copiaLupa.style.setProperty("width", `${r.width / z}px`, "important");
+    copiaLupa.style.setProperty("height", `${r.height / z}px`, "important");
+    copiaLupa.style.setProperty("min-height", `${r.height / z}px`, "important");
+    const ctx = contexto(card, copiaLupa, true);
+    ctx.style.setProperty("zoom", String(z), "important");
+    conteudo.replaceChildren(ctx);
     conteudo.style.transform = "none";
-    escala0 = r.width / Math.max(1, copiaLupa.offsetWidth); // (offsetWidth: não sofre o `scale` da lente aparecendo)
+    // (a lente pode estar no meio do "aparecer" com scale: desconta)
+    const escalaLente = Number(gsap.getProperty(lente, "scale")) || 1;
+    escala0 = r.width / Math.max(1, copiaLupa.getBoundingClientRect().width / escalaLente);
     mx = lx = e.clientX; my = ly = e.clientY;
     card.classList.add("com-lupa");
     if (!visivel) { visivel = true; gsap.killTweensOf(lente); gsap.fromTo(lente, { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.6)" }); }

@@ -200,10 +200,12 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
 - **Cards de Serviços e Cases** (23/11/2026, Victor: monitor de 15,6" não dava para ler; `src/lib/bolha.ts`, só computador):
   1) PASSAR O MOUSE = LUPA 3D que segue o mouse e AMPLIA (2,2x) só o texto embaixo dela; o card NÃO sai do lugar
   ("não quero que o menu venha para frente"). Modelo 2 escolhido pelo Victor (aro azul-ciano aceso, cabo cromado),
-  renderizado em 3D com three.js: `/public/lupa-moldura.webp` (2ª versão "proporcional": aro fino, cabo curto; centro 97,5/102,
-  raio 66 em 211×227 — a 1ª era grande demais) e
+  renderizado em 3D com three.js: `/public/lupa-moldura.webp` — HOJE é o MODELO 3, BOLHA sem cabo (borda furta-cor, centro
+  transparente; 181×181, centro 90,65, lente de 170px). O modelo 2 com cabo foi trocado ("não está muito bom") — e
   `/public/lupa-cursor.png` (ícone do cursor nas Perguntas e na dica). Dentro da lente vai uma cópia do card na MESMA
-  estrutura de classes (inclusive um `#cases` temporário) para as letras ficarem idênticas.
+  estrutura de classes (inclusive um `#cases` temporário), com o MESMO `zoom` da página e a MESMA largura e ALTURA do card:
+  as linhas quebram iguais e a lente nunca passa do fim da cópia. O centro da lente fica preso dentro do card (com mouse
+  rápido o atraso deixava a lente fora e ela ficava BRANCA).
   2) CLIQUE = a cópia sai do card e vem ao centro como GELATINA: cresce em 8 balanços (achata/estica, cada vez menos)
   até abrir; aro furta-cor de bolha de sabão e reflexo; fundo claro desfocado; fecha (×, fora, Esc) voltando ao card.
   RECUSADOS: gota azul ("cubo de gelo"), fundo azul-escuro, abrir sozinho ao passar o mouse (trazia o card para frente).
