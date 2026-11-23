@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 import Lenis from "lenis";
+import { iniciarPaginas } from "@/lib/paginas";
 
 
 /**
@@ -482,46 +483,11 @@ export default function Experience() {
         };
         walk(el, false);
       };
-      /* ---------- TRANSIÇÃO DE PÁGINA ENTRE OS BLOCOS CLARO/AZUL (Victor, 22/11/2026: "a página vai para o lado") ----------
-         Branco → azul: a PÁGINA INTEIRA sai para a ESQUERDA e a página azul entra pela DIREITA, como trocar de página.
-         Azul → branco: a página DESCE (sai para cima e a branca sobe de baixo).
-         Funciona com o próprio site: a tela sai, a rolagem é levada para o começo do bloco seguinte e a tela volta pelo
-         outro lado. Para cima, o caminho inverso. Durante a troca a rolagem fica segura (nada de "pular" duas). */
+      /* ---------- SITE EM PÁGINAS DE TELA CHEIA (23/11/2026) — ver src/lib/paginas.ts ---------- */
       if (!reduce) {
-        const pagina = [$("main"), $(".footer")].filter(Boolean) as HTMLElement[];
-        const fronteiras: Array<[string, "lado" | "desce"]> = [
-          [".manifesto", "lado"], [".services", "desce"], ["#metodo", "lado"], ["#cases", "desce"],
-          ["#sobre", "lado"], [".bigtext", "desce"], ["#contato", "lado"], [".footer", "desce"],
-        ];
-        let trocando = false;
-        const trocar = (destino: number, tipo: "lado" | "desce", dir: 1 | -1) => {
-          if (trocando) return;
-          trocando = true;
-          lenis?.stop();
-          document.documentElement.classList.add("trocando-pagina");
-          // o deslocamento é do tamanho da TELA (não da página inteira, que tem milhares de pixels de altura)
-          const eixo = tipo === "lado" ? "x" : "y";
-          const passo = tipo === "lado" ? window.innerWidth : window.innerHeight;
-          const sai = -passo * dir, entra = passo * dir; // para baixo: sai à esquerda/para cima e entra pela direita/de baixo
-          gsap.timeline({ onComplete: () => { gsap.set(pagina, { clearProps: "transform" }); document.documentElement.classList.remove("trocando-pagina"); lenis?.start(); setTimeout(() => { trocando = false; }, 250); } })
-            .to(pagina, { [eixo]: sai, duration: 0.55, ease: "power3.in" })
-            .add(() => { if (lenis) lenis.scrollTo(destino, { immediate: true, force: true }); else window.scrollTo(0, destino); })
-            .set(pagina, { [eixo]: entra })
-            .to(pagina, { [eixo]: 0, duration: 0.7, ease: "power3.out" });
-        };
-        fronteiras.forEach(([sel, tipo]) => {
-          const bloco = $(sel);
-          if (!bloco) return;
-          if (tipo === "desce") bloco.classList.add("pos-azul");
-          ScrollTrigger.create({
-            // "desce" dispara mais tarde: depois de um bloco curto (a frase azul), a fronteira seguinte já nasce perto
-            trigger: bloco, start: tipo === "lado" ? "top 72%" : "top 40%",
-            // descendo: leva ao começo do bloco (2 px antes, para não ligar a trava da Metodologia no meio da troca)
-            onEnter: () => trocar(Math.max(0, bloco.getBoundingClientRect().top + window.scrollY - 2), tipo, 1),
-            // subindo: volta para o fim do bloco anterior
-            onLeaveBack: () => trocar(Math.max(0, bloco.getBoundingClientRect().top + window.scrollY - window.innerHeight), tipo, -1),
-          });
-        });
+        // começa depois que os outros gatilhos (Metodologia, textos) já existem, para medir as paradas certas
+        const paginasTimer = setTimeout(() => { cleanups.push(iniciarPaginas(gsap, ScrollTrigger, lenis)); }, 600);
+        cleanups.push(() => clearTimeout(paginasTimer));
       }
       // dentro de um bloco que acabou de trocar de cor, o texto espera a transição terminar para aparecer
       const inicioTexto = (el: Element) => (el.closest(".pos-azul, .bloco-azul--abre, .cta-vidro") ? "top 45%" : "top 85%");
