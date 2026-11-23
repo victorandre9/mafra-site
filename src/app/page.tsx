@@ -194,16 +194,30 @@ export default function Home() {
             mostrando o vídeo do topo. Tudo em código (sem vídeo gerado): a logo é sempre o arquivo original. */}
         <canvas className="ab-estrelas" />
         <div className="ab-raios" />
+        <div className="ab-vinheta" />
         <div className="ab-palco">
           <span className="ab-aura" />
           <span className="ab-onda" />
           <span className="ab-anel ab-anel--1" />
           <span className="ab-anel ab-anel--2" />
           <span className="ab-anel ab-anel--3" />
+          {/* anel de luz que se DESENHA em volta da logo */}
+          <svg className="ab-traco" viewBox="0 0 200 200" aria-hidden="true">
+            <defs>
+              <linearGradient id="abTraco" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stopColor="#ffffff" />
+                <stop offset=".5" stopColor="#8ec5ff" />
+                <stop offset="1" stopColor="#1f5fa8" />
+              </linearGradient>
+            </defs>
+            <circle cx="100" cy="100" r="96" pathLength="100" />
+          </svg>
           <div className="ab-logo">
             <LogoImage size={420} priority />
             <span className="ab-reflexo" />
           </div>
+          {/* faíscas que saem da borda da logo no flash */}
+          <div className="ab-faiscas">{Array.from({ length: 28 }, (_, k) => <i key={k} />)}</div>
         </div>
         <p className="ab-frase">
           {"Sua operação no controle.".split(" ").map((w, k) => (
@@ -211,6 +225,8 @@ export default function Home() {
           ))}
         </p>
         <span className="ab-portal" />
+        {/* "risco" de luz horizontal de cinema (flare anamórfico) no flash */}
+        <span className="ab-risco" />
         <div className="ab-flash" />
       </div>
 
