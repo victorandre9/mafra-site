@@ -704,7 +704,7 @@ main, section, footer { max-width: 100vw; }
 }
 .drone__glow { left: 74px !important; }
 @media (max-width: 760px) {
-  .drone__beam { left: 46px !important; top: 60px !important; }
+  .drone__beam { left: 46px !important; top: 76px !important; }
   .drone__glow { left: 46px !important; }
 }
 
@@ -1320,7 +1320,7 @@ html.modo-paginas .header.is-hidden { transform: none !important; }
 /* robô 10% menor no computador (pedido do Victor, 23/11/2026): Orbe 148 → 133 px; luz reancorada no novo centro */
 @media (min-width: 761px) {
   .drone__roll, .drone__orb { width: 133px !important; height: 133px !important; }
-  .drone__beam { left: 66.5px !important; top: 86px !important; width: 171px !important; height: 270px !important; }
+  .drone__beam { left: 66.5px !important; top: 104px !important; width: 171px !important; height: 270px !important; }
   .drone__glow { left: 66.5px !important; }
 }
 /* faixa gigante: o trecho vazado vem no fim da parte colorida, na mesma linha */
