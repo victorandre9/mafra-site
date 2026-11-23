@@ -197,6 +197,14 @@ function Orb({ mobile, wrap }: { mobile: boolean; wrap: React.RefObject<HTMLDivE
   const { viewport, camera } = useThree();
   const anchors = useAnchors();
   const cur = useRef({ x: 0.27, y: 0, s: 1, o: 0, v: 0, lastY: 0 });
+  // COMPUTADOR (site em páginas): a malha não depende da rolagem — ela DANÇA pela tela inteira o tempo todo
+  // (pedido do Victor, 23/11/2026: "fica só num lugar"). A cada troca de página ganha um impulso (gira mais rápido).
+  const impulso = useRef(0);
+  useEffect(() => {
+    const f = () => { impulso.current = 1; };
+    window.addEventListener("mafra:pagina", f);
+    return () => window.removeEventListener("mafra:pagina", f);
+  }, []);
 
   useFrame((state, rawDt) => {
     const dt = Math.min(rawDt, 0.05);
@@ -214,10 +222,16 @@ function Orb({ mobile, wrap }: { mobile: boolean; wrap: React.RefObject<HTMLDivE
     const B = mobile ? STAGES[nextI].m : STAGES[nextI].d;
     const span = a[nextI] - a[i];
     const k = span > 0 && isFinite(span) ? smooth(Math.min(1, Math.max(0, (y - a[i]) / span))) : 0;
-    const tx = A[0] + (B[0] - A[0]) * k;
-    const ty = A[1] + (B[1] - A[1]) * k;
-    const ts = A[2] + (B[2] - A[2]) * k;
+    let tx = A[0] + (B[0] - A[0]) * k;
+    let ty = A[1] + (B[1] - A[1]) * k;
+    let ts = A[2] + (B[2] - A[2]) * k;
     const to = A[3] + (B[3] - A[3]) * k;
+    if (!mobile && document.documentElement.classList.contains("modo-paginas")) {
+      // passeio contínuo em "oito" irregular: vai de um canto a outro da tela em ~40 s, sem repetir o caminho
+      tx = Math.sin(t * 0.16) * 0.34 + Math.sin(t * 0.37 + 1.3) * 0.08;
+      ty = Math.cos(t * 0.12) * 0.24 + Math.sin(t * 0.29 + 0.6) * 0.08;
+      ts = 0.7 + Math.sin(t * 0.21) * 0.18;
+    }
 
     const c = cur.current;
     c.x = THREE.MathUtils.damp(c.x, tx, 2.6, dt);
@@ -227,7 +241,8 @@ function Orb({ mobile, wrap }: { mobile: boolean; wrap: React.RefObject<HTMLDivE
     // velocidade de rolagem → energia extra (gira e deforma mais quando a pessoa rola)
     const vel = Math.abs(y - c.lastY) / Math.max(dt, 0.001);
     c.lastY = y;
-    c.v = THREE.MathUtils.damp(c.v, Math.min(vel / 2500, 1), 4, dt);
+    impulso.current = THREE.MathUtils.damp(impulso.current, 0, 1.2, dt);
+    c.v = Math.max(THREE.MathUtils.damp(c.v, Math.min(vel / 2500, 1), 4, dt), impulso.current);
 
     // 2) Vida própria: deriva em lissajous + respiração
     const driftX = Math.sin(t * 0.37) * 0.32 + Math.sin(t * 0.11) * 0.18;

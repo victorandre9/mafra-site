@@ -547,8 +547,13 @@ export default function Home() {
 
         {/* TEXTO GIGANTE */}
         <section className="bigtext" aria-hidden="true">
-          <div className="bigtext__row" data-dir="-1">processos ✦ gestão ✦ tecnologia ✦ processos ✦ gestão ✦ tecnologia ✦</div>
-          <div className="bigtext__row outline" data-dir="1">diagnóstico ✦ tecnologia ✦ indicadores ✦ resultados ✦ diagnóstico ✦ tecnologia ✦</div>
+          {/* UMA faixa só (Victor, 23/11/2026): a parte colorida e, no fim dela, a vazada. O trecho se repete 4x: o laço
+              anda metade (2 trechos), que é sempre mais largo que a tela — a faixa nunca fica vazia */}
+          <div className="bigtext__row" data-dir="-1">
+            {[0, 1, 2, 3].map((i) => (
+              <span key={i}>processos ✦ gestão ✦ tecnologia ✦ <span className="bt-vazado">diagnóstico ✦ indicadores ✦ resultados ✦</span>{" "}</span>
+            ))}
+          </div>
         </section>
 
         {/* PERGUNTAS FREQUENTES: responde as objeções antes da conversa */}
