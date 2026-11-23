@@ -206,7 +206,7 @@ export default function Home() {
           </div>
         </div>
         <p className="ab-frase">
-          {"Da necessidade operacional à solução digital.".split(" ").map((w, k) => (
+          {"Sua operação no controle.".split(" ").map((w, k) => (
             <span key={k} className="ab-palavra"><span>{w}</span></span>
           ))}
         </p>
@@ -616,7 +616,7 @@ export default function Home() {
         {/* logo grande e centralizada; os links de redes ficam só no Contato, logo acima */}
         <div className="logo footer__logo"><Logo size={170} /></div>
         {/* assinatura: saiu do topo (3 slogans juntos competiam) e fecha a página aqui */}
-        <p className="footer__assinatura"><span className="hero__rule" />Da necessidade operacional à solução digital.<span className="hero__rule" /></p>
+        <p className="footer__assinatura"><span className="hero__rule" />Sua operação no controle.<span className="hero__rule" /></p>
         <p>Entendo o negócio. Transformo processos. Desenvolvo soluções.<br />© {new Date().getFullYear()} MAFRA Consultoria &amp; Tecnologia</p>
         <div className="footer__links">
           <a href="#top" data-cursor="↑">Voltar ao topo ↑</a>
