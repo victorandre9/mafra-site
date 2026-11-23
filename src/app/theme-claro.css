@@ -1342,3 +1342,22 @@ html.modo-paginas .services { background: transparent !important; }
     -webkit-font-smoothing: antialiased; text-rendering: geometricPrecision; }
   html.modo-paginas section.marquee { max-width: none !important; width: calc(100% + 60px); margin-left: -30px !important; } /* cobre as pontas inclinadas */
 }
+@media (min-width: 761px) {
+  /* Cases no computador (páginas): imagens com ALTURA fixa (não crescem quando o card alarga) → letra maior */
+  html.modo-paginas #cases .project__media { aspect-ratio: auto !important; height: 30vh; background: #0a0618; }
+  html.modo-paginas #cases .work__grupo--b2b .project__media { height: 19vh; }
+  html.modo-paginas #cases .project__media img:not(.project__placa) { width: 100%; height: 100%; object-fit: contain; }
+  html.modo-paginas #cases .work__grupo-head { max-width: none; }
+}
+@media (min-width: 761px) {
+  /* Cases (páginas): letra MAIOR nos cards — os cards ficaram largos, então o texto ocupa poucas linhas */
+  html.modo-paginas #cases .section-title { font-size: clamp(2rem, 3.4vw, 3.2rem) !important; }
+  html.modo-paginas #cases .project__info p { font-size: 1.2rem !important; line-height: 1.5 !important; }
+  html.modo-paginas #cases .project__info h3 { font-size: 1.6rem !important; }
+  html.modo-paginas #cases .project__info li { font-size: .95rem !important; }
+  html.modo-paginas #cases .project__tag, html.modo-paginas #cases .project__info .eyebrow { font-size: .9rem !important; }
+  html.modo-paginas #cases .work__grupo-titulo { font-size: 2rem !important; }
+  html.modo-paginas #cases .work__grupo-texto { font-size: 1.15rem !important; }
+}
+@media (min-width: 761px) { html.modo-paginas #cases .project__art { position: absolute; inset: 0; width: 100% !important; height: 100% !important; object-fit: contain !important; transform: none !important; } }
+@media (min-width: 761px) { html.modo-paginas #cases .project__logo { position: absolute !important; left: 50%; top: 50%; width: auto !important; height: 84% !important; max-width: 90%; object-fit: contain !important; transform: translate(-50%, -50%) !important; } }
