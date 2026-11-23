@@ -149,6 +149,7 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
 - **Card "Fale com o Victor"** (21/11/2026): modelo 2 holográfico (borda em degradê azul girando, brilho atravessando a cada 4 s,
   nome/botão em degradê marinho, linha "Respondo pelo WhatsApp") com a FOTO GRANDE do modelo 3 (lateral, dissolvendo no card).
 - Robô no celular: sempre que a página VOLTA AO TOPO, ele retorna ao lugar em frente a "movem" (larga o esconderijo).
+- **"Quem está por trás" no celular** (23/11/2026, Victor: "as letras demoram muito"): selo, título, texto e itens aparecem JUNTO com a rolagem (scrub) — começam a surgir quando a foto está no meio da tela e completam conforme sobem.
 - **Espaçamento no celular** (21/11/2026): temas encostados, ~10px entre os textos; só os CASES têm distância maior do bloco azul (88px).
 - **Imagem do link compartilhado** (`public/og-image.jpg`, 21/11/2026): modelo 4 — fundo azul-marinho, logo original, frase do topo e FOTO do Victor à direita com selo "Fale com o Victor →". Ao trocar, subir o `?v=` em `layout.tsx`.
 - **Metodologia em janela baixa** (22/11/2026): no computador com pouca altura (notebook com escala do Windows) a seção travada
