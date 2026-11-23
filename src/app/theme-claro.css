@@ -1022,9 +1022,11 @@ body.na-metodologia .faixa:not(.faixa--1):not(.faixa--6) { opacity: 0 !important
               linear-gradient(to bottom, rgba(243, 246, 249, 0) 70%, #f3f6f9 100%); }
 /* CELULAR: o vídeo vira uma faixa NÍTIDA no alto (sem véu por cima) e o texto desce para baixo dela (23/11/2026: faixa 48→42svh, texto sobe) */
 @media (max-width: 760px) {
-  .video-topo { inset: 0 0 auto 0; height: 42svh; }
-  .video-topo video { object-position: 55% 50%; }
-  .video-topo::after { background: linear-gradient(to bottom, rgba(243,246,249,0) 62%, #f3f6f9 100%); }
+  /* "zoom out" (23/11/2026, Victor: cubos muito grandes): o vídeo mostra a LARGURA INTEIRA (16:9), encostado no fim da
+     faixa de 42svh; em cima ele se dissolve no fundo claro */
+  .video-topo { inset: auto 0 auto 0; top: calc(42svh - min(56.25vw, 42svh)); height: min(56.25vw, 42svh); }
+  .video-topo video { object-position: 50% 50%; }
+  .video-topo::after { background: linear-gradient(to bottom, #f3f6f9 0%, rgba(243,246,249,0) 22%, rgba(243,246,249,0) 64%, #f3f6f9 100%); }
   .hero { padding-top: calc(42svh - 40px) !important; }
 }
 .hero .hero__content, .hero .io-servicos, .hero .io-card { position: relative; z-index: 2; }
