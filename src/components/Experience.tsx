@@ -104,6 +104,23 @@ export default function Experience() {
           if (!v || v.readyState >= 3) { ok(); return; }
           v.addEventListener("canplay", () => ok(), { once: true });
         });
+        // FASE 1 (Victor: "meio segundo para aparecer o símbolo"): a logo surge SOZINHA com a página (só CSS) e fica viva
+        // enquanto o site carrega; aqui o site por trás é congelado (nada dele gastando o computador)
+        let aparecida = 0;
+        const aparecer = () => {
+          if (aparecida) return;
+          aparecida = performance.now();
+          document.documentElement.classList.add("abrindo-quieto");
+          ($(".video-topo video") as HTMLVideoElement | null)?.pause();
+          pre.classList.add("ab-aparece");
+        };
+        setTimeout(aparecer, 150);
+        // a fase 1 precisa terminar de entrar (logo assentada, cometa fechado) antes da fase 2
+        const faseUmPronta = () => new Promise<void>((ok) => {
+          // (a fase 1 é só CSS e começa com a página: o relógio é o da página)
+          const checa = () => { if (performance.now() >= 2300) ok(); else setTimeout(checa, 50); };
+          checa();
+        });
         let comecou = false;
         const comecar = () => {
           if (comecou) return;
@@ -113,9 +130,9 @@ export default function Experience() {
           ($(".video-topo video") as HTMLVideoElement | null)?.pause();
           pausadas = gsap.globalTimeline.getChildren(false, true, true).filter((t) => (t as gsap.core.Tween).vars?.repeat === -1 && !t.paused());
           pausadas.forEach((t) => t.pause());
-          pre.classList.add("ab-roda"); // ← a apresentação começa (tudo no CSS, com os tempos lá)
+          pre.classList.add("ab-roda"); // ← FASE 2: brilho, slogan, carga, flash e portal (tempos no CSS)
           // os marcos abaixo são do RELÓGIO da animação (não de setTimeout): se o navegador engasgar, nada se adianta
-          const relogio = pre.getAnimations({ subtree: true }).find((a) => (a as CSSAnimation).animationName === "abLogo");
+          const relogio = pre.getAnimations({ subtree: true }).find((a) => (a as CSSAnimation).animationName === "abLogoSai");
           const quando = (ms: number, f: () => void) => {
             const t0 = performance.now();
             const tique = () => {
@@ -125,11 +142,11 @@ export default function Experience() {
             };
             requestAnimationFrame(tique);
           };
-          quando(2800, () => { pre.style.pointerEvents = "none"; }); // o site já aparece pelo portal: os cliques passam
-          quando(3350, () => intro());
-          quando(3970, fimAbertura);
+          quando(1800, () => { pre.style.pointerEvents = "none"; }); // o site já aparece pelo portal: os cliques passam
+          quando(2350, () => intro());
+          quando(2960, fimAbertura);
         };
-        Promise.race([Promise.all([carregou, videoPronto, esperar3D("orbe", 6500), esperar3D("fundo", 6500), espera(2000)]), espera(7000)])
+        Promise.all([Promise.race([Promise.all([carregou, videoPronto, esperar3D("orbe", 6500), esperar3D("fundo", 6500), espera(2000)]), espera(7000)]), faseUmPronta()])
           // mais um respiro curto: o navegador termina o que estava fazendo antes do 1º quadro da apresentação
           .then(() => new Promise<void>((ok) => requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(ok, 120)))))
           .then(comecar);
