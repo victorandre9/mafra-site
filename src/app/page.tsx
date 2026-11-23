@@ -309,7 +309,7 @@ export default function Home() {
               </div>
               <a className="io-card" href={LINK_WHATSAPP} target="_blank" rel="noopener noreferrer">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/sobre/victor-mafra.jpg?v=5" alt="Victor Mafra" width={80} height={96} />
+            <img src="/sobre/victor-mafra-retrato.jpg?v=6" alt="Victor Mafra" width={1122} height={1402} decoding="async" />
             <span className="io-card__txt">
               <b>Fale com o Victor</b>
               <span className="io-card__online">Respondo pelo WhatsApp</span>
