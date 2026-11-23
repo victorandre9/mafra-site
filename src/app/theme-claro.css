@@ -1646,7 +1646,7 @@ html.abrindo .pg-mapa, html.abrindo .pg-setas { display: none; } /* fora da tela
    Computador: passar o mouse = o card balança como bolha (propriedade `scale`, não briga com o tilt) + "Clique para ampliar";
    clicar = a cópia vem em bolha até o centro, em tamanho de leitura. Fecha clicando fora, no × ou com Esc. */
 @media (min-width: 761px) {
-  .card--bolha, .card--bolha * { cursor: image-set(url("/lupa-cursor.png") 2x) 27 21, url("/lupa-cursor.png") 27 21, zoom-in !important; }
+  .card--bolha, .card--bolha * { cursor: image-set(url("/lupa-cursor.png") 2x) 24 24, url("/lupa-cursor.png") 24 24, zoom-in !important; }
   @keyframes cardBolha { 0% { scale: 1; } 25% { scale: 1.035 .975; } 50% { scale: .99 1.025; } 75% { scale: 1.02 1.01; } 100% { scale: 1.015; } }
   .card__dica { position: absolute; right: 14px; bottom: 14px; z-index: 3; padding: 6px 12px 6px 30px; border-radius: 999px;
     font: 600 .78rem/1 var(--font-body, inherit); letter-spacing: .01em; color: #fff; pointer-events: none;
@@ -1688,7 +1688,7 @@ html.bolha-aberta .drone-layer { opacity: 0 !important; }
 /* ================= PERGUNTAS EM FOCO (23/11/2026, Victor: texto pequeno + abria uma sem fechar a outra) — src/lib/faqFoco.ts =================
    Computador: a resposta não abre na lista (a página nunca muda de altura). Clique = círculo escuro nasce do ponto do clique,
    painel de vidro com a pergunta subindo palavra por palavra e a resposta acendendo; setas ← → entre as perguntas. */
-@media (min-width: 761px) { html.modo-paginas .faq__item summary, html.modo-paginas .faq__item summary * { cursor: image-set(url("/lupa-cursor.png") 2x) 27 21, url("/lupa-cursor.png") 27 21, zoom-in !important; } }
+@media (min-width: 761px) { html.modo-paginas .faq__item summary, html.modo-paginas .faq__item summary * { cursor: image-set(url("/lupa-cursor.png") 2x) 24 24, url("/lupa-cursor.png") 24 24, zoom-in !important; } }
 .faq-foco { position: fixed; inset: 0; z-index: 140; display: grid; place-items: center; }
 .faq-foco__fundo { position: absolute; inset: 0; cursor: zoom-out;
   background: radial-gradient(ellipse at 50% 40%, rgba(13, 49, 104, .92), rgba(1, 16, 36, .96) 70%); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
@@ -1752,15 +1752,15 @@ html.bolha-aberta a, html.bolha-aberta button, html.bolha-aberta button * { curs
 /* ================= LUPA 3D que amplia o texto (23/11/2026, modelo 2 do Victor) — src/lib/bolha.ts =================
    O card não sai do lugar: a lente segue o mouse e mostra uma cópia do card ampliada 2,2x embaixo dela. */
 .card--bolha.com-lupa, .card--bolha.com-lupa * { cursor: none !important; }
-.lupa-lente { position: fixed; left: 0; top: 0; width: 211px; height: 227px; z-index: 135; pointer-events: none; opacity: 0; will-change: transform; }
-.lupa-lente__vidro { position: absolute; left: 31.5px; top: 36px; width: 132px; height: 132px; border-radius: 50%; overflow: hidden; background: #fff;
+.lupa-lente { position: fixed; left: 0; top: 0; width: 181.3px; height: 181.3px; z-index: 135; pointer-events: none; opacity: 0; will-change: transform; }
+.lupa-lente__vidro { position: absolute; left: 5.65px; top: 5.65px; width: 170px; height: 170px; border-radius: 50%; overflow: hidden; background: #f7f9fc;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .6), inset 0 0 14px rgba(1, 24, 52, .28); }
 .lupa-lente__conteudo { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
 .lupa-lente__brilho { position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
   background: radial-gradient(ellipse 46% 30% at 32% 22%, rgba(255, 255, 255, .55), transparent 70%),
               radial-gradient(circle at 50% 50%, transparent 62%, rgba(79, 155, 220, .18) 88%, rgba(31, 95, 168, .3) 100%); }
 .lupa-lente__moldura { position: absolute; inset: 0; width: 100%; height: 100%; user-select: none; }
-.lupa-lente .lupa-ctx, .lupa-lente .work__grupo, .lupa-lente .work__grid { display: block !important; width: max-content !important; max-width: none !important;
+.lupa-lente .work__grupo, .lupa-lente .work__grid { display: block !important; width: max-content !important; max-width: none !important;
   padding: 0 !important; margin: 0 !important; gap: 0 !important; min-height: 0 !important; background: none !important; border: 0 !important;
   transform: none !important; translate: none !important; zoom: 1 !important; box-shadow: none !important; }
 .lupa-lente .lupa-ctx > i, .lupa-lente .work__grid > i, .lupa-lente .work__grupo-head { display: none !important; }
@@ -1782,3 +1782,7 @@ html.bolha-aberta a, html.bolha-aberta button, html.bolha-aberta button * { curs
   html.modo-paginas .services__track .card p, html.modo-paginas .services__track .card:nth-child(1) p { font-size: 1.22rem !important; line-height: 1.5 !important; }
   html.modo-paginas .services__track .card--cta h3 { font-size: 1.9rem !important; }
 }
+/* (a raiz da cópia na lente recebe o mesmo `zoom` da página por estilo: não pode ser zerado aqui) */
+.lupa-lente .lupa-ctx { display: block !important; width: max-content !important; max-width: none !important; padding: 0 !important; margin: 0 !important;
+  gap: 0 !important; min-height: 0 !important; background: none !important; border: 0 !important; transform: none !important; translate: none !important; box-shadow: none !important; }
+.lupa-lente { filter: drop-shadow(0 10px 24px rgba(13, 44, 82, .22)); }
