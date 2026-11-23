@@ -1434,3 +1434,46 @@ html.modo-paginas .services { background: transparent !important; }
   .ab-frase { top: calc(50% + min(31vw, 140px) + 64px); font-size: 1.15rem; }
   .ab-anel--3 { display: none; }
 }
+
+/* ABERTURA rodando (html.abrindo-quieto): o site atrás dela fica parado — nenhuma animação de CSS gastando o
+   computador escondida (bordas girando, brilhos, faixas, setas do fundo); o robô e as setas nem aparecem.
+   Sai um instante antes do portal abrir. */
+html.abrindo-quieto main *, html.abrindo-quieto main *::before, html.abrindo-quieto main *::after,
+html.abrindo-quieto .header *, html.abrindo-quieto .footer *, html.abrindo-quieto .faixas-fundo * { animation-play-state: paused !important; }
+html.abrindo-quieto .faixas-fundo, html.abrindo-quieto .bg3d { visibility: hidden !important; }
+html.abrindo-quieto .drone-layer { opacity: 0 !important; }
+.drone-layer { transition: opacity .9s ease; } /* o robô aparece suave depois da apresentação */
+
+/* ===== NAVEGAÇÃO SEM ROLAGEM (computador, 23/11/2026): mapa do site + setas ===== */
+.pg-mapa { position: fixed; right: 16px; top: 50%; transform: translateY(-50%); z-index: 70; display: flex; flex-direction: column; align-items: center; gap: 11px;
+  padding: 14px 8px; border-radius: 999px; background: rgba(255, 255, 255, .55); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  box-shadow: 0 10px 28px -8px rgba(2, 37, 79, .28), inset 0 0 0 1px rgba(255, 255, 255, .7); transition: background .5s, box-shadow .5s, opacity .6s; }
+.pg-mapa button { position: relative; width: 10px; height: 10px; padding: 0; border: 0; border-radius: 999px; cursor: pointer;
+  background: rgba(2, 34, 73, .3); transition: height .45s cubic-bezier(.2, .9, .2, 1), background .3s, transform .2s; }
+.pg-mapa button::before { content: ""; position: absolute; inset: -7px -9px; } /* área de clique maior */
+.pg-mapa button:hover { background: rgba(2, 34, 73, .6); transform: scale(1.25); }
+.pg-mapa button.is-on { height: 28px; background: linear-gradient(180deg, #4f9bdc, #1f5fa8 55%, #011834); box-shadow: 0 0 12px rgba(79, 155, 220, .6); transform: none; }
+.pg-mapa button::after, .pg-setas button::after { content: attr(data-nome); position: absolute; right: calc(100% + 16px); top: 50%; transform: translate(6px, -50%);
+  white-space: nowrap; padding: 6px 11px; border-radius: 9px; font: 600 .8rem/1 var(--font-display); letter-spacing: .01em; color: #fff;
+  background: #0d2c52; box-shadow: 0 8px 20px rgba(2, 37, 79, .3); opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; }
+.pg-mapa button:hover::after, .pg-mapa button:focus-visible::after, .pg-setas button:hover::after { opacity: 1; transform: translate(0, -50%); }
+.pg-setas { position: fixed; right: 12px; bottom: 18px; z-index: 70; display: flex; flex-direction: column; gap: 8px; transition: opacity .6s; }
+.pg-setas button { position: relative; width: 42px; height: 42px; border-radius: 50%; border: 0; cursor: pointer; display: grid; place-items: center;
+  background: rgba(255, 255, 255, .6); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); color: #011834;
+  box-shadow: 0 10px 24px -8px rgba(2, 37, 79, .35), inset 0 0 0 1px rgba(255, 255, 255, .75); transition: transform .2s, background .3s, opacity .3s, color .3s; }
+.pg-setas button:hover:not(:disabled) { transform: scale(1.1); }
+.pg-setas button:disabled { opacity: .35; cursor: default; }
+.pg-setas svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+/* a seta de descer pulsa de leve: mostra que dá para seguir */
+.pg-setas button:last-child:not(:disabled) svg { animation: pgDica 2.2s ease-in-out infinite; }
+@keyframes pgDica { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(3px); } }
+/* sobre os temas AZUIS: vidro escuro e pontos claros */
+html.pg-no-azul .pg-mapa { background: rgba(1, 24, 52, .45); box-shadow: 0 10px 28px -8px rgba(0, 0, 0, .45), inset 0 0 0 1px rgba(142, 197, 255, .25); }
+html.pg-no-azul .pg-mapa button { background: rgba(255, 255, 255, .35); }
+html.pg-no-azul .pg-mapa button:hover { background: rgba(255, 255, 255, .7); }
+html.pg-no-azul .pg-mapa button.is-on { background: linear-gradient(180deg, #ffffff, #8ec5ff); box-shadow: 0 0 14px rgba(142, 197, 255, .8); }
+html.pg-no-azul .pg-setas button { background: rgba(1, 24, 52, .45); color: #fff; box-shadow: 0 10px 24px -8px rgba(0, 0, 0, .45), inset 0 0 0 1px rgba(142, 197, 255, .25); }
+/* escondidos durante a abertura e no voo do menu */
+body.em-voo .pg-mapa, body.em-voo .pg-setas { opacity: 0; pointer-events: none; }
+html.abrindo .pg-mapa, html.abrindo .pg-setas { display: none; } /* fora da tela de verdade: o vidro fosco por cima da abertura pesava */
+@media (max-width: 760px) { .pg-mapa, .pg-setas { display: none; } }
