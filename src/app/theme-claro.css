@@ -1298,7 +1298,7 @@ html.modo-paginas .header.is-hidden { transform: none !important; }
   html.modo-paginas .hero__title { font-size: clamp(3rem, min(9vh, 5.4vw), 7rem) !important; line-height: .98 !important; }
   html.modo-paginas .hero__title .line { display: inline-block !important; margin-right: .22em; }
   html.modo-paginas .hero__sub { font-size: clamp(1.1rem, 2.3vh, 1.45rem) !important; max-width: 46em !important; }
-  html.modo-paginas .hero .io-card { zoom: 1.35; }
+  html.modo-paginas .hero .io-card { zoom: 1.15; } /* 15% menor que antes (1,35) — Victor, 23/11/2026 */
   html.modo-paginas .marquee { padding-block: 14px !important; }
   /* 2ª página (manifesto): texto menor e CENTRALIZADO na tela */
   html.modo-paginas .manifesto { display: flex !important; align-items: center; justify-content: center; text-align: center; padding: 90px 6vw 40px !important; }
@@ -1329,3 +1329,5 @@ html.modo-paginas .header.is-hidden { transform: none !important; }
 /* área de desenho do Orbe 1,5x maior que o quadro dele (o aro girando era cortado na borda); não recebe clique */
 .drone__orb { position: relative; overflow: visible !important; }
 .drone__orb > div { position: absolute !important; left: -25% !important; top: -25% !important; width: 150% !important; height: 150% !important; overflow: visible !important; pointer-events: none !important; }
+/* Serviços: sem o véu branco por cima do fundo — a malha de pontos fica com a mesma força dos Cases (Victor, 23/11/2026) */
+html.modo-paginas .services { background: transparent !important; }
