@@ -197,22 +197,22 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   sem o "entortar" pela velocidade da rolagem (só no celular). Mesmo tamanho (Victor não quer maior).
 - **Barra do topo justa na logo** (23/11/2026): só 3px acima e 3px abaixo da logo (computador e celular).
 - **Telas do celular 3D** (23/11/2026): cada tela é ampliada com `zoom` até o conteúdo ocupar o espaço útil (`ajustarTelas`).
-- **Cards AMPLIÁVEIS** (23/11/2026, Victor: monitor de 15,6" não dava para ler; `src/lib/bolha.ts`, só computador): Serviços e
-  Cases. Mouse em cima = o card balança como bolha (`scale`), cursor vira LUPA 3D (`/public/lupa.svg`, também embutida no CSS)
-  e aparece "Clique para ampliar". Clique = a cópia CRESCE do lugar do card até o centro (estilo App Store: escala uniforme +
-  recorte com cantos redondos que se abre, mola), com aro iridescente de bolha de sabão e reflexo; fundo CLARO desfocado.
-  RECUSADOS: a "gota d'água" (parecia cubo de gelo) e o fundo azul-escuro. Fecha (×, fora, Esc) voltando para o card.
-  A cópia mora no <body> (fora do zoom das páginas) e rola com o mouse por dentro (`data-lenis-prevent`; paginas.ts só
-  segura a rolagem FORA do painel). Vo$: logo centralizada (80% da altura da mídia), sem esticar.
-  LUPA AUTOMÁTICA (Victor, 23/11/2026): mouse PARADO no card 750 ms = amplia sozinho (a dica "Ampliando…" mostra a carga;
-  passar rápido não abre; o clique continua valendo). Aberto sozinho, fecha quando o mouse sai do card ampliado (ou se
-  afasta 220px sem entrar); só arma de novo depois que o mouse sai do card. Com o card aberto o cursor é o NORMAL.
+- **Cards de Serviços e Cases** (23/11/2026, Victor: monitor de 15,6" não dava para ler; `src/lib/bolha.ts`, só computador):
+  1) PASSAR O MOUSE = LUPA 3D que segue o mouse e AMPLIA (2,2x) só o texto embaixo dela; o card NÃO sai do lugar
+  ("não quero que o menu venha para frente"). Modelo 2 escolhido pelo Victor (aro azul-ciano aceso, cabo cromado),
+  renderizado em 3D com three.js: `/public/lupa-moldura.webp` (aro vazado; centro 212,220, raio 105 em 468×501) e
+  `/public/lupa-cursor.png` (ícone do cursor nas Perguntas e na dica). Dentro da lente vai uma cópia do card na MESMA
+  estrutura de classes (inclusive um `#cases` temporário) para as letras ficarem idênticas.
+  2) CLIQUE = a cópia sai do card e vem ao centro como GELATINA: cresce em 8 balanços (achata/estica, cada vez menos)
+  até abrir; aro furta-cor de bolha de sabão e reflexo; fundo claro desfocado; fecha (×, fora, Esc) voltando ao card.
+  RECUSADOS: gota azul ("cubo de gelo"), fundo azul-escuro, abrir sozinho ao passar o mouse (trazia o card para frente).
+  O card aberto rola com o mouse por dentro (`data-lenis-prevent`); cursor normal com ele aberto.
 - **Perguntas em FOCO** (23/11/2026, `src/lib/faqFoco.ts`): sanfona (abriu uma, fecha as outras). No computador a resposta
   NÃO abre na lista (a página mudava de altura e o encaixe encolhia/crescia tudo): o clique abre um painel em tela cheia —
   círculo escuro nasce do ponto do clique, pergunta sobe palavra por palavra, resposta acende, luz passa; ← → navegam.
   `html.bolha-aberta` segura a troca de páginas enquanto bolha/foco estão abertos.
 - **"Voltar ao topo"** no computador usa `__paginas.ir(0)` (a rolagem suave fica desligada no modo páginas).
-- Lista do topo ("/ Diagnóstico & processos…"): +2px e negrito; texto do topo ("Entendo a rotina…") +1px e negrito; menu do topo em negrito (monitor pequeno). Bloco de texto do topo 80px mais à esquerda no computador (`translate`, o vídeo NÃO muda).
+- Lista do topo ("/ Diagnóstico & processos…"): +2px e negrito; texto do topo ("Entendo a rotina…") +1px e negrito; menu do topo em negrito (monitor pequeno). Bloco de texto do topo 160px mais à esquerda no computador (`translate`, o vídeo NÃO muda).
 - Botões verdes: flash claro passando da esquerda para a direita a cada 3 s (`verde-varre`).
 
 ## Pendências conhecidas
