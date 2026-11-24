@@ -208,7 +208,9 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   rápido o atraso deixava a lente fora e ela ficava BRANCA).
   VIGIA: a cada movimento do mouse (em qualquer lugar) confere se ainda está no card da lupa; senão ela some — o navegador
   às vezes não avisa a saída rápida e a lente branca ficava TRAVADA na tela. Some também ao sair da janela, trocar de página
-  (`mafra:pagina`), tecla ou rodinha.
+  (`mafra:pagina`), tecla ou rodinha. Causa real da lente presa: entrar e sair rápido deixava a animação de APARECER brigando com a de SUMIR (a de
+  aparecer terminava por último) → `esconderLupa` mata as animações antes (`killTweensOf` + `overwrite`), e o vigia força
+  opacidade 0 se não houver card sob o mouse.
   2) CLIQUE = a cópia sai do card e vem ao centro como GELATINA: cresce em 8 balanços (achata/estica, cada vez menos)
   até abrir; aro furta-cor de bolha de sabão e reflexo; fundo claro desfocado; fecha (×, fora, Esc) voltando ao card.
   RECUSADOS: gota azul ("cubo de gelo"), fundo azul-escuro, abrir sozinho ao passar o mouse (trazia o card para frente).
