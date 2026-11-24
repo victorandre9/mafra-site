@@ -41,191 +41,26 @@ O endereço de produção é o do projeto `mafra-site` na Vercel.
   a pessoa é o **Victor**; a empresa é a **MAFRA Consultoria & Tecnologia**. Nada de "o Mafra fez", "fale com o Mafra".
 - Números no site só se forem reais (prazos e etapas da metodologia). Nada inventado.
 
-## Tema de cores (18/11/2026)
+## Notas por ASSUNTO (leia SÓ o arquivo do assunto da tarefa)
 
-- **No ar desde 18/11/2026 (noite): tema AZUL** (azul-marinho da logo, `#001836`, subindo na escala). Histórico:
-  verde → azul → verde → azul. O botão do **WhatsApp** é sempre verde (marca dele).
-- **Para trocar de tema: rodar a regra de cores no site ATUAL** (nunca restaurar a cópia antiga inteira):
-  verde→azul = matiz 80°–175° vira 213° (`l2 = 0.07 + (l-0.15)*0.42`, `s2 = 0.95`; gelo/menta acima de l 0.86 mantém
-  a luz, saturação até 0.55), pulando o bloco `.btn--wa`; e trocar a foto `public/sobre/` pela do tema (subir o `?v=`).
-- A troca para o azul foi feita mudando o matiz de todas as cores verdes (CSS, robô 3D, malha, celular);
-  script de referência: só os verdes com matiz 80°–175° viram azul 213°.
-- **Os dois temas estão salvos no GitHub** (pedido do Victor), cada um com todas as melhorias:
-  branch `tema-azul` (o que está no ar) e branch `tema-verde`, ambas atualizadas com TUDO até a noite de 18/11/2026. A cor NÃO é trocável pelo visitante.
-  Para trocar de tema: aplicar no `main` a diferença de cores do branch do outro tema (CSS, `Background3D.tsx`,
-  `Phone.tsx`, `robo/ModelosPerola.tsx`, `page.tsx` e a foto `public/sobre/`), mantendo o que mudou depois.
-- **REGRA (pedido do Victor, 19/11/2026): toda atualização vai também para o `tema-verde`.** Depois de cada merge:
-  cherry-pick dos commits novos no `tema-verde` e trocar só os ACENTOS azuis que entraram no commit pelos verdes
-  (`#011834`→`#0c6b38`, `#1f5fa8`→`#18a057`, `#4f9bdc`→`#34d27a`, `#8ec5ff`→`#7fe3ad`); textos/navy neutros ficam.
-- Botões: **arredondados** (cantos suaves de 8px foram testados e recusados).
+As notas detalhadas ficam em `docs/claude/`, um arquivo por bloco do site. Antes de mexer num assunto, leia o arquivo
+dele (e só ele). Ao decidir algo novo, registre no arquivo do assunto — não aqui.
 
-## Robô (Orbe) no celular
+| Assunto | Arquivo | Código principal |
+|---|---|---|
+| Cores, tema azul/verde, regra do `tema-verde` | `docs/claude/tema-cores.md` | `theme-claro.css` |
+| Topo: vídeo, título, selo, card "Fale com o Victor", faixa | `docs/claude/topo.md` | `page.tsx`, `theme-claro.css` |
+| Abertura "PORTAL" | `docs/claude/abertura.md` | `Abertura.tsx`, `Experience.tsx`, `abertura.ts` |
+| Robô (Orbe) | `docs/claude/robo.md` | `Experience.tsx`, `Drone*.tsx` |
+| Computador em páginas, mapa/setas, Serviços | `docs/claude/paginas.md` | `src/lib/paginas.ts` |
+| Cards (lupa, bolha), Cases, Perguntas | `docs/claude/cards-lupa-perguntas.md` | `src/lib/bolha.ts`, `faqFoco.ts` |
+| Visual geral (blocos, vidro, fundo, malha, mouse, contato) | `docs/claude/visual.md` | `theme-claro.css`, `Background3D.tsx` |
+| Metodologia (celular 3D) e ajustes do celular | `docs/claude/metodologia-celular.md` | `Phone.tsx`, `Experience.tsx` |
 
-- Nunca em cima do texto nem do **celular 3D** (seção "Metodologia de trabalho", a que trava a tela).
-  O esconderijo é guardado em coordenada de TELA; sem lugar 100% livre, ele vai para o ponto que menos
-  cobre texto, com o celular pesando 4x (`custo` em `Experience.tsx`).
-  Enquanto o celular 3D está na tela, o Orbe ESTACIONA ABAIXO DO CELULAR (21/11/2026, um pouco à esquerda do centro, balões
-  abrem ao lado dele; o balão também desvia do celular). Sem espaço embaixo (tela baixa), volta para a VAGA FIXA na lateral.
-- O Orbe NUNCA sai da tela (trava `travar`, a cada quadro).
-- Selo do topo ("Processos mais inteligentes…"): card com a COR DOS BALÕES do robô (vidro verde), letra branca, cantos de 12px, texto centralizado (`.hero .pill`).
+**Regra de cor do dia a dia:** toda atualização vai também para o `tema-verde` (detalhes em `tema-cores.md`).
 
-- **Voo do menu (computador E celular — no celular pelo menu ☰)**: clicar em Serviços/Método/Cases/Sobre/Contato escurece a tela, a luz do
-  robô cresce (brilho, largura e comprimento do facho) e ele desce até o tema em 3 s, 4 s, 5 s, 6 s, 7 s;
-  a rolagem é nossa, quadro a quadro (o scrollTo do Lenis pulava direto no PC do Victor); o robô desce em
-  linha reta e estaciona POR CIMA do título, com a lanterna em cima dele; a tela volta ao normal (`mafra:voo`).
-- **Falas do Orbe**: só com a tela PARADA (rolou → o balão some na hora) e uma a cada 10 s, de começo a começo
-  (1 minuto parado = 6 falas). Continua valendo a regra de ouro: só fala se houver lugar sem cobrir texto.
-- Mouse no computador: o círculo SAIU. Lanterna verde suave segue o mouse (`.lanterna-mouse`); cards, cases,
-  formação, números e perguntas sobem/crescem com borda verde e reflexo que segue o mouse; botões, menu e foto têm zoom.
-  Botões: SEM ímã (não seguem o mouse), só zoom + luz verde atrás; nunca mudam de cor no hover.
-- Metodologia (computador): abaixo das etapas, o EXEMPLO da equipe de manutenção (no lugar de "Dois resultados…");
-  só a etapa ativa mostra a descrição, para tudo caber na tela travada. No celular o exemplo fica oculto (sem espaço).
-- **Cases em DOIS GRUPOS** (19/11/2026, `GRUPOS_CASES` em `page.tsx`):
-  **Soluções empresariais** (3 lado a lado no computador): Verifica, **Vetra Sales** (`public/cases/vetra-sales-card.webp`),
-  **Polar OS** (`public/cases/polar-os-card.webp`); **Aplicativos e produtos digitais** (2): Vo$ e iFluxo.
-  Card final "A solução da sua empresa" fica fora dos grupos, em largura total. Tablet: 2 colunas (o 3º card empresarial
-  ocupa a fileira); celular: 1. Vetra Sales é o nome de divulgação de um protótipo de vendas externas:
-  NUNCA ligá-lo a cliente nenhum no site; "Na sua empresa" aprovado pelo Victor em 19/11/2026.
-- Cases empresariais: as TRÊS placas de logo (Verifica em código; Vetra/Polar recortadas das imagens originais em
-  `public/cases/*-placa.webp`) com o MESMO tamanho e proporção 3,7:1, teto 320px, no mesmo fundo azul-escuro do Verifica.
-- Celular 3D da Metodologia: RETO o tempo todo (sem giro na rolagem nem com o mouse); telas alternam
-  escura (etapas 1 e 3) e CLARA (etapas 2 e 4) para o visitante perceber a troca. Balões em volta (`.holo`)
-  posicionados pelo próprio celular (`posHolos`): A fora à esquerda sem invadir o texto, B fora à direita.
-- **Fundo animado** (modelo 1, 19/11/2026): 6 faixas diagonais da marca (`.faixas-fundo`, mesma forma do
-  `Chevron` do topo), fixas atrás do conteúdo. Refinadas: seta própria mais LARGA, proporção fixa (vmin), SEM giro; cada uma
-  entra pela lateral, flutua e sai (ciclo de 6 s, uma entrando a cada ~1 s). VAGAS FIXAS que não se cruzam
-  (3 à direita, 3 à esquerda, alturas separadas), sem parallax; na Metodologia (`body.na-metodologia`, ligado no PRÓPRIO gatilho que trava a tela) ficam só 2,
-  na coluna livre à direita do celular (computador) e nenhuma no celular.
-  Aparecem só depois do topo; suaves para não brigar com o texto.
-- Malha de pontos (`Background3D`): tem paradas também DENTRO dos Cases e nas Perguntas — sem elas parecia travada.
-- **Topo com VÍDEO** (20/11/2026, gerado no Runway Gen-4.5 pela API e ampliado para 2K no Magnific (217 créditos); computador `topo-hd.mp4` 1080p, celular `topo.mp4` 720p — chave salva no ambiente `mafra-site`):
-  `public/video/topo.mp4` em LOOP atrás do topo (mudo + play forçados pelo código; recarrega se o Safari congelar ao voltar do
-  app; vigia a cada 1 s). Celular: faixa de vídeo NÍTIDA no alto (42svh desde 23/11/2026; era 48 — texto começava quase no meio da tela) com o vídeo em ZOOM OUT: largura inteira 16:9 encostada no fim da faixa, topo dissolvendo no fundo (Victor: cubos muito grandes) e texto abaixo. Com o vídeo na tela, malha 3D e setas somem.
-- Topo: lista "/ Diagnóstico & processos…" e cartão de vidro **"Fale com o Victor"** (foto, abre o WhatsApp) na MESMA linha
-  dos dois botões; os dois botões do topo fazem o VOO do robô (Método 4 s, Contato 7 s).
-- **Contato escuro** (estilo Liquid Glass CTA): azul-marinho, setas flutuando, WhatsApp/Instagram/LinkedIn empilhados no mesmo
-  formato com as cores OFICIAIS de cada app.
-- Robô: obstáculos incluem CARDS inteiros; cobrindo texto/botão/card > 12% fica translúcido (0,28) no computador e no celular.
-- **Abertura "PORTAL"** (23/11/2026, aprovada pelo Victor; substitui a de 21/11): espera o site CARREGAR (página + vídeo do
-  topo, mínimo 2 s, máximo 6 s) com estrelas calmas; depois ~3,8 s: logo ORIGINAL grande surge do desfoque girando, anéis e
-  raios, brilho atravessa, slogan "Sua operação no controle." (escolhido pelo Victor, 23/11/2026; também no rodapé), CARGA (estrelas em dobra), FLASH + onda de
-  choque, e o PORTAL (`--furo`, máscara circular na própria abertura) abre e revela o site com o vídeo rodando. Tudo em código
-  (`.ab-*` no fim do `theme-claro.css`, timeline em `Experience.tsx`). Saída com `display:none !important` (o CSS usa !important).
-  REFINO de desempenho (23/11/2026, "travando demais" no Windows/Chrome): a espera também aguarda as DUAS cenas 3D ficarem
-  prontas (`src/lib/abertura.ts`) e o 3D PARA de desenhar durante a abertura (`<PausaAbertura/>` via `setFrameloop` — trocar
-  a prop `frameloop` recriava a cena e travava 1,5 s). Recorte da logo com `clip-path` e filtro só na imagem (no iPhone o
-  filtro em elemento redondo desenhava um QUADRADO). Raios menores sem máscara, céu a 1x, anel do portal com `transform`,
-  `ScrollTrigger.refresh()` do intro só depois da abertura, imagens pré-carregadas na espera, letras do título sem blur.
-  Medido: travadas de ~3 s → ~0,2 s (computador) e ~2-4 s → ~0,4 s (celular). Extras: anel de luz que se desenha (SVG),
-  faíscas e risco de luz horizontal no flash, brilho correndo pelo slogan.
-  SITE CONGELADO durante a abertura (`html.abrindo-quieto`, Victor: "congele todo o site"): vídeo pausado, animações de CSS
-  do site pausadas, faixas gigantes (gsap repeat -1) pausadas, robô/setas/malha escondidos e tickers do robô parados;
-  tudo volta só NO FIM da apresentação (3,99 s).
-  **ROTEIRO NO COMPOSITOR (23/11/2026, Victor: "precisa rodar 100% lisa", travava no PC e no celular):** a varredura mostrou o
-  navegador ocupado 2,6 s com o 3D bem na espera, e a apresentação (GSAP + canvas, quadro a quadro em JavaScript) congelava junto.
-  Agora é TUDO animação de CSS só com `transform`/`opacity` (`src/components/Abertura.tsx` + bloco `.ab-*` no `theme-claro.css`),
-  que o navegador roda no compositor e NÃO trava com o resto ocupado. O JS só liga `.ab-roda` e marca 2,8 s (cliques),
-  3,35 s (intro) e 3,97 s (fim) pelo RELÓGIO da animação `abLogo`. Estrelas e faíscas são elementos com valores fixos
-  (gerador com semente — servidor e navegador iguais). O anel desenhado virou um COMETA de luz dando a volta + aro aceso.
-  Atenção ao `animation-fill-mode`: elementos que começam VISÍVEIS no 0% do keyframe (onda, faíscas) usam `forwards`,
-  senão aparecem parados desde o início. Portal: `@property --furo` (inherits: false) animado em CSS.
-  **DUAS FASES (23/11/2026, Victor: "o símbolo demora; estrelas primeiro e a logo em meio segundo"):** FASE 1 é só CSS e
-  começa SOZINHA com a página (sem esperar o JavaScript, que levava 2-3 s): estrelas, e aos ~0,5 s a logo surge com anéis,
-  cometa e raios, e fica viva (aura pulsando) enquanto o site carrega. FASE 2 (`.ab-roda`, quando tudo carregou e a fase 1
-  assentou — `performance.now() ≥ 2,3 s`): brilho, slogan, carga, flash, portal; marcos do JS pelo relógio de `abLogoSai`
-  (1,8 s cliques, 2,35 s intro, 2,96 s fim). A espera pelo carregamento (vídeo, 3D, página) continua como estava.
-  **PORTAL EM ÍRIS (23/11/2026, Victor: "travadinha na hora que abre o portal"):** a máscara `--furo` era redesenhada pelo
-  navegador a cada quadro e engasgava. Agora: no flash (1,8 s) o FUNDO (`.ab-fundo`: céu, dobra, raios) some e a ÍRIS
-  (`.ab-iris`) assume o escuro — um anel com furo que cresce (scale 0→1,667, furo 48vmax×escala) + 4 placas escuras que se
-  afastam 50vmax×escala com a MESMA curva. Só transform/opacity (compositor). O site (vídeo, 3D, animações) só ACORDA quando
-  o portal termina (2,96 s; Victor: "acabou o portal, inicia os vídeos do site").
-- **"que movem." do título em NEGRITO** (23/11/2026, Victor: "muito fraquinho", mesma cor): contorno 2,6px e peso 800 no computador; no celular contorno 2,2px e peso 700 (o 800 quebrava "movem").
-- Robô no celular nasce na PARTE BRANCA, EM FRENTE à palavra "movem" (centro da última linha do título, canto direito; vão livre medido pelo layout; sem vão, cai no vídeo); fica parado ali até a 1ª rolagem. Saudação "Clique aqui! 👆" em balão compacto de 2 linhas, só se couber sem cobrir texto.
-- iPhone em economia de bateria (vídeo bloqueado): esconde o vídeo e o botão de play, fica a imagem parada (`.video-bloqueado`).
-- Malha de pontos/setas: somem só com o topo quase inteiro na tela (`com-video` termina em `bottom 85%`); o vídeo usa `video-na-tela`.
-- **Site em BLOCOS claro/azul** (21/11/2026, `section.bloco-azul`, mesmo azul do Contato, largura total):
-  topo (claro) · faixa que passa (no BRANCO, com respiro antes do azul) · manifesto (azul) · serviços (claro) · metodologia + números (azul) · cases (claro) · sobre (azul) ·
-  perguntas (claro) · contato (azul). Faixa clara de transição CURTA (36px) só no começo de cada bloco (`bloco-azul--abre`);
-  o Contato também (antes 160px, "efeito branco muito forte").
-- **Cards em VIDRO COM AURA** (modelo 2 escolhido pelo Victor, 21/11/2026, fim de `theme-claro.css`): vidro fosco, filete de
-  luz no topo e brilho azul saindo do canto de baixo à direita. Cantoneiras em "L" e quadriculado foram RECUSADOS (não voltar).
-  Blocos azuis (sobre, números): vidro escuro, texto branco; claros (serviços, cases, perguntas): vidro claro. Serviços mantêm
-  o aro triplo; `card--cta`/`project--cta` ficam como eram. Alternativas mostradas: borda de luz girando (1), filete no topo (3).
-  Borda dos cards 3px (3x mais grossa, mesma cor); números do bloco azul em BRANCO sólido (o span tinha degradê marinho).
-- **Card "Fale com o Victor"** (21/11/2026): modelo 2 holográfico (borda em degradê azul girando, brilho atravessando a cada 4 s,
-  nome/botão em degradê marinho, linha "Respondo pelo WhatsApp") com a FOTO GRANDE do modelo 3 (lateral, dissolvendo no card).
-- Robô no celular: sempre que a página VOLTA AO TOPO, ele retorna ao lugar em frente a "movem" (larga o esconderijo).
-- **"Quem está por trás" no celular** (23/11/2026, Victor: "as letras demoram muito"): selo, título, texto e itens aparecem JUNTO com a rolagem (scrub) — começam a surgir quando a foto está no meio da tela e completam conforme sobem.
-- **Espaçamento no celular** (21/11/2026): temas encostados, ~10px entre os textos; só os CASES têm distância maior do bloco azul (88px).
-- **Imagem do link compartilhado** (`public/og-image.jpg`, 21/11/2026): modelo 4 — fundo azul-marinho, logo original, frase do topo e FOTO do Victor à direita com selo "Fale com o Victor →". Ao trocar, subir o `?v=` em `layout.tsx`.
-- **Metodologia em janela baixa** (22/11/2026): no computador com pouca altura (notebook com escala do Windows) a seção travada
-  encolhe com `zoom` em `.process__grid` (degraus por max-height 920/840/780/720/660); `posHolos` divide as posições pelo zoom.
-- **Site em PÁGINAS DE TELA CHEIA** (23/11/2026, `src/lib/paginas.ts`, só COMPUTADOR): 1 gesto (fraco ou forte) = 1 página,
-  nunca pula nem para no meio. Cada página cabe numa tela (zoom de 60% a 150%; letra cresce se sobra espaço). Troca de
-  BLOCO = a página entra INTEIRA pela direita, só na horizontal (a própria página desliza, como o vídeo de referência do
-  Victor); dentro do bloco desce. Cases = 2 páginas (`PEDACOS`); Metodologia = 4 paradas na tela travada; Serviços = 6 cards
-  em 2 fileiras de 3. **CELULAR: rolagem contínua normal, tudo para baixo, sem páginas e sem lateral** (ordem do Victor).
-  A troca lateral move a PRÓPRIA página (`translate` nas seções; a parte travada da Metodologia se move sozinha) — NUNCA
-  cópia/clone: a cópia piscava e a página "se reajustava" na chegada (Victor, 23/11/2026). A página de destino chega PRONTA
-  (`prepararDestino`: animações de entrada terminadas). Nada de esconder a barra de rolagem na troca (no Windows alargava a
-  página). `ScrollTrigger.refresh()` sempre DEPOIS do encaixe (`ajustarTamanhos`). A barra do topo não some ao rolar.
-  Gesto novo = mão parada 220 ms OU mudou de direção OU o embalo do trackpad voltou a crescer (hora do evento, `ev.timeStamp`).
-  Topo: título em 2 linhas largas, card "Fale com o Victor" 1,15x na linha dos botões (1,35 ficou grande demais), com a
-  foto GRANDE (`victor-mafra-retrato.jpg`, 1122×1402; a de 720 px ficava sem qualidade). Manifesto: menor e centralizado.
-  Serviços sem o véu branco (a malha de pontos aparece igual à dos Cases).
-  Pedaços (Cases) medidos SEM a animação de entrada (`topoLayout`), seção com 1px de respiro (margem não atravessa) e
-  margem corrigida medindo de novo. Se uma página MUDA de altura sozinha (ex.: números contando 0→30 quebravam a linha),
-  um ResizeObserver reencaixa tudo. `.stat__n` sem quebra de linha. Card "A solução da sua empresa" 72px mais abaixo.
-  Cases LEGÍVEIS: a largura na TELA é fixa (90%, até 1800 px) e a de layout é ela ÷ zoom (cards largos = menos linhas);
-  imagens com altura fixa (30vh/19vh, `contain`); letras dos cards maiores. No 1920×694 do Victor: zoom 0,49 → 0,60.
-- **Direção das trocas (regra do Victor, 23/11/2026)**: tela CLARA → AZUL = página entra pela DIREITA; AZUL → CLARA = entra
-  DE BAIXO PARA CIMA; mesmo tema e azul → azul = desce; voltando, o inverso. Salto pelo mapa (pula temas) = de lado.
-- **Navegação sem rolagem (computador)**: MAPA DO SITE na lateral direita (`.pg-mapa`, uma bolinha por tema, nome ao passar
-  o mouse, a atual alongada; vidro escuro sobre os temas azuis) + SETAS ↑ ↓ no canto (`.pg-setas`). Usam o mesmo `ir()`.
-- **Robô no computador (páginas, 23/11/2026)**: NÃO segue mais a rolagem. A cada troca (`mafra:pagina`, avisado por
-  `paginas.ts`) ele escolhe um lugar LIVRE na página que está chegando (vagas laterais alternadas, `VAGAS`) e voa até lá
-  com uma MOLA amortecida (arco para cima quando vai longe; inclina na direção do voo). Não fala enquanto voa.
-  Orbe 10% menor no computador (133 px). Celular: tudo como antes. Victor aprovou o robô assim ("ficou ótimo, pode manter").
-  A área de desenho do Orbe é 1,5x o quadro dele (`.drone__orb > div`, câmera fov 54,6°): o ARO girando não é cortado.
-  A LUZ (`.drone__beam`) mora DENTRO de `.drone__float` (flutua, inclina e desvia junto) e nasce na PONTINHA de baixo
-  (computador top 104px, celular 76px; centro 66,5px / 46px).
-- **Faixa gigante (Perguntas)**: UMA linha — "processos ✦ gestão ✦ tecnologia ✦" + no fim o trecho VAZADO
-  (`.bt-vazado`), repetido 4x para o letreiro nunca ficar vazio (23/11/2026).
-- **Malha de pontos no computador (páginas)**: dança pela tela inteira sozinha (caminho em "oito", ~40 s), sem depender
-  da rolagem; a cada troca de página gira mais rápido por um instante. Celular: paradas pela rolagem, como antes.
-- **Faixa do topo (computador, páginas)**: nítida — sem `scale(1.05)`, sem `will-change`, sem halo de sombra, peso 600,
-  sem o "entortar" pela velocidade da rolagem (só no celular). Mesmo tamanho (Victor não quer maior).
-- **Barra do topo justa na logo** (23/11/2026): só 3px acima e 3px abaixo da logo (computador e celular).
-- **Telas do celular 3D** (23/11/2026): cada tela é ampliada com `zoom` até o conteúdo ocupar o espaço útil (`ajustarTelas`).
-- **Cards de Serviços e Cases** (23/11/2026, Victor: monitor de 15,6" não dava para ler; `src/lib/bolha.ts`, só computador):
-  1) PASSAR O MOUSE = LUPA 3D que segue o mouse e AMPLIA (2,2x) só o texto embaixo dela; o card NÃO sai do lugar
-  ("não quero que o menu venha para frente"). Modelo 2 escolhido pelo Victor (aro azul-ciano aceso, cabo cromado),
-  renderizado em 3D com three.js: `/public/lupa-moldura.webp` — HOJE é o MODELO 3, BOLHA sem cabo (borda furta-cor, centro
-  transparente; 181×181, centro 90,65, lente de 170px). O modelo 2 com cabo foi trocado ("não está muito bom") — e
-  `/public/lupa-cursor.png` (ícone do cursor nas Perguntas e na dica). Dentro da lente vai uma cópia do card na MESMA
-  estrutura de classes (inclusive um `#cases` temporário), com o MESMO `zoom` da página e a MESMA largura e ALTURA do card:
-  as linhas quebram iguais e a lente nunca passa do fim da cópia. O centro da lente fica preso dentro do card (com mouse
-  rápido o atraso deixava a lente fora e ela ficava BRANCA).
-  VIGIA: a cada movimento do mouse (em qualquer lugar) confere se ainda está no card da lupa; senão ela some — o navegador
-  às vezes não avisa a saída rápida e a lente branca ficava TRAVADA na tela. Some também ao sair da janela, trocar de página
-  (`mafra:pagina`), tecla ou rodinha. Causa real da lente presa: entrar e sair rápido deixava a animação de APARECER brigando com a de SUMIR (a de
-  aparecer terminava por último) → `esconderLupa` mata as animações antes (`killTweensOf` + `overwrite`), e o vigia força
-  opacidade 0 se não houver card sob o mouse.
-  2) CLIQUE = a cópia sai do card e vem ao centro como GELATINA: cresce em 8 balanços (achata/estica, cada vez menos)
-  até abrir; aro furta-cor de bolha de sabão e reflexo; fundo claro desfocado; fecha (×, fora, Esc) voltando ao card.
-  RECUSADOS: gota azul ("cubo de gelo"), fundo azul-escuro, abrir sozinho ao passar o mouse (trazia o card para frente).
-  O card aberto rola com o mouse por dentro (`data-lenis-prevent`); cursor normal com ele aberto.
-- **Perguntas em FOCO** (23/11/2026, `src/lib/faqFoco.ts`): sanfona (abriu uma, fecha as outras). No computador a resposta
-  NÃO abre na lista (a página mudava de altura e o encaixe encolhia/crescia tudo): o clique abre um painel em tela cheia —
-  círculo escuro nasce do ponto do clique, pergunta sobe palavra por palavra, resposta acende, luz passa; ← → navegam.
-  `html.bolha-aberta` segura a troca de páginas enquanto bolha/foco estão abertos.
-- **Serviços no computador** (23/11/2026): título encostado no menu (respiro = altura do menu, em `paginas.ts`), cards e
-  cabeçalho com 90% da LARGURA DA TELA (`calc(90vw * var(--inv-zoom))`), letras maiores (h3 1,75rem, texto 1,22rem).
-  Em 1366×650 o texto dos cards foi de ~8px para ~13px na tela.
-- **"Voltar ao topo"** no computador usa `__paginas.ir(0)` (a rolagem suave fica desligada no modo páginas).
-- Lista do topo ("/ Diagnóstico & processos…"): +2px e negrito; texto do topo ("Entendo a rotina…") +1px e negrito; menu do topo em negrito (monitor pequeno). Bloco de texto do topo 160px mais à esquerda no computador (`translate`, o vídeo NÃO muda).
-- Botões verdes: flash claro passando da esquerda para a direita a cada 3 s (`verde-varre`).
-
+**Economia de publicações (Vercel, plano gratuito tem limite diário):** `vercel.json` → `ignoreCommand` NÃO publica
+os branches `tema-azul`/`tema-verde` (são só cópia de segurança) nem mudanças só em `CLAUDE.md`/`docs/`.
 ## Pendências conhecidas
 
 - E-mail profissional: o Victor vai criar; quando existir, entra no Contato (e-mail como 2º canal além do WhatsApp).
