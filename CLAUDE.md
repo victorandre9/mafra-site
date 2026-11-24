@@ -61,6 +61,12 @@ dele (e só ele). Ao decidir algo novo, registre no arquivo do assunto — não 
 
 **Economia de publicações (Vercel, plano gratuito tem limite diário):** `vercel.json` → `ignoreCommand` NÃO publica
 os branches `tema-azul`/`tema-verde` (são só cópia de segurança) nem mudanças só em `CLAUDE.md`/`docs/`.
+
+## Mapa do código (Graphify)
+
+Antes de abrir arquivos para achar onde algo mora, consulte o mapa (montado sem custo de tokens no início da sessão):
+`graphify query "assunto"`, `graphify explain "Função"` ou `graphify-out/GRAPH_REPORT.md`. Depois de mudar código: `graphify update .`
+
 ## Pendências conhecidas
 
 - E-mail profissional: o Victor vai criar; quando existir, entra no Contato (e-mail como 2º canal além do WhatsApp).
