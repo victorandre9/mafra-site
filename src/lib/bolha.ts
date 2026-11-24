@@ -112,14 +112,18 @@ export function iniciarBolha(): () => void {
     escala0 = r.width / Math.max(1, copiaLupa.getBoundingClientRect().width / escalaLente);
     mx = lx = e.clientX; my = ly = e.clientY;
     card.classList.add("com-lupa");
-    if (!visivel) { visivel = true; gsap.killTweensOf(lente); gsap.fromTo(lente, { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.6)" }); }
+    if (!visivel) { visivel = true; gsap.killTweensOf(lente); gsap.fromTo(lente, { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(1.6)", overwrite: true }); }
     posicionar();
   };
   const esconderLupa = () => {
     cancelAnimationFrame(raf); raf = 0;
     alvo?.classList.remove("com-lupa");
     alvo = null;
-    if (visivel) { visivel = false; gsap.to(lente, { opacity: 0, scale: 0.8, duration: 0.2, ease: "power2.in", onComplete: () => { if (!visivel && !alvo) conteudo.replaceChildren(); } }); }
+    // (cancela o "aparecer" que ainda estiver rodando: entrar e sair rápido deixava as duas animações brigando — a de
+    // aparecer terminava por último e a lupa ficava na tela, vazia; Victor, 23/11/2026)
+    gsap.killTweensOf(lente);
+    if (visivel) { visivel = false; gsap.to(lente, { opacity: 0, scale: 0.8, duration: 0.18, ease: "power2.in", overwrite: true, onComplete: () => { if (!visivel && !alvo) conteudo.replaceChildren(); } }); }
+    else gsap.set(lente, { opacity: 0 });
   };
   lente.style.transformOrigin = `${MOLDURA.cx}px ${MOLDURA.cy}px`;
 
@@ -242,7 +246,11 @@ export function iniciarBolha(): () => void {
   // lugar confere: não está mais em cima do card da lupa → ela some na hora. Vale também ao sair da janela, ao trocar
   // de página pelo mapa/setas/teclado e se o card sumiu da tela.
   const vigia = (e: PointerEvent) => {
-    if (!visivel && !alvo) return;
+    if (!visivel && !alvo) {
+      // rede de segurança: sem card sob o mouse, a lupa NUNCA fica visível
+      if (Number(gsap.getProperty(lente, "opacity")) > 0 && !gsap.isTweening(lente)) gsap.set(lente, { opacity: 0 });
+      return;
+    }
     const sobre = (e.target as Element | null)?.closest?.(".card--bolha");
     if (!alvo || sobre !== alvo || !alvo.isConnected) esconderLupa();
   };
